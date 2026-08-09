@@ -1,1383 +1,1825 @@
-# **AGENTS.md**
+# AGENTS.md
 
 This file defines the operating rules for AI coding agents and human contributors working on **AnschlussPilot**.
 
 AnschlussPilot is a:
 
-> **German rail connection-risk and journey-reliability decision-support platform**
+> **Disruption-aware journey decision-support system for German rail.**
 
-The project is not a generic train-delay dashboard, a DB Navigator clone, or an AI-first demonstration.
+Its purpose is not merely to report train delays or predict missed connections.
 
-Its core responsibility is to help a passenger answer:
+Its core responsibility is:
 
-1. **Can I still realistically make this connection?**  
-2. **What is the likely impact on my complete journey?**  
-3. **What is the next reasonable action if the planned connection fails?**
+> **Given the information available right now, help determine which reasonable action is most likely to produce a better journey outcome.**
 
-All implementation decisions should be evaluated against those questions.
+The system should continuously reason about questions such as:
+
+1. What changed?
+2. Is the current journey still feasible?
+3. Is continuing with the current plan still the best choice?
+4. What reasonable alternatives exist?
+5. What is the expected outcome of each option?
+6. Is there enough reliable information to recommend any action at all?
+
+All substantial implementation decisions should be evaluated against those questions.
 
 ---
 
-# **1\. Source of Truth**
+# 1. Repository Truth Comes First
 
-Before modifying the repository, inspect the actual repository state.
+Before modifying the repository, inspect its actual current state.
 
-Do not infer implementation status from this file, the README, issue descriptions, comments, screenshots, previous conversations, or planned architecture.
+The repository is the source of truth for what exists.
 
-The repository itself is the source of truth for what currently exists.
+Do not infer implementation status from:
 
-Before making a substantial change, read at minimum:
+- this file;
+- README descriptions;
+- product plans;
+- issue text;
+- screenshots;
+- previous conversations;
+- roadmap items;
+- comments describing future architecture.
 
-README.md  
+Before any non-trivial change, inspect at minimum:
+
+```text
+README.md
 AGENTS.md
+```
 
-and any relevant:
+and all relevant:
 
-docs/  
-architecture documentation  
-product requirements  
-source files  
-tests  
-configuration  
-database migrations  
-provider adapters  
+```text
+docs/
+source files
+tests
+schemas
+provider adapters
+database migrations
 CI workflows
+configuration
+architecture documentation
+product requirements
+```
 
-that relate to the task.
+that affect the requested change.
 
-If the repository later contains a dedicated product requirements document, architecture decision records, schemas, or provider documentation, read those before changing the corresponding subsystem.
+If the repository later contains more specific instructions, prefer the most local applicable instruction while preserving the product invariants defined here.
 
 ---
 
-# **2\. Never Invent Repository Capabilities**
+# 2. Never Invent Capabilities
 
-Never claim that something exists unless it is verifiably present in the repository or actually confirmed by a configured external system.
+Never claim a feature or capability exists unless it is verifiably present.
 
 Do not fabricate:
 
-* implemented features;  
-* supported railway providers;  
-* API capabilities;  
-* realtime-data availability;  
-* timetable coverage;  
-* platform-change support;  
-* cancellation support;  
-* deployment infrastructure;  
-* production readiness;  
-* test results;  
-* benchmark results;  
-* model performance;  
-* prediction accuracy;  
-* model calibration;  
-* database contents;  
-* historical datasets;  
-* monitoring coverage;  
-* security guarantees;  
-* GDPR compliance;  
-* licensing permissions;  
-* passenger-rights support.
+- supported railway providers;
+- realtime integrations;
+- historical datasets;
+- API capabilities;
+- routing capabilities;
+- platform-change handling;
+- cancellation handling;
+- state-reconciliation behaviour;
+- prediction models;
+- calibrated probabilities;
+- machine-learning performance;
+- test results;
+- benchmarks;
+- deployment status;
+- production readiness;
+- monitoring coverage;
+- GDPR compliance;
+- security guarantees;
+- licensing permission;
+- passenger-rights logic.
 
-If something is planned but not implemented, describe it as planned.
+If something is planned but not implemented, label it as planned.
 
-If something cannot be verified, say that it cannot be verified.
+If a capability cannot be verified, state that it cannot be verified.
 
----
-
-# **3\. Product Invariants**
-
-The following principles are architectural constraints, not marketing slogans.
-
-## **3.1 Journey outcome over train delay**
-
-AnschlussPilot should reason about the passenger's **journey outcome**, not merely display individual train delays.
-
-A delay is an input.
-
-The product output should concern questions such as:
-
-Is the transfer still feasible?  
-How much usable transfer margin remains?  
-What happens to destination arrival?  
-What should the passenger do next?
-
-Do not turn the project into a general-purpose train-status application unless the product scope is explicitly changed.
+Never report tests as passing unless they were actually executed successfully.
 
 ---
 
-## **3.2 Decision support over raw data**
+# 3. Core Product Invariant
 
-Prefer:
+AnschlussPilot is not primarily a train-status product.
 
-HIGH RISK
+It is not primarily a connection-probability product.
 
-Estimated remaining transfer buffer:  
-0–2 min
+It is not primarily an alternative-route search product.
 
-Reason:  
-Incoming arrival has moved later and the transfer requires approximately 5–7 min.
+The intended reasoning chain is:
 
-Alternative:  
-Next reasonable connection ...
+```text
+Current journey
+      ↓
+Railway observations
+      ↓
+Canonical current state
+      ↓
+Connection feasibility
+      ↓
+Reasonable actions
+      ↓
+Outcome estimation
+      ↓
+Action comparison
+      ↓
+Decision recommendation
+      ↓
+Continue monitoring
+```
 
-over interfaces that primarily expose:
+A risk score is an intermediate result.
 
-raw API fields  
-train metadata  
-large tables  
-technical charts  
-provider-specific status codes
+An alternative itinerary is also an intermediate result.
 
-Technical details may exist, especially for debugging or observability, but passenger-facing UX should remain decision-first.
-
----
-
-## **3.3 Uncertainty must remain visible**
-
-Never convert insufficient information into artificial certainty.
-
-`Unknown` is a valid and necessary product state.
-
-The system must be able to represent:
-
-SAFE  
-ATTENTION  
-HIGH\_RISK  
-MISSED\_OR\_UNAVAILABLE  
-UNKNOWN
-
-or semantically equivalent domain values.
-
-Do not silently map missing or stale data to `SAFE`.
-
-Do not fabricate a probability when the system only supports a deterministic classification.
-
-Do not display false precision.
-
-Prefer:
-
-Estimated transfer requirement: 4–6 min
-
-over:
-
-Transfer requirement: 5 min 14 sec
-
-unless such precision is actually justified.
+The product output is the **decision support created by comparing plausible actions and their expected outcomes**.
 
 ---
 
-## **3.4 Data quality before model complexity**
+# 4. Product Principles
 
-A more sophisticated model does not compensate for incorrect railway identity, broken event ordering, stale data, leakage, or an invalid target.
+The following are architectural constraints.
+
+## 4.1 Optimize journey outcomes
+
+Do not optimize only for:
+
+```text
+smallest train delay
+shortest scheduled journey
+highest connection probability
+fewest API calls
+```
+
+without considering the passenger's complete journey.
+
+The relevant target is closer to:
+
+```text
+reliable destination arrival
+```
+
+subject to available information and reasonable passenger costs.
+
+---
+
+## 4.2 Decisions over raw railway data
+
+Passenger-facing functionality should prioritize:
+
+```text
+recommended action
+destination impact
+risk
+reason
+alternative comparison
+data freshness
+```
+
+before:
+
+```text
+raw provider fields
+internal status codes
+technical metrics
+railway metadata
+```
+
+Technical details may exist for diagnostics, observability, or advanced views, but they are not the primary product.
+
+---
+
+## 4.3 Risk is not the decision
+
+Never implement:
+
+```text
+HIGH_RISK => REROUTE
+```
+
+as a universal product rule.
+
+A high-risk connection may still be the best option if:
+
+- the connecting service is also delayed;
+- all alternatives are significantly worse;
+- the alternative contains even greater uncertainty;
+- rerouting creates additional risky transfers.
+
+Likewise, a merely `ATTENTION` connection may justify an early change if a clearly better alternative exists.
+
+Keep **risk assessment** and **action recommendation** as separate concepts.
+
+---
+
+## 4.4 Uncertainty must remain visible
+
+Never transform missing, stale, inferred, or probabilistic information into certainty.
+
+`UNKNOWN` must remain a valid domain result.
+
+Do not silently map:
+
+```text
+missing data
+stale data
+unsupported condition
+conflicting observations
+```
+
+to:
+
+```text
+SAFE
+CONTINUE
+```
+
+Do not fabricate probabilities.
+
+Do not display unjustified precision.
+
+---
+
+## 4.5 Data quality before model complexity
 
 Prioritize:
 
-correct domain modelling  
-correct service identity  
-correct event ingestion  
-correct temporal ordering  
-correct state reconciliation  
-correct freshness handling  
+```text
+correct service identity
+correct timestamps
+correct event ordering
+correct normalization
+correct state reconciliation
 correct labels
+correct freshness semantics
+correct backtesting
+```
 
-before introducing additional machine-learning complexity.
+before advanced models.
 
----
-
-## **3.5 German rail first**
-
-Do not expand scope merely because an abstraction makes expansion technically possible.
-
-The product should first solve one high-quality German rail connection-risk use case.
-
-European expansion, multimodal routing, aviation, coaches, taxis, and unrelated mobility features are post-MVP concerns.
+A sophisticated model using temporally invalid or incorrectly reconciled data is worse than a simple deterministic rule.
 
 ---
 
-# **4\. MVP Boundary**
+## 4.6 German rail first
+
+Do not expand into:
+
+```text
+European rail
+aviation
+coaches
+taxis
+car sharing
+general multimodal routing
+```
+
+merely because the abstractions could support them.
+
+Build one excellent German rail disruption use case first.
+
+---
+
+# 5. MVP Boundary
 
 The intended MVP is:
 
-> Given a supported German rail itinerary containing at least one transfer, AnschlussPilot evaluates each connection as railway conditions change, explains its current risk, and presents a reasonable alternative when the original connection becomes unsafe or impossible.
+> **Given a supported German rail journey containing at least one transfer, AnschlussPilot monitors relevant operational changes, evaluates whether the current plan remains feasible, compares a limited set of reasonable railway alternatives, and explains the currently preferred action.**
 
-Features should normally support at least one of:
+The MVP should focus on:
 
-connection feasibility  
-journey outcome  
-risk explanation  
-alternative decision support  
-data reliability
+```text
+journey state
+connection feasibility
+alternative generation
+outcome comparison
+decision recommendation
+uncertainty handling
+```
 
-If a proposed feature does not materially improve one of these areas, question whether it belongs in the MVP.
-
----
-
-# **5\. Explicit Non-Goals**
-
-Unless the product requirements are intentionally changed, do not implement AnschlussPilot as:
-
-* a DB Navigator replacement;  
-* a complete German public-transport application;  
-* a ticket shop;  
-* a payment system;  
-* a reservation platform;  
-* a Deutsche Bahn account client;  
-* a compensation-claim service;  
-* a legal passenger-rights authority;  
-* a guaranteed connection predictor;  
-* an indoor turn-by-turn station navigator;  
-* a universal European railway planner;  
-* a flight \+ rail \+ bus \+ taxi multimodal platform;  
-* an LLM chatbot whose purpose is merely to make the project appear AI-driven.
-
-Do not introduce these capabilities indirectly without updating the corresponding product documentation.
+Do not expand scope simply to increase feature count.
 
 ---
 
-# **6\. Railway Domain Correctness**
+# 6. Explicit Non-Goals
 
-Railway domain behaviour must be treated as a first-class engineering concern.
+Unless the product definition is deliberately changed, AnschlussPilot is not:
 
-Do not assume that:
+- a DB Navigator replacement;
+- a generic train-delay tracker;
+- merely a reliability-score website;
+- a ticket shop;
+- a payment processor;
+- a seat-reservation platform;
+- a Deutsche Bahn account client;
+- a compensation-claim automation system;
+- an authoritative passenger-rights engine;
+- a guaranteed missed-connection predictor;
+- an indoor turn-by-turn station navigator;
+- a universal European rail planner;
+- a multimodal mobility super-app;
+- an LLM chatbot whose main purpose is marketing.
 
-train number \== unique train run  
-scheduled connection \== feasible connection  
-delay \== only relevant disruption  
-arrival/departure times only move forward  
-realtime updates arrive in order  
-provider data is internally consistent  
-same-name stations are interchangeable
-
-Design for domain situations such as:
-
-* delay changes;  
-* delay corrections;  
-* platform changes;  
-* full cancellations;  
-* partial cancellations;  
-* changed stopping patterns;  
-* train splitting;  
-* train joining;  
-* through services;  
-* train-number changes;  
-* journeys crossing midnight;  
-* service termination;  
-* replacement transport;  
-* duplicate events;  
-* out-of-order events;  
-* missing realtime data;  
-* stale realtime data;  
-* conflicting observations.
-
-Do not implement a domain shortcut merely because it works for a demo itinerary.
+Do not introduce these indirectly without updating the product documentation.
 
 ---
 
-# **7\. Connection Feasibility**
+# 7. Railway Domain Correctness
 
-A connection should not be reduced to:
+Railway behaviour must be treated as a first-class domain problem.
 
-incoming\_delay \> scheduled\_transfer\_time
+Never assume:
 
-A useful conceptual model is:
+```text
+train number == train identity
+scheduled transfer == feasible transfer
+delay == only disruption type
+arrival times only move later
+updates arrive in order
+provider data is consistent
+a train always keeps the same stopping pattern
+same-name stations are equivalent
+```
 
-# **$$**
+Relevant domain situations include:
 
-# **B\_{\\mathrm{effective}}**
+- changing delays;
+- delay corrections;
+- platform changes;
+- cancellations;
+- partial cancellations;
+- changed stopping patterns;
+- changed train numbers;
+- train splitting;
+- train joining;
+- through services;
+- replacement services;
+- journey termination;
+- cross-midnight journeys;
+- duplicate events;
+- out-of-order events;
+- missing observations;
+- stale observations;
+- conflicting observations.
 
-## **T\_{\\mathrm{departure,next}}**
-
-## **T\_{\\mathrm{arrival,current}}**
-
-## **T\_{\\mathrm{transfer}}**
-
-T\_{\\mathrm{safety}}.  
-$$
-
-This formula is conceptual.
-
-Do not assume it completely defines connection feasibility.
-
-The implementation may also need to consider:
-
-* cancellation state;  
-* platform changes;  
-* outgoing-service delay;  
-* changed stop patterns;  
-* transfer-station topology;  
-* unavailable information;  
-* provider confidence;  
-* transfer-time ranges;  
-* other domain conditions.
-
-Keep the risk engine explainable.
-
-If a rule changes the user's risk state, the system should ideally be capable of explaining the relevant factors.
-
----
-
-# **8\. Risk State Semantics**
-
-Risk states must have stable domain meanings.
-
-A recommended conceptual vocabulary is:
-
-| State | Meaning |
-| ----- | ----- |
-| `SAFE` | Current information indicates a reasonable buffer. |
-| `ATTENTION` | The available margin is shrinking or becoming uncertain. |
-| `HIGH_RISK` | Missing the connection is a material possibility. |
-| `MISSED_OR_UNAVAILABLE` | The planned connection is no longer feasible according to current information. |
-| `UNKNOWN` | Available information is insufficient for reliable assessment. |
-
-Avoid encoding presentation text directly into core domain logic.
-
-Prefer stable domain enums or equivalent typed representations.
-
-Frontend wording may later be localized independently.
+Do not implement shortcuts that only work for a polished demo.
 
 ---
 
-# **9\. External Provider Boundary**
+# 8. Canonical Provider Boundary
 
-Never let raw external-provider payloads become the AnschlussPilot domain model.
+Raw external-provider payloads must not become the internal domain model.
 
-Maintain an explicit boundary:
+Maintain a separation similar to:
 
-External provider  
-      ↓  
-Provider adapter  
-      ↓  
-Normalization  
-      ↓  
-AnschlussPilot domain model  
-      ↓  
-Journey / Risk engine  
-      ↓  
-Application API / UI
+```text
+External provider
+      ↓
+Provider adapter
+      ↓
+Normalization
+      ↓
+Canonical railway model
+      ↓
+Journey state
+      ↓
+Risk / alternative / decision logic
+```
 
-Provider-specific fields should be translated into canonical internal concepts before they reach core journey logic.
+Provider-specific fields should remain isolated.
 
-Benefits include:
+Core decision logic should not depend directly on raw provider JSON.
 
-* provider independence;  
-* easier testing;  
-* controlled schema evolution;  
-* explicit missing-data semantics;  
-* easier addition of future providers;  
-* reduced coupling between infrastructure and domain logic.
+This allows:
 
-Do not spread provider-specific JSON parsing throughout the backend.
-
----
-
-# **10\. Canonical Domain Model**
-
-The internal model should be designed around railway and journey concepts rather than API response shapes.
-
-Likely concepts include:
-
-Station  
-Journey  
-Service / Train Run  
-Stop  
-Scheduled Stop Event  
-Realtime Observation  
-Journey Leg  
-Connection  
-Disruption  
-Alternative  
-Risk Assessment
-
-Do not add abstractions merely because they sound architecturally sophisticated.
-
-Add them when the repository has a concrete domain requirement.
-
-When modifying domain types:
-
-1. inspect all consumers;  
-2. inspect persistence implications;  
-3. inspect serialization/API implications;  
-4. update tests;  
-5. update documentation when semantics change.
+- testing without live providers;
+- provider replacement;
+- schema evolution;
+- explicit handling of missing information;
+- stable domain semantics.
 
 ---
 
-# **11\. Service Identity**
+# 9. Canonical Domain Concepts
 
-Service identity is a critical correctness problem.
+Likely domain concepts include:
 
-Do not assume that a displayed train number uniquely identifies a train run.
+```text
+Station
+Journey
+JourneyLeg
+Connection
+ServiceRun
+Stop
+ScheduledStopEvent
+RealtimeObservation
+CurrentServiceState
+Disruption
+RiskAssessment
+AlternativeJourney
+DecisionCandidate
+OutcomeEstimate
+DecisionRecommendation
+```
 
-The system may eventually need identity based on a combination of provider-defined journey identifiers, service date, route information, stop sequence, or other stable attributes.
+Do not create these abstractions speculatively.
 
-Never merge services solely because they share a train number.
+Introduce or extend them only when supported by actual requirements.
 
-Never split one service solely because an operational field changed.
-
-Identity logic must have tests.
+Domain types should model railway semantics, not external API response shapes.
 
 ---
 
-# **12\. Realtime Observations and State Reconciliation**
+# 10. Service Identity Is Critical
 
-Do not treat realtime ingestion as a sequence of destructive overwrites.
+Never assume a displayed train number uniquely identifies a train run.
+
+Identity may depend on:
+
+- provider journey identifiers;
+- service date;
+- route;
+- stop sequence;
+- operating context;
+- replacement relationships;
+- split/join behaviour.
+
+Incorrect identity handling can corrupt:
+
+```text
+current journey state
+historical observations
+risk labels
+alternatives
+backtests
+ML training data
+```
+
+Service identity logic must be explicitly tested.
+
+---
+
+# 11. Realtime Observations Are Events, Not Just Values
+
+Do not treat realtime ingestion as destructive overwrites.
 
 Conceptually distinguish:
 
-Scheduled truth  
-Realtime observations  
-Current interpreted state  
+```text
+Scheduled state
+Realtime observations
+Current interpreted state
 Historical observations
+```
+
+Example:
+
+```text
+15:01  delay +3
+15:04  delay +5
+15:06  platform changed
+15:08  delay +9
+15:10  corrected to +6
+15:14  partial cancellation
+```
+
+The latest interpreted state may change, but previous observations can remain important for:
+
+- debugging;
+- reproducibility;
+- delay evolution;
+- historical reconstruction;
+- statistical modelling;
+- decision backtesting.
+
+---
+
+# 12. State Reconciliation
+
+Realtime observations may be:
+
+- duplicated;
+- delayed;
+- out of order;
+- corrected;
+- incomplete;
+- inconsistent.
+
+State reconciliation should therefore be explicit.
+
+Do not assume:
+
+```text
+last event received == newest truth
+```
+
+without considering provider semantics and timestamps.
+
+When possible, preserve enough information to explain why current state changed.
+
+---
+
+# 13. Temporal Correctness
+
+Time semantics are fundamental.
+
+Where applicable, distinguish:
+
+```text
+scheduled time
+provider observation time
+event effective time
+ingestion time
+decision time
+```
+
+Use timezone-aware values where appropriate.
+
+Handle:
+
+- cross-midnight journeys;
+- service dates;
+- daylight-saving transitions;
+- delayed observations;
+- late corrections.
+
+Most importantly:
+
+> **Historical evaluation must only use information that was available at the evaluated decision time.**
+
+---
+
+# 14. Data Freshness
+
+Freshness is part of product correctness.
+
+Do not present old information as realtime merely because it is the latest stored record.
+
+The system should be capable of representing states equivalent to:
+
+```text
+LIVE
+STALE
+UNAVAILABLE
+```
+
+A decision recommendation should know the freshness of the evidence it relies on.
+
+If data freshness is insufficient, prefer uncertainty over false confidence.
+
+---
+
+# 15. Data Provenance
+
+Where practical, retain provenance for normalized information.
+
+It should be possible to determine:
+
+- which provider supplied it;
+- when it was observed;
+- when it was received;
+- whether it was directly reported;
+- whether it was inferred;
+- how it was normalized.
+
+Never silently convert inferred information into provider-reported fact.
+
+---
+
+# 16. Connection Feasibility
+
+A connection must not be reduced to:
+
+```text
+incoming_delay > scheduled_transfer_time
+```
+
+A conceptual starting point is:
+
+$$
+B_{\mathrm{effective}}
+======================
+
+## T_{\mathrm{departure,next}}
+
+## T_{\mathrm{arrival,current}}
+
+## T_{\mathrm{transfer}}
+
+T_{\mathrm{safety}}.
+$$
+
+But feasibility may also depend on:
+
+- outgoing-service delay;
+- cancellation state;
+- platform changes;
+- transfer-time range;
+- station topology;
+- changed stop patterns;
+- unsupported or stale information.
+
+Keep connection assessment explainable.
+
+---
+
+# 17. Risk Semantics
+
+Risk states should have stable domain meaning.
+
+A conceptual vocabulary is:
+
+```text
+SAFE
+ATTENTION
+HIGH_RISK
+MISSED_OR_UNAVAILABLE
+UNKNOWN
+```
+
+Do not embed localized UI wording directly in core domain logic.
+
+Do not infer that a particular risk state implies a particular action.
+
+---
+
+# 18. Decision Candidates
+
+The decision layer should compare explicit candidate actions.
+
+Possible actions may include:
+
+```text
+CONTINUE_CURRENT_PLAN
+WAIT_FOR_CONNECTION
+REROUTE_EARLY
+TAKE_LATER_CONNECTION
+USE_ALTERNATIVE_RAIL_ROUTE
+NO_RELIABLE_RECOMMENDATION
+```
+
+This is conceptual terminology; use repository conventions if different.
+
+Do not generate an unlimited number of alternatives merely because routing makes them available.
+
+The candidate set should remain operationally reasonable.
+
+---
+
+# 19. Outcome Estimates
+
+Each decision candidate should be evaluated against passenger-relevant outcomes where data permits.
+
+Possible dimensions include:
+
+```text
+expected destination arrival
+destination delay
+connection feasibility
+number of additional transfers
+journey complexity
+uncertainty
+```
+
+Do not reduce action comparison to only:
+
+```text
+earliest scheduled arrival
+```
+
+if the product is explicitly intended to optimize reliability.
+
+---
+
+# 20. Separate Facts, Estimates, and Predictions
+
+Structured output must distinguish:
+
+```text
+scheduled fact
+provider realtime observation
+derived state
+deterministic estimate
+probabilistic prediction
+decision recommendation
+```
+
+These categories are not interchangeable.
 
 For example:
 
-15:01  delay \+3  
-15:04  delay \+5  
-15:06  platform changed  
-15:08  delay \+9  
-15:10  corrected to \+6  
-15:14  partial cancellation
+```text
+Platform 7
+```
 
-The current state may be derived from these observations, but historical information can remain important for:
+may be provider-reported.
 
-* debugging;  
-* auditability;  
-* delay evolution;  
-* model training;  
-* data-quality analysis;  
-* reproducibility.
+```text
+Transfer requirement: 4–6 min
+```
 
-Do not discard historical observations without a deliberate retention decision.
+may be estimated.
 
----
+```text
+Missed-connection risk: 72%
+```
 
-# **13\. Temporal Correctness**
+may be probabilistic.
 
-Railway data is temporal data.
+```text
+Recommended action: reroute at Mannheim
+```
 
-Be explicit about:
+is a decision output.
 
-* service date;  
-* event timestamp;  
-* scheduled timestamp;  
-* provider observation timestamp;  
-* ingestion timestamp;  
-* timezone;  
-* daylight-saving transitions;  
-* stale thresholds.
-
-Avoid using naive datetimes when timezone-aware values are required.
-
-Do not assume all relevant times belong to the same calendar date.
-
-Cross-midnight journeys must be tested.
+Do not blur these layers.
 
 ---
 
-# **14\. Data Freshness**
+# 21. Decision Recommendation Is Not a Fact
 
-Freshness must be represented explicitly.
+A recommendation is a result of current evidence and decision logic.
 
-Do not present stale information as live merely because it is the newest value available in the database.
+Do not present it as an operational guarantee.
 
-Where relevant, retain:
+Prefer:
 
-observed\_at  
-received\_at  
-last\_successful\_update  
-provider status  
-freshness / stale state
+```text
+Recommended based on currently available information
+```
 
-or equivalent information.
+over:
 
-User-facing behaviour should be capable of distinguishing:
+```text
+You must take this train
+```
 
-Realtime data available  
-Realtime data stale  
-Realtime data unavailable
-
-A provider failure should degrade gracefully.
+unless the product intentionally supports authoritative operational instructions, which is outside the initial scope.
 
 ---
 
-# **15\. Data Provenance**
+# 22. Recommendation Stability
 
-Whenever practical, normalized information should retain enough provenance to determine:
+Realtime state may fluctuate rapidly.
 
-* where it came from;  
-* when it was observed;  
-* which provider supplied it;  
-* how it was normalized;  
-* whether it was inferred.
+Do not create a product that tells the passenger:
 
-Do not silently convert inferred information into provider-reported fact.
+```text
+reroute
+continue
+reroute
+continue
+```
 
-This distinction is especially important for risk explanations and later statistical modelling.
+every few seconds because small estimates changed.
 
----
+Where appropriate, consider:
 
-# **16\. Historical Data**
+- minimum improvement thresholds;
+- confidence requirements;
+- hysteresis;
+- cooldowns;
+- state persistence;
+- recommendation-change reasons.
 
-Historical railway observations may become a major project asset.
-
-If historical collection is implemented, design it deliberately.
-
-Consider:
-
-* deduplication;  
-* event identity;  
-* immutable versus mutable fields;  
-* storage volume;  
-* retention;  
-* licensing restrictions;  
-* reproducibility;  
-* schema evolution;  
-* data backfills;  
-* incomplete observations.
-
-Do not retain provider data simply because storage is technically possible.
-
-Verify that retention and downstream use are permitted.
+Recommendation stability is a product-quality property.
 
 ---
 
-# **17\. Machine Learning Policy**
+# 23. Avoid False Interventions
 
-Machine learning is post-baseline.
+An unnecessary reroute can make the journey worse.
 
-Do not introduce ML merely to make AnschlussPilot look more advanced.
+Do not optimize only for avoiding missed connections.
+
+A decision policy should also consider the cost of:
+
+- unnecessary rerouting;
+- additional transfers;
+- longer travel;
+- unstable advice;
+- increased uncertainty.
+
+A false intervention is a real failure mode.
+
+---
+
+# 24. Compare Against Continue-as-Planned
+
+The current itinerary should normally remain an explicit decision candidate.
+
+Do not compare alternatives only against each other.
+
+The key product question often is:
+
+> **Is changing now actually better than doing nothing?**
+
+This requires a baseline candidate representing the current plan.
+
+---
+
+# 25. Earlier Intervention Is a Distinct Capability
+
+Do not limit alternative evaluation to the station where the connection is expected to fail.
+
+A key product opportunity is identifying whether the journey should be changed **before** the threatened transfer point.
+
+Architecture should not unnecessarily assume:
+
+```text
+rerouting can only happen at planned transfer station
+```
+
+unless that is intentionally an MVP constraint.
+
+---
+
+# 26. Decision Engine Must Be Testable
+
+Core recommendation logic should be testable without:
+
+- a browser;
+- live railway APIs;
+- production credentials;
+- production infrastructure.
+
+Prefer deterministic fixtures and pure domain logic where possible.
+
+Tests should be able to supply:
+
+```text
+journey state
+observations
+candidate alternatives
+expected outcomes
+```
+
+and assert the resulting recommendation.
+
+---
+
+# 27. Counterfactual Thinking
+
+Decision quality requires asking:
+
+```text
+What happens if the passenger continues?
+What happens if the passenger changes?
+```
+
+This is different from predicting only what will happen under the current itinerary.
+
+When building future evaluation infrastructure, preserve this distinction.
+
+Do not label an alternative as "better" without defining what it is being compared against.
+
+---
+
+# 28. Historical Reconstruction
+
+If historical storage is implemented, it should ideally support reconstruction of:
+
+```text
+What was known at time t?
+What journey state existed?
+What actions were available?
+What would the policy recommend?
+What happened afterward?
+```
+
+This is more valuable than storing only final delay values.
+
+Historical reconstruction is foundational for trustworthy backtesting.
+
+---
+
+# 29. Backtesting Before Deployment
+
+Changes to deterministic rules, statistical models, or decision policies should eventually be evaluated against historical data before production use.
+
+A backtest should preserve:
+
+- chronological information availability;
+- provider-state semantics;
+- candidate availability;
+- decision timestamps;
+- actual outcomes.
+
+Do not use future observations to improve past decisions.
+
+---
+
+# 30. Baseline First
+
+Before introducing machine learning, establish meaningful deterministic baselines.
+
+Examples may include:
+
+```text
+simple transfer-buffer rule
+risk-threshold rule
+continue-unless-impossible
+next-reasonable-connection rule
+```
+
+The exact baseline should match the domain.
+
+ML must be evaluated against the baseline rather than against no system at all.
+
+---
+
+# 31. Machine Learning Policy
+
+Do not introduce ML merely because the problem supports it.
 
 Before adding a model, require:
 
-1. a clearly defined target;  
-2. a meaningful deterministic baseline;  
-3. sufficient historical data;  
-4. temporal validation;  
-5. leakage analysis;  
-6. appropriate metrics;  
-7. documented failure modes;  
-8. evidence that the model improves the relevant product decision.
+1. a clear target;
+2. adequate historical data;
+3. correct temporal labels;
+4. a deterministic baseline;
+5. leakage analysis;
+6. appropriate evaluation metrics;
+7. documented uncertainty;
+8. evidence of product improvement.
 
-The central future modelling problem may include:
+Potential future targets include:
 
-$$  
-P(\\text{miss connection}\\mid X).  
+$$
+P(\text{miss connection}\mid X_t),
 $$
 
-A model that predicts delay accurately but does not improve connection decisions may not provide useful product value.
+$$
+P(T_{\mathrm{arrival}}\leq t\mid X_t),
+$$
+
+or:
+
+$$
+P(Y\mid X_t,a).
+$$
+
+The last category may eventually be most relevant to decision quality.
 
 ---
 
-# **18\. Statistical Validation**
+# 32. Feature Leakage
 
-Probability quality matters.
+Railway prediction systems are particularly vulnerable to leakage.
 
-Do not evaluate probabilistic risk models using classification accuracy alone.
+Do not use information unavailable at prediction time.
 
-Where appropriate, evaluate:
+Potential leakage includes:
 
-* Brier score;  
-* log loss;  
-* calibration curves;  
-* reliability diagrams;  
-* temporal holdout performance;  
-* baseline comparison;  
-* confidence intervals;  
-* subgroup behaviour;  
-* distribution shift.
+- final arrival delay;
+- future cancellation events;
+- later platform changes;
+- downstream events occurring after prediction time;
+- final outcome labels joined into input features.
 
-If the UI shows:
+Random row-level train/test splitting may be inappropriate.
 
-80% missed-connection risk
-
-the probability should have defensible calibration.
-
-Otherwise use categorical risk states instead.
+Prefer temporal validation where applicable.
 
 ---
 
-# **19\. Feature Leakage**
+# 33. Calibration Matters
 
-Railway prediction systems are highly susceptible to temporal leakage.
+Probabilistic outputs must be evaluated probabilistically.
 
-Do not use information that would not have been available at the prediction timestamp.
+Useful evaluation may include:
 
-Examples of potential leakage include:
+- Brier score;
+- log loss;
+- calibration curves;
+- reliability diagrams;
+- temporal holdouts;
+- confidence intervals;
+- subgroup evaluation;
+- distribution-shift monitoring.
 
-* final arrival delay;  
-* future cancellation information;  
-* later platform updates;  
-* downstream events observed after prediction time;  
-* labels accidentally joined back into features.
+Do not expose:
 
-Train/test splitting should normally respect time.
+```text
+78% risk
+```
 
-Random row-level splitting may produce misleadingly optimistic results.
+merely because a classifier produces `0.78`.
 
----
-
-# **20\. Frontend and UX**
-
-AnschlussPilot is intended for passengers who may be:
-
-* standing on a platform;  
-* moving between platforms;  
-* under time pressure;  
-* using one hand;  
-* on a small screen;  
-* dealing with unreliable connectivity.
-
-Design accordingly.
-
-Prioritize:
-
-decision  
-risk  
-reason  
-alternative  
-arrival impact
-
-before technical detail.
-
-Do not overload primary screens with internal railway metadata.
-
-Responsive web or PWA behaviour is preferred for an initial product unless the repository intentionally adopts another strategy.
+If calibration is inadequate, prefer categorical risk states.
 
 ---
 
-# **21\. Accessibility**
+# 34. Evaluate the Decision Policy
 
-Passenger-facing interfaces should aim for accessible semantics.
+Prediction quality and decision quality are different.
 
-Do not communicate risk exclusively through colour.
+A model may improve AUC while making worse journey recommendations.
 
-Use text labels such as:
+Where possible, evaluate product outcomes such as:
 
-Safe  
-Attention  
-High Risk  
-Unavailable  
-Unknown
+```text
+destination delay
+successful journey completion
+missed connections
+false interventions
+unnecessary rerouting
+warning lead time
+recommendation stability
+```
 
-Ensure interactive controls remain keyboard-accessible where applicable.
+The best predictive model is not automatically the best product policy.
+
+---
+
+# 35. UX Is Decision-First
+
+Primary passenger-facing hierarchy should resemble:
+
+```text
+Recommended action
+      ↓
+Expected destination impact
+      ↓
+Risk
+      ↓
+Reason
+      ↓
+Alternative comparison
+      ↓
+Technical detail
+```
+
+Do not make the passenger interpret internal railway data to discover the decision.
+
+---
+
+# 36. Mobile Pressure Context
+
+Assume the passenger may be:
+
+- standing on a platform;
+- walking;
+- carrying luggage;
+- under time pressure;
+- using a small screen;
+- experiencing poor connectivity.
+
+Critical information should be scannable.
+
+Avoid interfaces that require extensive reading before the next action becomes clear.
+
+---
+
+# 37. Accessibility
+
+Do not communicate risk or action solely through colour.
+
+Use explicit labels.
 
 Prefer semantic HTML.
 
-Accessibility regressions should be treated as product defects.
+Maintain keyboard accessibility where applicable.
+
+Accessibility regressions are product defects.
 
 ---
 
-# **22\. Localization**
+# 38. Localization
 
-Repository-level engineering documentation may use English.
+Engineering documentation may use English.
 
-Passenger-facing German should be treated as genuine localization rather than literal translation.
+Passenger-facing German should be treated as genuine localization.
 
-Relevant railway terminology includes:
+Use established railway terminology where appropriate, such as:
 
-Anschluss  
-Umstieg  
-Verspätung  
-Zugausfall  
-Gleisänderung  
+```text
+Anschluss
+Umstieg
+Verspätung
+Zugausfall
+Gleisänderung
 voraussichtliche Ankunft
+```
 
-Do not invent German railway terminology when established wording exists.
-
-Do not mix localization strings deeply into domain logic.
-
-Use localization boundaries when the frontend supports multiple languages.
+Do not mix localized strings into domain logic.
 
 ---
 
-# **23\. Privacy**
+# 39. Privacy by Default
 
-Default to collecting less data.
+Collect as little personal information as possible.
 
-The MVP should not require personal accounts unless they are needed for a concrete capability.
+Avoid unnecessary:
 
-Avoid unnecessary collection of:
+- names;
+- emails;
+- DB credentials;
+- tickets;
+- payment data;
+- continuous GPS;
+- persistent journey history tied to identity.
 
-* names;  
-* email addresses;  
-* Deutsche Bahn credentials;  
-* tickets;  
-* payment details;  
-* continuous precise GPS;  
-* long-term journey histories tied to identity.
+If a new feature introduces personal data, consider:
 
-If a feature introduces personal data, explicitly consider:
-
-purpose  
-retention  
-access  
-deletion  
-security  
-legal basis  
+```text
+purpose
+legal basis
+retention
+access
+deletion
+security
 data minimization
+```
 
-Do not casually add analytics identifiers or persistent tracking.
+before implementation.
 
 ---
 
-# **24\. Security**
+# 40. Security
 
-Do not commit secrets.
+Never commit secrets.
 
-Never place real credentials in:
-
-source code  
-tests  
-examples  
-README.md  
-AGENTS.md  
-tracked .env files  
-fixtures  
-logs
-
-Use environment variables or appropriate secret management.
-
-If authentication is added, implement authorization explicitly.
-
-Do not assume that hiding a frontend control prevents backend access.
+Treat external provider responses as untrusted input.
 
 Validate external input.
 
-Treat provider payloads as untrusted input.
+Use environment variables or proper secret management.
 
-Keep dependencies reasonably current and review security-sensitive changes carefully.
+If authentication is introduced, enforce authorization server-side.
 
----
-
-# **25\. Legal and Licensing Boundaries**
-
-Do not assume that public accessibility of railway information implies permission to:
-
-* scrape it;  
-* store it indefinitely;  
-* redistribute it;  
-* train models on it;  
-* commercialize it;  
-* remove attribution.
-
-Before implementing an external provider integration, verify the actual current licence and API terms.
-
-Document important restrictions near the provider implementation.
-
-Do not claim that AnschlussPilot is affiliated with Deutsche Bahn or another operator unless that relationship actually exists.
+Do not assume hidden frontend controls provide security.
 
 ---
 
-# **26\. Passenger Rights**
+# 41. Legal and Licensing Boundaries
 
-Operational route advice and legal entitlement are different domains.
+Do not assume that publicly accessible railway data may automatically be:
 
-The application may eventually say:
+- stored indefinitely;
+- redistributed;
+- scraped;
+- used commercially;
+- used for model training;
+- re-licensed.
 
-Based on currently available timetable information,  
-this is the next reasonable connection.
+Before adding a provider integration, verify its actual current terms.
+
+Document material restrictions near the provider code or appropriate repository documentation.
+
+---
+
+# 42. Passenger Rights Are a Separate Domain
+
+Operational journey recommendations and legal entitlement are not the same thing.
+
+The system may say:
+
+```text
+This appears to be the better railway option
+based on currently available information.
+```
 
 It must not infer without validated legal logic:
 
+```text
 You are legally entitled to board this service.
+```
 
-Passenger-rights functionality should be implemented as a separately validated domain with versioned legal rules and effective dates.
+Passenger-rights support should require:
 
-Do not delegate authoritative legal decisions to an LLM.
+- versioned rules;
+- effective dates;
+- legal validation;
+- explicit jurisdiction.
 
----
-
-# **27\. Testing Strategy**
-
-Tests should emphasize domain correctness, not only happy paths.
-
-At minimum, relevant subsystems should eventually cover cases such as:
-
-normal connection  
-shrinking transfer buffer  
-incoming delay correction  
-outgoing train delay  
-platform change  
-full cancellation  
-partial cancellation  
-duplicate observation  
-out-of-order observation  
-cross-midnight journey  
-provider timeout  
-stale realtime data  
-missing realtime data  
-changed train number  
-changed stopping pattern  
-same-name stations  
-service termination
-
-Prefer deterministic fixtures.
-
-Avoid tests that depend unnecessarily on live external APIs.
-
-External-provider integration tests should be separated from pure domain tests.
+Do not use an LLM as the authoritative legal engine.
 
 ---
 
-# **28\. Test the Domain Core Independently**
+# 43. LLM Boundaries
 
-Core risk logic should be testable without:
+LLMs must not become authoritative for:
 
-* a browser;  
-* a database when not required;  
-* a network connection;  
-* a live railway provider;  
-* production credentials.
+- timetable facts;
+- realtime railway state;
+- arithmetic transfer feasibility;
+- service identity;
+- provider normalization;
+- legal entitlement;
+- fare validity.
 
-Prefer pure or mostly pure domain functions where appropriate.
-
-This makes behaviour easier to verify and protects the project from provider instability.
-
----
-
-# **29\. Provider Contract Tests**
-
-When provider adapters exist, test normalization boundaries.
-
-Verify that provider representations are converted correctly into canonical domain values.
-
-Test at least:
-
-valid response  
-missing optional fields  
-unknown enum/status values  
-malformed timestamps  
-duplicate events  
-cancelled services  
-platform changes  
-unexpected but syntactically valid payloads
-
-Do not let unknown provider values crash the entire journey pipeline when graceful handling is possible.
+If generative text is introduced, it should explain already structured domain conclusions rather than invent them.
 
 ---
 
-# **30\. Error Handling**
+# 44. Never Hide Uncertainty with Language Generation
 
-Do not swallow errors silently.
+If structured state says:
 
-Differentiate where useful between:
+```text
+UNKNOWN
+```
 
-provider unavailable  
-provider rejected request  
-invalid provider response  
-normal missing data  
-unsupported journey  
-internal processing failure  
+generated text must remain consistent with uncertainty.
+
+An LLM must never transform:
+
+```text
+estimated
+unknown
+unverified
+stale
+```
+
+into:
+
+```text
+confirmed
+guaranteed
+certain
+```
+
+---
+
+# 45. Testing Strategy
+
+Test railway edge cases, not only happy paths.
+
+Relevant scenarios include:
+
+```text
+normal connection
+incoming delay
+outgoing delay
+shrinking buffer
+delay correction
+platform change
+full cancellation
+partial cancellation
+changed stop pattern
+changed train number
+split/join service
+duplicate event
+out-of-order event
+provider timeout
+stale data
+missing data
+same-name station
+cross-midnight journey
+earlier rerouting opportunity
+alternative becomes unavailable
+recommendation reversal pressure
+```
+
+---
+
+# 46. Test Decision Cases Explicitly
+
+Decision-layer tests should include situations such as:
+
+```text
+HIGH_RISK but CONTINUE is best
+ATTENTION but REROUTE_EARLY is best
+MISSED and later alternative is preferred
+UNKNOWN => no reliable recommendation
+alternative has earlier arrival but much higher risk
+minor improvement should not trigger recommendation change
+```
+
+This prevents accidental coupling between risk state and action.
+
+---
+
+# 47. Provider Contract Tests
+
+Provider adapters should test:
+
+- valid responses;
+- missing fields;
+- unknown status values;
+- malformed timestamps;
+- duplicate observations;
+- cancellations;
+- platform changes;
+- syntactically valid but unexpected values.
+
+Unknown provider values should degrade gracefully where possible.
+
+---
+
+# 48. Error Handling
+
+Differentiate errors such as:
+
+```text
+provider unavailable
+provider rejected request
+malformed provider data
+unsupported journey
+normal missing information
+normal UNKNOWN risk
+internal processing error
 database failure
+```
 
-User-facing errors should remain understandable.
-
-Internal logs should preserve enough technical context for diagnosis without leaking secrets or unnecessary personal data.
+Do not collapse all failures into one generic exception where the distinction matters.
 
 ---
 
-# **31\. Observability**
+# 49. Observability
 
-When operational components exist, instrument meaningful boundaries.
+Meaningful future metrics may include:
 
-Potential metrics include:
-
-provider request success rate  
-provider latency  
-data freshness  
-collector failures  
-normalization failures  
-risk-evaluation failures  
-API latency  
-error rate  
-queue backlog  
+```text
+provider availability
+provider latency
+data freshness
+normalization failures
+state-reconciliation failures
+risk-evaluation failures
+alternative-generation failures
+decision-engine failures
+recommendation changes
+API latency
 database health
+```
 
-Do not add metrics merely because they are easy to count.
-
-Prefer metrics that can identify user-impacting failures.
-
----
-
-# **32\. Logging**
-
-Use structured logging where the stack supports it.
-
-Avoid logging:
-
-* credentials;  
-* tokens;  
-* private ticket data;  
-* unnecessary location history;  
-* full sensitive payloads.
-
-Include correlation identifiers when useful for tracing a journey or ingestion pipeline.
-
-Do not make logs the only source of important state.
+Prefer metrics that expose user-impacting failures.
 
 ---
 
-# **33\. API Design**
+# 50. Product Analytics
 
-If an application API exists, expose AnschlussPilot domain concepts rather than raw provider payloads.
+Avoid vanity metrics as the primary measure of success.
 
-Prefer stable internal representations.
+Potentially useful metrics include:
 
-Do not expose an external provider's schema as the public API unless there is a deliberate reason.
+- warning lead time;
+- false warning rate;
+- unnecessary rerouting rate;
+- missed-connection detection;
+- recommendation stability;
+- expected versus actual destination arrival;
+- decision-policy improvement;
+- unknown-state frequency;
+- data freshness.
 
-When changing API semantics:
+Analytics must respect privacy requirements.
 
-1. inspect consumers;  
-2. update validation;  
-3. update tests;  
-4. update examples;  
+---
+
+# 51. API Design
+
+Application APIs should expose AnschlussPilot domain concepts rather than raw provider schemas.
+
+Prefer stable representations for:
+
+```text
+Journey
+Connection
+RiskAssessment
+AlternativeJourney
+OutcomeEstimate
+DecisionRecommendation
+```
+
+When API semantics change:
+
+1. inspect consumers;
+2. update validation;
+3. update tests;
+4. update examples;
 5. update documentation.
 
 ---
 
-# **34\. Validation and Types**
+# 52. Validation and Types
 
-Use schema validation at system boundaries where the language and stack support it.
+Validate structured data at system boundaries where supported.
 
-Validate:
+Prefer explicit types over loosely structured maps.
 
-* external provider data;  
-* API requests;  
-* environment configuration;  
-* persisted structured data when appropriate.
+Stable domain states should generally be represented using:
 
-Prefer explicit types for domain concepts over unstructured dictionaries or loosely typed maps.
+- enums;
+- tagged unions;
+- discriminated unions;
+- typed value objects;
 
-Avoid "stringly typed" railway states where stable enums or discriminated unions would be clearer.
+or equivalent language features.
 
----
-
-# **35\. Database Changes**
-
-Do not modify persistent schemas casually.
-
-For schema changes:
-
-* inspect existing migrations;  
-* preserve migration order;  
-* avoid rewriting already-applied migrations unless repository policy explicitly permits it;  
-* consider backward compatibility;  
-* consider existing data;  
-* update tests.
-
-If historical observations are stored, protect temporal and identity semantics during migrations.
+Avoid uncontrolled string values for critical domain state.
 
 ---
 
-# **36\. Dependencies**
+# 53. Database Changes
+
+Treat persistence changes carefully.
+
+Before changing schema:
+
+- inspect existing migrations;
+- preserve migration history;
+- consider existing data;
+- consider backward compatibility;
+- update tests.
+
+Historical observation schemas require particular care because migration mistakes can invalidate later backtesting.
+
+---
+
+# 54. Dependencies
 
 Before adding a dependency, ask:
 
-What problem does it solve?  
-Can the existing stack solve it?  
-What maintenance burden does it introduce?  
-What security surface does it add?  
-Is the licence compatible?
+```text
+What problem does this solve?
+Does the existing stack already solve it?
+What maintenance burden does it add?
+What security surface does it add?
+Is its licence compatible?
+```
 
-Avoid adding large frameworks for small utilities.
-
-Do not introduce a second library that duplicates an established repository abstraction without a strong reason.
+Avoid dependency proliferation.
 
 ---
 
-# **37\. Architecture Changes**
-
-Avoid speculative architecture.
+# 55. Avoid Speculative Architecture
 
 Do not introduce:
 
-* microservices;  
-* event sourcing;  
-* Kafka;  
-* Kubernetes;  
-* GraphQL;  
-* vector databases;  
-* LLM infrastructure;  
-* complex workflow engines;
+```text
+microservices
+Kafka
+Kubernetes
+GraphQL
+vector databases
+LLM orchestration
+event sourcing
+complex workflow engines
+```
 
-merely because AnschlussPilot might need them one day.
+merely because the project might need them someday.
 
-Use the simplest architecture that correctly supports current requirements.
-
-Architecture should evolve from observed requirements, not résumé-driven design.
-
----
-
-# **38\. Performance**
-
-Optimize passenger-critical paths first.
-
-Potentially important latency includes:
-
-journey lookup  
-realtime refresh  
-risk recomputation  
-alternative retrieval  
-initial mobile render
-
-Do not optimize hypothetical bottlenecks before measuring them.
-
-Correctness and clarity come before premature optimization.
+Choose the simplest architecture that preserves current correctness requirements.
 
 ---
 
-# **39\. Resilience**
+# 56. Performance
 
-External railway providers are expected to fail occasionally.
+Optimize passenger-critical operations first:
 
-Design graceful degradation.
+```text
+journey loading
+realtime refresh
+state reconciliation
+risk recomputation
+alternative evaluation
+decision recomputation
+mobile rendering
+```
 
-A provider failure should not automatically:
+Measure before optimizing.
 
-* crash the frontend;  
-* erase the last known state;  
-* classify a connection as safe;  
-* present stale information as current.
-
-Where appropriate, retain the last successful observation together with its timestamp and freshness state.
-
----
-
-# **40\. Documentation**
-
-Documentation must describe the repository that actually exists.
-
-When implementation changes materially affect:
-
-* setup;  
-* architecture;  
-* configuration;  
-* supported providers;  
-* risk semantics;  
-* data model;  
-* testing;  
-* deployment;
-
-update the relevant documentation in the same change.
-
-Do not add future installation instructions before the corresponding implementation exists.
-
-Do not leave README claims stale after removing a feature.
+Correctness comes before speculative performance work.
 
 ---
 
-# **41\. Comments**
+# 57. Resilience
 
-Use comments for:
+External providers will fail.
 
-* domain reasoning;  
-* railway-specific edge cases;  
-* non-obvious invariants;  
-* provider quirks;  
-* legal or licensing constraints when relevant.
+Provider failure must not automatically:
 
-Do not use comments to restate obvious syntax.
+- crash the UI;
+- erase last known state;
+- mark a connection safe;
+- produce a recommendation from stale data without warning.
 
-If a strange implementation exists because of a railway-domain rule, explain the rule.
+Graceful degradation is part of product correctness.
 
 ---
 
-# **42\. Naming**
+# 58. Recommendation Changes Must Be Explainable
 
-Prefer names from the actual domain.
+When the preferred action changes, the system should ideally be able to identify the material reason.
 
-Good examples:
+Examples:
 
-Connection  
-JourneyLeg  
-RealtimeObservation  
-TransferBuffer  
-RiskAssessment  
-ServiceRun  
-ScheduledStopEvent
+```text
+outgoing train is now delayed
+incoming delay increased
+alternative was cancelled
+platform changed
+transfer requirement increased
+data became stale
+```
+
+Avoid opaque recommendation flips.
+
+---
+
+# 59. Documentation Must Reflect Reality
+
+Documentation must describe what actually exists.
+
+Update documentation when implementation materially changes:
+
+- setup;
+- architecture;
+- supported providers;
+- risk semantics;
+- decision semantics;
+- schemas;
+- testing;
+- deployment.
+
+Do not add fake installation commands or future API examples.
+
+---
+
+# 60. Naming
+
+Use domain-specific names.
+
+Prefer:
+
+```text
+Connection
+ServiceRun
+RealtimeObservation
+RiskAssessment
+DecisionCandidate
+OutcomeEstimate
+DecisionRecommendation
+TransferBuffer
+```
 
 Avoid vague names such as:
 
-DataManager  
-Helper  
-Thing  
-Processor2  
-UtilsService
+```text
+Manager
+Thing
+Helper2
+DataProcessor
+GenericService
+```
 
-unless their responsibility is genuinely generic.
+when a domain concept exists.
 
 ---
 
-# **43\. Change Discipline**
+# 61. Change Discipline
 
 Keep changes focused.
 
-Do not combine unrelated:
+Avoid combining unrelated:
 
-feature work  
-refactoring  
-dependency upgrades  
-formatting changes  
-schema redesign
+- feature work;
+- refactoring;
+- dependency upgrades;
+- formatting;
+- schema redesign.
 
-unless the task genuinely requires them together.
-
-Avoid repository-wide rewrites for a local problem.
-
-Preserve existing conventions unless there is a strong reason to change them.
+Do not rewrite the entire repository to solve a narrow issue.
 
 ---
 
-# **44\. Refactoring**
+# 62. Refactoring
 
-Refactor when it improves:
+Refactor to improve:
 
-* correctness;  
-* comprehensibility;  
-* testability;  
-* domain boundaries;  
-* maintainability.
+- correctness;
+- domain boundaries;
+- testability;
+- readability;
+- maintainability.
 
-Do not refactor solely to impose a preferred style.
+Do not refactor merely to impose stylistic preference.
 
-Before major refactoring, understand existing behaviour and tests.
-
-Preserve external behaviour unless the task explicitly changes it.
+Preserve observable behaviour unless the task explicitly changes it.
 
 ---
 
-# **45\. AI / LLM Usage**
-
-AnschlussPilot must not use an LLM where deterministic logic is more appropriate.
-
-LLMs must not become the authoritative mechanism for:
-
-* realtime railway state;  
-* timetable facts;  
-* connection feasibility arithmetic;  
-* legal entitlement;  
-* fare validity;  
-* data normalization;  
-* safety-critical operational facts.
-
-If LLM functionality is introduced later, its role should be clearly bounded.
-
-Structured domain data should remain authoritative.
-
----
-
-# **46\. Do Not Hide Uncertainty Behind AI**
-
-Never use generative text to make incomplete railway information sound confident.
-
-If structured data says:
-
-UNKNOWN
-
-the generated explanation must remain consistent with that state.
-
-An LLM must never upgrade:
-
-unknown  
-estimated  
-unverified
-
-into:
-
-confirmed  
-guaranteed  
-certain
-
----
-
-# **47\. Product Analytics**
-
-If analytics are introduced, measure product usefulness rather than vanity metrics.
-
-Potentially meaningful metrics include:
-
-warning lead time  
-false warning rate  
-connection outcome accuracy  
-calibration  
-alternative recommendation usefulness  
-unknown-state rate  
-data freshness  
-recommendation adoption
-
-Page views alone do not establish that AnschlussPilot helps passengers.
-
-Analytics collection must also respect privacy requirements.
-
----
-
-# **48\. Definition of Done**
-
-A change is not complete merely because code has been written.
-
-For a substantial change, verify as applicable:
-
-* implementation matches the requested scope;  
-* existing repository conventions are respected;  
-* relevant tests were added or updated;  
-* relevant tests pass;  
-* static checks pass;  
-* type checks pass;  
-* formatting/lint checks pass;  
-* error states were considered;  
-* stale/missing data behaviour was considered;  
-* domain edge cases were considered;  
-* documentation was updated;  
-* no unsupported capability claims were introduced;  
-* no secrets were committed;  
-* no licensing assumptions were silently introduced.
-
-If a check cannot be run, state that explicitly.
-
-Never report a check as passing unless it was actually executed successfully.
-
----
-
-# **49\. Required Agent Workflow**
+# 63. Required Agent Workflow
 
 For every non-trivial task, follow this sequence.
 
-## **Step 1 — Inspect**
+## Step 1 — Inspect
 
-Read the relevant code, tests, configuration, and documentation.
+Read the relevant:
 
-Do not begin by assuming the architecture.
+```text
+code
+tests
+schemas
+configuration
+documentation
+```
 
-## **Step 2 — Identify the domain boundary**
+Do not assume architecture.
 
-Determine which part of the system owns the behaviour:
+## Step 2 — Locate the Domain Owner
 
-provider adapter?  
-normalization?  
-domain model?  
-risk engine?  
-API?  
-frontend?  
-persistence?
+Determine where the behaviour belongs:
 
-Fix behaviour at the correct layer.
+```text
+provider adapter
+normalization
+service identity
+state reconciliation
+journey model
+risk engine
+alternative generation
+outcome estimation
+decision engine
+API
+frontend
+persistence
+```
 
-## **Step 3 — Preserve product scope**
+Fix the problem at the correct layer.
 
-Confirm that the task supports AnschlussPilot's current product boundary.
+## Step 3 — Preserve Product Scope
 
-Do not expand into unrelated transport functionality accidentally.
+Confirm the change contributes to the current AnschlussPilot product boundary.
 
-## **Step 4 — Implement the smallest coherent change**
+Avoid accidental expansion.
 
-Prefer a complete narrow solution over a broad partial redesign.
+## Step 4 — Preserve Temporal Correctness
 
-## **Step 5 — Test**
+For data or modelling changes, ask:
 
-Run the smallest relevant tests first.
+> Would this information actually be available at the time the system makes the decision?
 
-Then run broader checks when practical.
+## Step 5 — Implement the Smallest Coherent Change
 
-## **Step 6 — Review failure cases**
+Prefer a narrow complete solution over broad redesign.
 
-Explicitly consider:
+## Step 6 — Test the Relevant Domain Cases
 
-missing data  
-stale data  
-duplicate data  
-out-of-order data  
-provider failure  
-unknown domain values  
-cross-midnight time
+Run focused tests first.
 
-when relevant.
+Then broader repository checks where practical.
 
-## **Step 7 — Review documentation**
+## Step 7 — Review Uncertainty and Failure Modes
 
-Update documentation when behaviour, setup, architecture, or capability claims changed.
+Consider, where relevant:
 
-## **Step 8 — Report truthfully**
+```text
+missing data
+stale data
+duplicate data
+out-of-order data
+provider failure
+conflicting data
+unknown values
+cross-midnight journeys
+alternative failure
+recommendation instability
+```
+
+## Step 8 — Review Decision Effects
+
+If the change affects risk, routing, alternatives, or recommendation logic, ask:
+
+```text
+Could this trigger unnecessary rerouting?
+Could this suppress a useful intervention?
+Could this make recommendations unstable?
+Could it confuse risk with action?
+```
+
+## Step 9 — Update Documentation
+
+Update documentation if semantics or capabilities changed.
+
+## Step 10 — Report Truthfully
 
 Summarize:
 
-what changed  
-why  
-what was tested  
-what was not tested  
-remaining limitations
+```text
+what changed
+why it changed
+what was tested
+what was not tested
+known limitations
+```
 
 Never fabricate validation.
 
 ---
 
-# **50\. When Requirements Are Ambiguous**
+# 64. Definition of Done
 
-Prefer existing repository behaviour and documented product principles.
+A substantial change is complete only when applicable checks are satisfied:
 
-Do not invent a large new subsystem to resolve a minor ambiguity.
+- requested behaviour is implemented;
+- product scope remains intact;
+- railway-domain semantics are preserved;
+- provider boundaries remain clean;
+- temporal correctness was considered;
+- stale/missing data behaviour was considered;
+- risk and action remain conceptually separate;
+- decision stability was considered;
+- relevant tests were added or updated;
+- executed tests pass;
+- static/type/lint checks pass where applicable;
+- documentation matches behaviour;
+- no secrets were added;
+- no unsupported capability claims were introduced;
+- no licensing assumptions were silently introduced.
 
-When multiple interpretations are possible, choose the one that:
+If something could not be verified, state that clearly.
 
-1. preserves current functionality;  
-2. keeps the MVP narrow;  
-3. preserves railway-domain correctness;  
-4. keeps uncertainty explicit;  
-5. minimizes irreversible architectural decisions.
+---
+
+# 65. When Requirements Are Ambiguous
+
+Prefer the interpretation that:
+
+1. preserves existing repository behaviour;
+2. keeps the MVP narrow;
+3. protects railway-domain correctness;
+4. preserves temporal validity;
+5. preserves uncertainty;
+6. avoids unnecessary intervention;
+7. avoids irreversible architecture.
 
 Document material assumptions.
 
----
-
-# **51\. Repository Evolution**
-
-This file should evolve with the project.
-
-When AnschlussPilot gains actual:
-
-* providers;  
-* backend architecture;  
-* database schemas;  
-* frontend framework;  
-* deployment infrastructure;  
-* ML pipelines;  
-* production monitoring;
-
-replace generic guidance with repository-specific commands and invariants.
-
-For example, future versions of this file should eventually include verified commands such as:
-
-install dependencies  
-start development environment  
-run unit tests  
-run integration tests  
-run type checks  
-run lint  
-run migrations  
-build production artifacts
-
-Do not add placeholder commands that do not work.
+Do not create a large subsystem merely to resolve a small ambiguity.
 
 ---
 
-# **52\. Final Engineering Principle**
+# 66. Engineering Priority Hierarchy
 
-When uncertain between a clever implementation and a trustworthy one, prefer the trustworthy one.
+When priorities conflict, prefer:
 
-The hierarchy for AnschlussPilot is:
+```text
+Railway-domain correctness
+          ↓
+Temporal correctness
+          ↓
+Data correctness
+          ↓
+Decision usefulness
+          ↓
+Decision stability
+          ↓
+Reliability
+          ↓
+Explainability
+          ↓
+Prediction sophistication
+          ↓
+Architectural cleverness
+```
 
-Railway-domain correctness  
-          ↓  
-Data correctness  
-          ↓  
-Decision usefulness  
-          ↓  
-Reliability  
-          ↓  
-Explainability  
-          ↓  
-Model sophistication
+A sophisticated system that confidently recommends the wrong action is a failure.
 
-A sophisticated system that confidently gives the wrong railway advice is worse than a simple system that correctly says:
+A simpler system that correctly says:
 
-> **Unknown — realtime information is insufficient to assess this connection reliably.**
+> **No reliable recommendation — realtime information is insufficient.**
 
+is behaving properly.
+
+---
+
+# 67. Final Product Rule
+
+Before completing any substantial change, ask:
+
+> **Does this make AnschlussPilot better at deciding what a passenger should do while there is still time to improve the journey outcome?**
+
+If the answer is no, reconsider whether the change belongs in the product.
+
+The intended sequence is:
+
+```text
+Observe the disruption
+        ↓
+Reconstruct the current state
+        ↓
+Understand the risk
+        ↓
+Generate reasonable actions
+        ↓
+Estimate their outcomes
+        ↓
+Compare them
+        ↓
+Recommend carefully
+        ↓
+Continue monitoring
+```
+
+That is AnschlussPilot's core engineering contract.

@@ -1,1036 +1,1498 @@
-# **AnschlussPilot**
+# AnschlussPilot
 
-**German Rail Connection-Risk & Journey-Reliability Decision-Support Platform**
+**Disruption-Aware Journey Decision Support for German Rail**
 
-> From railway disruption data to an actionable travel decision.
+> AnschlussPilot turns changing railway conditions into continuously updated journey decisions.
 
-AnschlussPilot is a project focused on one difficult question in German rail travel:
+AnschlussPilot is a German rail journey-reliability project focused on a problem that conventional delay displays do not fully solve:
 
-> **Is my planned connection still realistically achievable — and if not, what should I do next?**
+> **Given everything that is known right now, what should I do to maximize the chance of reaching my destination reliably?**
 
-Railway applications are good at showing timetables, delays, cancellations, and platform information. But a passenger making a transfer does not merely need another delay number.
+A passenger does not ultimately care whether one train is `+8 min`.
 
-They need a decision.
+They care whether:
 
-AnschlussPilot is designed to transform timetable and realtime railway information into an assessment of **connection feasibility**, explain why a transfer is becoming risky, and identify a reasonable alternative when the original journey can no longer be completed as planned.
+- the next connection is still realistic;
+- waiting for the original connection is still the best choice;
+- changing the journey earlier would produce a better outcome;
+- an alternative route would reduce the expected destination delay;
+- the available information is reliable enough to make a decision at all.
 
-The objective is not simply:
+AnschlussPilot is therefore not intended to be another train-delay tracker or a simple connection-probability display.
 
-$$  
-\\text{minimum scheduled travel time}  
-$$
-
-but rather:
-
-$$  
-\\text{reliable arrival at destination}.  
-$$
+It is designed as a **realtime journey decision-support system**.
 
 ---
 
-## **Status**
+## Project Status
 
-> \[\!IMPORTANT\]  
+> [!IMPORTANT]
 > **AnschlussPilot is currently in the product-definition / pre-MVP stage.**
 
-This README describes the intended product, architecture boundaries, engineering principles, and MVP scope.
+This README defines the intended product direction, engineering principles, system boundaries, and MVP.
 
-It does **not** imply that:
+It does **not** imply that any of the following already exist:
 
-* realtime railway integrations are already implemented;  
-* any specific Deutsche Bahn or other transport API is currently supported;  
-* connection-risk predictions have already been validated;  
-* machine-learning models already exist;  
-* the application is production-ready;  
-* passenger-rights decisions are supported;  
-* any particular deployment architecture or technology stack has been finalized.
+- a production application;
+- a live Deutsche Bahn integration;
+- a specific supported railway API;
+- historical railway datasets;
+- validated connection-risk models;
+- machine-learning models;
+- calibrated probabilities;
+- production infrastructure;
+- passenger-rights functionality;
+- guaranteed railway coverage.
 
-Implementation claims should only be added to this README once they are supported by the actual repository.
-
----
-
-# **The Problem**
-
-Consider a passenger changing trains at Frankfurt Hauptbahnhof.
-
-Their itinerary provides a scheduled 12-minute connection.
-
-The incoming train is currently six minutes late.
-
-A conventional application may show:
-
-Incoming train: \+6 min  
-Scheduled transfer: 12 min
-
-At first glance, the passenger appears to have six minutes left.
-
-But that is not necessarily the usable transfer time.
-
-Suppose:
-
-Scheduled connection       12 min  
-Incoming train delay       \+6 min  
-Platform transfer           4 min  
-Safety buffer               2 min  
-\---------------------------------  
-Effective buffer             0 min
-
-The meaningful question is therefore not:
-
-> How late is my train?
-
-It is:
-
-> **Given the current railway state, how realistic is my next connection?**
-
-And if the answer is "not very realistic":
-
-> **What is the best reasonable next action?**
-
-That is the problem AnschlussPilot is intended to solve.
+Capabilities should only be described as implemented once they are verifiably present in the repository.
 
 ---
 
-# **Product Thesis**
+# The Problem
 
-AnschlussPilot is based on five principles:
+German rail applications can already expose substantial operational information:
 
-> **1\. Predict the journey outcome, not merely the train delay.**
+```text
+Train delay
+Cancellation
+Platform change
+Updated departure
+Updated arrival
+Alternative connections
+```
 
-> **2\. Give the traveller a decision, not just railway data.**
+But raw operational information is not the same as a decision.
 
-> **3\. Never present uncertainty as certainty.**
+Consider a passenger travelling:
 
-> **4\. Data quality comes before model complexity.**
+```text
+Mannheim
+   ↓
+Frankfurt Hbf
+   ↓
+Hamburg Hbf
+```
 
-> **5\. Build one excellent German rail use case before expanding scope.**
+The incoming train is delayed.
 
-The core product pipeline is intentionally narrow:
+The passenger's original transfer in Frankfurt is becoming increasingly difficult.
 
-Planned journey  
-      ↓  
-Timetable \+ realtime railway state  
-      ↓  
-Connection feasibility  
-      ↓  
-Risk explanation  
-      ↓  
-Reasonable alternative  
-      ↓  
-Expected destination impact
+A conventional system may report:
 
-If this chain works reliably, AnschlussPilot already provides meaningful value without needing to become a general-purpose transport super-app.
+```text
+Incoming train: +8 min
+Connection time: 11 min
+```
+
+A connection-risk system may improve this to:
+
+```text
+Connection success probability: 41%
+```
+
+But the passenger's real problem remains unresolved:
+
+> **Should I continue to Frankfurt, or should I change the journey before Frankfurt?**
+
+AnschlussPilot is intended to answer this higher-level question.
+
+For example:
+
+```text
+HIGH RISK
+
+Current transfer margin:
+2–4 min
+
+Estimated transfer requirement:
+6–8 min
+
+Continuing to Frankfurt is no longer
+the best available option.
+
+Recommended action:
+Change at Mannheim.
+
+Alternative:
+ICE xxx
+
+Expected destination arrival:
+18:37
+
+If continuing with the original plan:
+Expected destination arrival:
+19:04
+```
+
+The product is therefore concerned with **journey intervention**, not merely disruption observation.
 
 ---
 
-# **Target Users**
+# Product Thesis
+
+The central thesis of AnschlussPilot is:
+
+> **Predict the journey outcome, compare the available actions, and help the passenger choose the best next step.**
+
+The project follows six principles:
+
+> **1. Optimize the journey outcome, not merely individual train punctuality.**
+
+> **2. Give the passenger a decision, not just railway data.**
+
+> **3. Treat connection risk as an input to a decision, not as the final product.**
+
+> **4. Never present uncertainty as certainty.**
+
+> **5. Data quality and railway-domain correctness come before model complexity.**
+
+> **6. Solve one excellent German rail disruption use case before expanding scope.**
+
+---
+
+# What Makes AnschlussPilot Different
+
+The product should not stop at:
+
+```text
+Your train is delayed.
+```
+
+It should not stop at:
+
+```text
+Your connection is at high risk.
+```
+
+And it should not stop at:
+
+```text
+Here is the next scheduled train.
+```
+
+The intended product loop is:
+
+```text
+Current journey
+      ↓
+Realtime railway state
+      ↓
+Connection feasibility
+      ↓
+Possible interventions
+      ↓
+Outcome estimation
+      ↓
+Compare alternatives
+      ↓
+Recommended action
+      ↓
+Continue monitoring
+```
+
+This makes AnschlussPilot a **continuously updating decision engine** rather than a static reliability estimator.
+
+---
+
+# Core Product Questions
+
+At any point during a disrupted journey, AnschlussPilot should try to answer five questions.
+
+## 1. What is happening?
+
+Examples:
+
+```text
+Incoming service delayed
+Connection buffer shrinking
+Platform changed
+Outgoing service also delayed
+Original service cancelled
+Realtime information unavailable
+```
+
+## 2. Is the current plan still feasible?
+
+The system evaluates whether the passenger can still reasonably execute the current itinerary.
+
+## 3. Is continuing with the current plan still optimal?
+
+A technically possible connection is not always the best choice.
+
+Waiting for the original journey may lead to a worse destination outcome than rerouting earlier.
+
+## 4. What alternatives are available?
+
+Alternative actions may include:
+
+```text
+continue as planned
+change earlier
+take a later connection
+use a different railway routing
+wait because the connecting service is also delayed
+```
+
+Only actions supported by reliable railway information should be considered.
+
+## 5. What happens if I choose each action?
+
+The product should compare the expected destination consequences of different choices.
+
+Examples include:
+
+```text
+expected arrival time
+additional destination delay
+number of additional transfers
+connection risk
+uncertainty
+```
+
+---
+
+# From Risk Prediction to Decision Policy
+
+Connection-risk prediction is useful, but it is an intermediate problem.
+
+A future probabilistic model may estimate:
+
+$$
+P(\text{miss connection}\mid X_t),
+$$
+
+where $X_t$ represents the information available at time $t$.
+
+But AnschlussPilot ultimately wants to reason about actions.
+
+Conceptually, the system may compare:
+
+$$
+a^*
+===
+
+\arg\max_{a \in A_t}
+\mathbb{E}
+\left[
+U(Y)\mid X_t,a
+\right],
+$$
+
+where:
+
+- $X_t$ is the currently observable journey state;
+- $A_t$ is the set of reasonable available actions;
+- $Y$ is the eventual journey outcome;
+- $U$ represents the passenger-relevant value of that outcome.
+
+This is a product direction, not a claim that the MVP requires a sophisticated optimization algorithm.
+
+The first implementation should remain simple, explainable, and testable.
+
+---
+
+# Target Users
 
 The initial target user is:
 
 > **An individual passenger travelling through Germany on a rail journey containing at least one transfer.**
 
-The MVP is particularly relevant to:
+The MVP is especially relevant to:
 
-* ICE, IC, and EC passengers;  
-* journeys combining long-distance and regional rail;  
-* travellers making time-sensitive connections;  
-* international passengers unfamiliar with German railway operations;  
-* passengers for whom a missed connection causes significant disruption.
+- ICE, IC, and EC journeys;
+- long-distance journeys combined with regional rail;
+- passengers with time-sensitive transfers;
+- international travellers unfamiliar with German railway operations;
+- travellers for whom missed connections produce significant downstream delay.
 
-The initial product is **not** intended for:
-
-* railway dispatch centres;  
-* transport operators;  
-* enterprise travel management;  
-* travel agencies;  
-* fleet or infrastructure management.
-
-Those would represent substantially different B2B products.
+The initial product is not intended as a B2B railway-operations system.
 
 ---
 
-# **Core Product Questions**
+# Connection Feasibility
 
-Every MVP feature should materially improve at least one of three questions.
+A transfer should not be reduced to:
 
-## **1\. Can I still make this connection?**
+$$
+\text{incoming delay}
 
-The system should assess whether the current transfer remains realistically feasible.
+>
 
-## **2\. What happens to my complete journey?**
-
-A train delay matters primarily because of its effect on the passenger's eventual arrival.
-
-The product should therefore reason about the **journey**, not just an individual train.
-
-## **3\. What should I do next?**
-
-When the original transfer becomes unsafe or impossible, the system should identify a reasonable railway alternative and explain its impact on destination arrival.
-
-Features that do not substantially improve one of these questions should normally remain outside the MVP.
-
----
-
-# **Connection-Risk Model**
-
-A connection should not be classified using a rule as simplistic as:
-
-$$  
-\\text{incoming delay} \> \\text{scheduled transfer time}  
-\\Rightarrow  
-\\text{missed connection}.  
+\text{scheduled transfer time}.
 $$
 
-A more useful conceptual quantity is the **effective transfer buffer**:
+A useful conceptual starting point is an **effective transfer buffer**:
 
-# **$$**
+$$
+B_{\mathrm{effective}}
+======================
 
-# **B\_{\\mathrm{effective}}**
+## T_{\mathrm{departure,next}}
 
-## **T\_{\\mathrm{departure,next}}**
+## T_{\mathrm{arrival,current}}
 
-## **T\_{\\mathrm{arrival,current}}**
+## T_{\mathrm{transfer}}
 
-## **T\_{\\mathrm{transfer}}**
-
-T\_{\\mathrm{safety}},  
+T_{\mathrm{safety}},
 $$
 
 where:
 
-* $T\_{\\mathrm{arrival,current}}$ is the currently expected arrival of the incoming service;  
-* $T\_{\\mathrm{departure,next}}$ is the currently expected departure of the connecting service;  
-* $T\_{\\mathrm{transfer}}$ is the estimated time required to perform the transfer;  
-* $T\_{\\mathrm{safety}}$ is an additional operational safety margin.
-
-This is deliberately a conceptual model rather than a claim that transfer feasibility can always be reduced to one equation.
-
-Real railway operations may involve:
-
-* platform changes;  
-* cancellations;  
-* partial cancellations;  
-* delayed departures of the connecting service;  
-* train splitting or joining;  
-* through services;  
-* changed stopping patterns;  
-* replacement transport;  
-* inconsistent or stale realtime information.
-
-These cases belong in the domain model rather than being treated as unusual exceptions after implementation.
-
----
-
-# **Risk States**
-
-The initial product should use a small, stable, explainable vocabulary.
-
-| State | Meaning |
-| ----- | ----- |
-| **Safe** | Current information indicates a reasonable transfer margin. |
-| **Attention** | The available transfer margin is becoming limited. |
-| **High Risk** | Missing the planned connection is a material possibility. |
-| **Missed / Unavailable** | The original connection is no longer feasible according to current information. |
-| **Unknown** | Available data is insufficient for a reliable assessment. |
-
-`Unknown` is a required product state.
-
-A trustworthy decision-support system must be capable of saying:
-
-> **We don't know.**
-
-It must not manufacture a risk score merely because the user interface expects one.
-
----
-
-# **Explainability**
-
-The connection assessment should be understandable without exposing unnecessary implementation details.
-
-A result might conceptually look like:
-
-HIGH RISK
-
-Incoming service:  
-\+8 min
-
-Scheduled transfer:  
-11 min
-
-Estimated transfer requirement:  
-4–6 min
-
-Effective remaining buffer:  
-approximately \-3 to \-1 min
-
-The purpose of the explanation is not to demonstrate algorithmic sophistication.
-
-It is to help the passenger understand why the recommendation changed.
-
----
-
-# **MVP**
-
-The MVP can be defined as follows:
-
-> **Given a supported German rail itinerary containing at least one transfer, AnschlussPilot evaluates each connection as railway conditions change, explains its current risk, and presents a reasonable alternative when the original connection becomes unsafe or impossible.**
-
-## **Intended MVP Capabilities**
-
-| Capability | Responsibility |
-| ----- | ----- |
-| **Journey input** | Select an origin, destination, date/time, and supported itinerary. |
-| **Timetable ingestion** | Represent scheduled stops, arrivals, departures, and services. |
-| **Realtime status** | Process delays, cancellations, platform changes, and other states actually supported by the selected provider. |
-| **Journey state** | Represent journey legs and transfers. |
-| **Connection Risk Engine** | Determine the current feasibility state of a transfer. |
-| **Risk explanation** | Explain the factors behind the current assessment. |
-| **Transfer buffer** | Estimate the currently available transfer margin. |
-| **Alternative connection** | Identify a reasonable next railway option when the planned transfer fails. |
-| **Expected arrival impact** | Show how disruption or rerouting affects destination arrival. |
-| **Data freshness** | Expose when operational information was last successfully updated. |
-| **Unknown-state handling** | Refuse to produce unjustified certainty when required data is unavailable. |
-| **Responsive interface** | Remain usable on a mobile browser during travel. |
-| **Historical observations** | Preserve permitted operational observations for later reliability analysis. |
-| **Observability** | Detect failures in collectors, providers, processing, and application services. |
-
----
-
-# **MVP User Experience**
-
-The first version does not need a large collection of screens.
-
-Four strong product surfaces are sufficient.
-
-## **Journey Search**
-
-Select a supported journey.
-
-## **Journey Monitor**
-
-Show the passenger's current journey, legs, transfers, and relevant disruption state.
-
-## **Connection Detail**
-
-Answer:
-
-What is the current risk?  
-How much transfer margin remains?  
-Why has the risk changed?  
-How fresh is the underlying data?
-
-## **Alternative**
-
-Show a reasonable alternative connection together with its effect on expected destination arrival.
-
----
-
-# **Decision-First UX**
-
-A passenger standing on a platform under time pressure should not have to interpret a railway operations dashboard.
-
-A connection view might conceptually present:
-
-Frankfurt Hbf  
-ICE 123 → ICE 789
-
-HIGH RISK
-
-Expected arrival: 16:19  
-Connecting departure: 16:23  
-Estimated transfer requirement: 6–8 min
-
-Alternative  
-ICE 791 · 16:42
-
-Expected destination impact:  
-\+19 min
-
-The intended hierarchy is:
-
-Decision  
-   ↓  
-Risk  
-   ↓  
-Reason  
-   ↓  
-Alternative  
-   ↓  
-Technical details
-
-not:
-
-Raw provider data  
-   ↓  
-Train metadata  
-   ↓  
-Charts  
-   ↓  
-Statistics  
-   ↓  
-Passenger decision
-
-AnschlussPilot should be a **decision-support product**, not a railway-data dashboard.
-
----
-
-# **Data Architecture**
-
-The external railway provider must not become the application's domain model.
-
-A provider boundary should separate transport-specific payloads from internal product logic:
-
-External railway provider  
-          ↓  
-    Provider adapter  
-          ↓  
-     Normalization  
-          ↓  
-AnschlussPilot domain model  
-          ↓  
- Journey / Risk engine  
-          ↓  
-       API / UI
-
-This allows external data sources to evolve without forcing connection-risk logic to depend directly on provider-specific JSON structures.
-
-The internal model should eventually be able to represent concepts such as:
-
-Station  
-Journey  
-Service / Train Run  
-Stop  
-Scheduled Stop Event  
-Realtime Observation  
-Journey Leg  
-Connection  
-Disruption  
-Alternative  
-Risk Assessment
-
-The precise implementation should be documented only after the repository contains it.
-
----
-
-# **Railway Identity and State Reconciliation**
-
-Realtime railway software is not ordinary CRUD software.
-
-A single service may produce a sequence of observations such as:
-
-15:01  delay \+3  
-15:04  delay \+5  
-15:06  platform changed  
-15:08  delay \+9  
-15:10  corrected to \+6  
-15:14  partial cancellation
-
-Simply overwriting the previous record loses important information.
-
-The architecture should distinguish:
-
-Scheduled truth  
-Realtime observations  
-Current interpreted state  
-Historical observations
-
-A particularly important engineering problem is **service identity**.
-
-The same physical train run must not accidentally become multiple unrelated entities simply because:
-
-* its train number changes;  
-* realtime information is corrected;  
-* its stopping pattern changes;  
-* an event is received twice;  
-* updates arrive out of order.
-
-Correct railway state reconciliation is a core product capability.
-
----
-
-# **Data Is a Product Asset**
-
-The long-term value of AnschlussPilot is likely to depend at least as much on its data quality as on its application code.
-
-Historical observations may eventually enable analysis of:
-
-* delay evolution;  
-* station-specific transfer reliability;  
-* service-specific reliability;  
-* connection outcomes;  
-* disruption patterns;  
-* transfer-time assumptions;  
-* prediction calibration.
-
-Accordingly, data ingestion should be designed for:
-
-* normalization;  
-* provenance;  
-* deduplication;  
-* temporal correctness;  
-* event identity;  
-* schema evolution;  
-* missing-data handling;  
-* reproducibility.
-
-External data may only be stored or reused when permitted by its applicable licence and terms.
-
----
-
-# **Deterministic Before Machine Learning**
-
-AnschlussPilot should **not** begin as an AI-first project.
-
-The initial system should establish a deterministic, explainable baseline.
-
-Conceptually:
-
-$$  
-R \=  
-f(  
-\\text{remaining transfer time},  
-\\text{estimated transfer requirement},  
-\\text{delay evolution},  
-\\text{cancellation state},  
-\\ldots  
-).  
-$$
-
-A simple but defensible:
-
-HIGH RISK
-
-is preferable to presenting:
-
-78% probability of missing connection
-
-when that probability has not been validated.
-
-Machine learning should be introduced only when it can demonstrate measurable improvement over the deterministic baseline.
-
----
-
-# **Future Statistical Modelling**
-
-After sufficient historical data has been collected, AnschlussPilot may investigate models for quantities such as:
-
-$$  
-P(\\text{miss connection}\\mid X)  
-$$
-
-or destination-arrival distributions.
-
-A probabilistic model must not be evaluated solely by generic classification accuracy.
-
-Relevant evaluation should include, where appropriate:
-
-* temporal train/test splits;  
-* Brier score;  
-* log loss;  
-* calibration curves;  
-* reliability diagrams;  
-* confidence intervals;  
-* deterministic baseline comparison;  
-* feature-leakage analysis;  
-* distribution-shift monitoring.
-
-If the product displays an 80% missed-connection probability, events assigned approximately 80% probability should fail at approximately that frequency over an appropriate evaluation population.
-
-**Probability calibration is a product requirement, not merely a modelling detail.**
-
----
-
-# **Uncertainty-Aware UX**
-
-Prediction uncertainty must be reflected in the interface.
-
-The application should distinguish between:
-
-* a deterministic operational fact;  
-* a current realtime observation;  
-* an estimate;  
-* an inference;  
-* a probabilistic prediction;  
-* unavailable information.
+- $T_{\mathrm{arrival,current}}$ is the current expected arrival of the incoming service;
+- $T_{\mathrm{departure,next}}$ is the current expected departure of the connecting service;
+- $T_{\mathrm{transfer}}$ is the estimated transfer requirement;
+- $T_{\mathrm{safety}}$ is an additional operational margin.
 
 For example:
 
-Estimated transfer requirement:  
+```text
+Scheduled transfer        12 min
+Incoming delay             6 min
+Transfer requirement       4 min
+Safety margin              2 min
+--------------------------------
+Effective buffer           0 min
+```
+
+But connection feasibility cannot always be expressed by a single arithmetic rule.
+
+Relevant state may also include:
+
+- outgoing-train delay;
+- platform changes;
+- cancellations;
+- partial cancellations;
+- changed stop patterns;
+- train splitting or joining;
+- through services;
+- altered train numbers;
+- transfer-station topology;
+- stale information;
+- unavailable information.
+
+Railway-domain correctness therefore belongs in the core architecture.
+
+---
+
+# Risk States
+
+The initial product should use a small and stable risk vocabulary.
+
+| State                    | Meaning                                                                         |
+| ------------------------ | ------------------------------------------------------------------------------- |
+| **Safe**                 | Current information indicates a reasonable transfer margin.                     |
+| **Attention**            | The transfer margin is becoming limited or uncertain.                           |
+| **High Risk**            | Missing the planned connection is a material possibility.                       |
+| **Missed / Unavailable** | The original connection is no longer feasible according to current information. |
+| **Unknown**              | The system lacks enough reliable information to assess the connection.          |
+
+`Unknown` is a first-class result.
+
+The system must be allowed to say:
+
+> **Realtime information is insufficient to assess this connection reliably.**
+
+It must never convert missing information into artificial certainty.
+
+---
+
+# Decision States
+
+Risk and action should remain conceptually separate.
+
+For example:
+
+```text
+Risk:
+HIGH RISK
+
+Current decision:
+CONTINUE
+```
+
+may be valid if the connecting train is also heavily delayed.
+
+Likewise:
+
+```text
+Risk:
+ATTENTION
+
+Current decision:
+REROUTE EARLY
+```
+
+may be appropriate if a much better alternative is available before the planned transfer station.
+
+This distinction is important.
+
+**High risk does not automatically imply rerouting.**
+
+The product should compare outcomes rather than applying a single fixed reaction to each risk state.
+
+---
+
+# Explainability
+
+Every recommendation should be explainable using the structured information that produced it.
+
+A result might look like:
+
+```text
+Recommended action:
+Change at Mannheim
+
+Why?
+
+Original Frankfurt connection:
+High Risk
+
+Estimated Frankfurt transfer margin:
+2–4 min
+
+Estimated transfer requirement:
+6–8 min
+
+Alternative from Mannheim:
+Expected destination arrival 18:37
+
+Continue to Frankfurt:
+Expected destination arrival 19:04
+```
+
+The goal is not to expose internal algorithms.
+
+The goal is to allow the passenger to understand the decision.
+
+---
+
+# MVP
+
+The MVP should remain deliberately narrow.
+
+> **Given a supported German rail journey containing at least one transfer, AnschlussPilot monitors relevant operational changes, evaluates the feasibility of the current plan, compares a limited set of reasonable railway alternatives, and explains the currently preferred action.**
+
+The MVP does not need to solve general transportation optimization.
+
+---
+
+## Intended MVP Capabilities
+
+| Capability                  | Responsibility                                                            |
+| --------------------------- | ------------------------------------------------------------------------- |
+| **Journey input**           | Select a supported origin, destination, date/time, and itinerary.         |
+| **Timetable ingestion**     | Represent scheduled services, stops, arrivals, departures, and transfers. |
+| **Realtime ingestion**      | Process operational updates supported by the selected provider.           |
+| **Journey state**           | Maintain the passenger's current itinerary and transfer structure.        |
+| **State reconciliation**    | Convert changing railway observations into a coherent current state.      |
+| **Connection Risk Engine**  | Evaluate current transfer feasibility.                                    |
+| **Risk explanation**        | Explain why a risk state was assigned.                                    |
+| **Transfer margin**         | Estimate currently usable transfer time.                                  |
+| **Alternative discovery**   | Identify a limited number of reasonable railway alternatives.             |
+| **Outcome comparison**      | Compare expected destination impact across actions.                       |
+| **Decision recommendation** | Recommend continuing, waiting, or rerouting when justified.               |
+| **Data freshness**          | Expose how current the underlying information is.                         |
+| **Unknown-state handling**  | Explicitly represent insufficient information.                            |
+| **Responsive interface**    | Work effectively on a mobile browser.                                     |
+| **Historical observations** | Preserve legally permitted observations for analysis and later modelling. |
+| **Observability**           | Detect data-pipeline and application failures.                            |
+
+---
+
+# MVP Decision Loop
+
+A minimal useful implementation can follow:
+
+```text
+1. Load journey
+        ↓
+2. Identify transfers
+        ↓
+3. Receive realtime updates
+        ↓
+4. Reconstruct current railway state
+        ↓
+5. Re-evaluate transfer feasibility
+        ↓
+6. Generate reasonable alternatives
+        ↓
+7. Estimate destination outcomes
+        ↓
+8. Compare options
+        ↓
+9. Explain preferred action
+        ↓
+10. Repeat when state changes
+```
+
+The continuous repetition of this loop is central to the product.
+
+---
+
+# MVP User Experience
+
+The initial product can remain small.
+
+## Journey Search
+
+Choose a supported journey.
+
+## Journey Monitor
+
+Show the current journey state and highlight transfers requiring attention.
+
+## Decision Detail
+
+Answer:
+
+```text
+What changed?
+What is the current risk?
+What should I do?
+Why?
+What happens if I continue?
+What happens if I change?
+How fresh is this information?
+```
+
+## Alternatives
+
+Compare a small number of reasonable actions rather than displaying an overwhelming route catalogue.
+
+---
+
+# Decision-First UX
+
+A passenger under disruption should see the decision before technical metadata.
+
+A concept screen might look like:
+
+```text
+Frankfurt Hbf connection
+
+HIGH RISK
+
+Recommended:
+Change earlier at Mannheim
+
+Expected arrival:
+18:37
+
+Continue current journey:
+19:04
+
+Why?
+Frankfurt transfer margin is now
+estimated at 2–4 min.
+
+Transfer requirement:
+6–8 min.
+
+Last realtime update:
+18 seconds ago
+```
+
+The intended hierarchy is:
+
+```text
+Recommended action
+       ↓
+Destination impact
+       ↓
+Risk
+       ↓
+Reason
+       ↓
+Alternative comparison
+       ↓
+Technical details
+```
+
+not:
+
+```text
+Provider payload
+       ↓
+Train metadata
+       ↓
+Charts
+       ↓
+Raw statistics
+       ↓
+Passenger interpretation
+```
+
+---
+
+# Data Architecture
+
+External transport-provider formats must not define the internal application.
+
+The intended boundary is:
+
+```text
+External railway provider
+          ↓
+Provider adapter
+          ↓
+Normalization
+          ↓
+Canonical railway model
+          ↓
+Current journey state
+          ↓
+Risk engine
+          ↓
+Alternative evaluation
+          ↓
+Decision engine
+          ↓
+API / UI
+```
+
+Provider-specific payloads should remain isolated behind adapters.
+
+Core decision logic should operate on AnschlussPilot domain types.
+
+---
+
+# Canonical Domain Model
+
+The internal model should eventually be able to represent concepts such as:
+
+```text
+Station
+Journey
+Journey Leg
+Connection
+Service Run
+Stop
+Scheduled Stop Event
+Realtime Observation
+Current Service State
+Disruption
+Alternative Journey
+Risk Assessment
+Decision Candidate
+Decision Recommendation
+Outcome Estimate
+```
+
+Exact implementation details should follow actual requirements rather than speculative architecture.
+
+---
+
+# Realtime State Reconciliation
+
+Realtime railway information changes over time.
+
+For example:
+
+```text
+15:01  delay +3
+15:04  delay +5
+15:06  platform changed
+15:08  delay +9
+15:10  corrected to +6
+15:14  partial cancellation
+```
+
+AnschlussPilot should conceptually distinguish:
+
+```text
+Scheduled state
+Realtime observations
+Current interpreted state
+Historical observations
+```
+
+Realtime processing must account for:
+
+- duplicate events;
+- out-of-order events;
+- corrections;
+- stale observations;
+- incomplete updates;
+- contradictory information.
+
+Destructive overwrite of each new event is not sufficient for a system that later needs explanation, reproducibility, or statistical analysis.
+
+---
+
+# Service Identity
+
+A displayed train number must not automatically be treated as the unique identity of a train run.
+
+Railway identity may be affected by:
+
+- service date;
+- provider journey identifiers;
+- changed train numbers;
+- split services;
+- joined services;
+- changed stopping patterns;
+- operational replacements.
+
+Incorrect identity reconstruction can corrupt:
+
+```text
+journey state
+historical observations
+risk labels
+alternative routing
+machine-learning datasets
+```
+
+Service identity is therefore a core engineering problem rather than a data-cleaning afterthought.
+
+---
+
+# Temporal Correctness
+
+Railway data is inherently temporal.
+
+The system should distinguish when appropriate:
+
+```text
+scheduled timestamp
+realtime event timestamp
+provider observation timestamp
+ingestion timestamp
+decision timestamp
+```
+
+Cross-midnight journeys, timezones, daylight-saving changes, late updates, and future information must be handled deliberately.
+
+Most importantly:
+
+> **A historical decision must only use information that was actually available at that decision time.**
+
+This principle is essential both for realistic backtesting and for preventing machine-learning leakage.
+
+---
+
+# Data Freshness
+
+Freshness must be explicit.
+
+The system should distinguish between:
+
+```text
+LIVE
+STALE
+UNAVAILABLE
+```
+
+or equivalent states.
+
+If realtime data fails, AnschlussPilot should prefer:
+
+```text
+Realtime information unavailable
+
+Last successful update:
+18:42
+```
+
+over silently presenting old information as current.
+
+---
+
+# Historical Data as a Product Asset
+
+The long-term value of AnschlussPilot may depend heavily on the quality of its historical observation pipeline.
+
+A useful historical dataset may eventually allow the project to reconstruct:
+
+> **What information was available at time $t$, what actions were possible, what recommendation would have been made, and what actually happened afterward?**
+
+This creates the foundation for evaluating:
+
+- connection-risk models;
+- alternative-routing policies;
+- warning lead time;
+- destination-delay outcomes;
+- decision quality;
+- model calibration;
+- policy improvement.
+
+Historical railway data should therefore preserve temporal structure and provenance rather than merely final train delays.
+
+Any collection, storage, redistribution, or model training must remain compatible with the applicable provider licences and terms.
+
+---
+
+# Deterministic Before Machine Learning
+
+AnschlussPilot is **not an AI-first product**.
+
+The initial risk and decision systems should be deterministic, explainable, and testable.
+
+For example:
+
+```text
+IF transfer margin is strongly negative
+AND original connection is not expected to wait
+AND a validated earlier alternative produces
+a materially better destination outcome
+THEN recommend early rerouting
+```
+
+The exact rules should evolve from railway-domain requirements and evidence.
+
+Machine learning should only replace or augment a rule when it can demonstrate a meaningful improvement.
+
+---
+
+# Machine Learning Direction
+
+Once sufficient historical data exists, future models may estimate quantities such as:
+
+$$
+P(\text{miss connection}\mid X_t),
+$$
+
+arrival-delay distributions such as:
+
+$$
+P(T_{\mathrm{arrival}}\le t\mid X_t),
+$$
+
+or action-dependent outcomes such as:
+
+$$
+P(Y\mid X_t,a).
+$$
+
+The question is not whether a model produces impressive predictions.
+
+The question is:
+
+> **Does the model improve actual journey decisions compared with a simple deterministic baseline?**
+
+---
+
+# Statistical Validation
+
+Probabilistic models must be evaluated as probabilistic models.
+
+Relevant methods may include:
+
+- temporal train/test splits;
+- Brier score;
+- log loss;
+- calibration curves;
+- reliability diagrams;
+- confidence intervals;
+- deterministic baseline comparison;
+- subgroup analysis;
+- distribution-shift monitoring;
+- feature-leakage analysis.
+
+If AnschlussPilot displays:
+
+```text
+80% missed-connection risk
+```
+
+then cases assigned approximately 80% probability should fail approximately that often over an appropriate evaluation population.
+
+Otherwise a categorical state such as:
+
+```text
+HIGH RISK
+```
+
+may be more honest and more useful.
+
+---
+
+# Decision Evaluation
+
+A connection predictor can be statistically accurate while still producing poor passenger decisions.
+
+AnschlussPilot should eventually evaluate the **decision policy itself**.
+
+Possible outcome measures include:
+
+```text
+destination arrival delay
+probability of reaching destination
+number of missed connections
+warning lead time
+unnecessary rerouting
+additional transfers
+decision reversals
+unknown-state frequency
+```
+
+The best model is not necessarily the one with the best standalone prediction metric.
+
+The best system is the one that produces better journey outcomes.
+
+---
+
+# Avoiding False Interventions
+
+AnschlussPilot should not reroute aggressively merely because a connection looks risky.
+
+A premature reroute may itself produce a worse journey.
+
+The system must account for the cost of:
+
+```text
+false warnings
+unnecessary transfers
+longer routes
+unstable recommendations
+rapidly changing advice
+```
+
+A recommendation should change only when new information materially changes the preferred action.
+
+Future work may need mechanisms such as:
+
+```text
+decision hysteresis
+minimum improvement thresholds
+confidence requirements
+recommendation stability
+```
+
+to avoid repeatedly telling passengers to change their plan.
+
+---
+
+# Uncertainty-Aware UX
+
+The system must distinguish between:
+
+- scheduled facts;
+- realtime observations;
+- estimates;
+- inferred state;
+- model predictions;
+- unavailable information.
+
+For example:
+
+```text
+Estimated transfer requirement:
 4–6 min
+```
 
 is preferable to:
 
-Transfer requires exactly 5 min 14 sec
+```text
+Transfer time:
+5 min 14 sec
+```
 
-when the system cannot justify that precision.
+when such precision cannot be justified.
 
-Similarly, a prediction must never be worded as a carrier guarantee.
+Likewise:
 
----
+```text
+Current evidence suggests this connection
+is unlikely to remain feasible.
+```
 
-# **Realtime Reliability**
+is different from:
 
-AnschlussPilot depends on external systems that may be:
+```text
+You will miss this train.
+```
 
-* unavailable;  
-* delayed;  
-* incomplete;  
-* contradictory;  
-* rate-limited;  
-* stale.
-
-Failure handling is therefore part of the product.
-
-If realtime information is unavailable, the application should prefer:
-
-Realtime data unavailable
-
-Last successful update:  
-18:42
-
-over silently presenting stale data as live information.
-
-The system should distinguish at minimum between:
-
-scheduled data  
-live/realtime data  
-stale data  
-missing data  
-inferred state
+Predictions are not guarantees.
 
 ---
 
-# **Alternative Recommendations**
+# Alternative Recommendations
 
-When a planned connection becomes infeasible, AnschlussPilot may identify a reasonable railway alternative based on currently available information.
+Alternative recommendations may compare:
 
-An alternative can include:
+- continue current journey;
+- wait for a delayed outgoing train;
+- change at an earlier station;
+- take a later connection;
+- use another supported railway routing.
 
-* the next reasonable railway connection;  
-* expected departure;  
-* expected destination arrival;  
-* additional journey time.
+The MVP should keep the candidate set deliberately limited.
 
-The system may state:
+The system may say:
 
-> **Based on currently available timetable information, this is the next reasonable connection.**
+> **Based on currently available railway information, this appears to be the better journey option.**
 
-It must not automatically state:
+It must not automatically say:
 
-> **You are legally entitled to board this train.**
+> **You are legally entitled to board this service.**
 
-Operational routing and passenger-rights or fare-rule decisions are different domains.
-
-Ticket validity and legal entitlement remain outside the initial MVP.
-
----
-
-# **Privacy by Design**
-
-The initial product should minimize personal-data collection.
-
-The core MVP should not require an account merely to evaluate a journey.
-
-Where feasible, an anonymous session should be preferred over collecting:
-
-* names;  
-* email addresses;  
-* Deutsche Bahn credentials;  
-* uploaded tickets;  
-* payment information;  
-* continuous precise GPS history.
-
-Authentication, notifications, cross-device synchronization, and personalized behaviour should be introduced only when their product value justifies the additional security and GDPR surface.
+Operational routing and legal entitlement are separate domains.
 
 ---
 
-# **Security**
+# Privacy by Design
 
-Security requirements should grow with the application's capabilities, but secure engineering begins before production deployment.
+The core MVP should require as little personal information as possible.
 
-Relevant concerns include:
+Where feasible, journey monitoring should work without collecting:
 
-* secret management;  
-* authentication and authorization when accounts are introduced;  
-* transport encryption;  
-* secure API design;  
-* dependency management;  
-* rate limiting;  
-* data-retention policies;  
-* auditability;  
-* abuse prevention;  
-* backup and recovery.
+- names;
+- email addresses;
+- Deutsche Bahn credentials;
+- uploaded tickets;
+- payment information;
+- continuous precise GPS history.
 
-Sensitive capabilities should not be added merely because they are convenient to implement.
+Accounts, notifications, personalization, and cross-device synchronization should only be introduced when their product value justifies the additional security and GDPR surface.
 
 ---
 
-# **Legal, Licensing, and Independence**
+# Legal, Licensing, and Independence
 
 AnschlussPilot is intended to be an **independent product**.
 
-It must not imply that it is operated, endorsed, or officially provided by Deutsche Bahn or another railway operator unless such a relationship actually exists.
+It must not imply official Deutsche Bahn affiliation unless such a relationship actually exists.
 
-Any external data integration must be evaluated against the provider's then-current:
+Before integrating any railway data source, the project must verify the current:
 
-* API terms;  
-* licence;  
-* attribution requirements;  
-* storage rights;  
-* caching restrictions;  
-* redistribution rules;  
-* permitted commercial or non-commercial uses.
+- API terms;
+- licence;
+- attribution requirements;
+- storage rights;
+- caching restrictions;
+- redistribution permissions;
+- permitted model-training use;
+- commercial-use conditions.
 
-Legal wording must not be frozen in advance of selecting and verifying the actual data sources.
-
-If passenger-rights functionality is introduced later, applicable EU and German rules must be treated as a separately versioned domain rather than inferred casually by an AI model.
-
----
-
-# **Quality Assurance**
-
-Railway applications contain far more edge cases than a happy-path demonstration suggests.
-
-Testing should eventually include scenarios such as:
-
-* cancellations;  
-* partial cancellations;  
-* platform changes;  
-* journeys crossing midnight;  
-* changed train numbers;  
-* duplicate realtime events;  
-* out-of-order events;  
-* delay corrections;  
-* provider timeouts;  
-* stale data;  
-* missing realtime information;  
-* changed stopping patterns;  
-* terminated journeys;  
-* same-name stations;  
-* train splitting or joining;  
-* changed transfer stations.
-
-Domain edge cases should be represented as explicit tests rather than being discovered only after deployment.
+Availability of an API does not automatically imply permission for every downstream use.
 
 ---
 
-# **Observability and Operations**
+# Passenger Rights
 
-If AnschlussPilot becomes publicly available, reliability becomes part of the product itself.
+Journey recommendations and legal passenger rights must remain separate.
 
-Operational monitoring should eventually cover:
+Passenger-rights functionality may eventually require:
 
-* provider availability;  
-* data freshness;  
-* collector failures;  
-* queue or processing backlog;  
-* API latency;  
-* error rates;  
-* database health;  
-* application availability;  
-* resource consumption;  
-* deployment failures;  
-* infrastructure cost.
+```text
+versioned legal rules
+effective dates
+validated domain logic
+jurisdiction awareness
+legal review
+```
 
-A system designed to help passengers react to unreliable railway operations must itself fail transparently and predictably.
+An LLM must not become the authoritative source for ticket validity, compensation entitlement, or boarding rights.
+
+This is outside the initial MVP.
 
 ---
 
-# **Product Analytics**
-
-If the project reaches real users, success should not be measured primarily through page views.
-
-More meaningful product metrics may include:
-
-* useful warning lead time;  
-* missed-connection detection performance;  
-* false-warning rate;  
-* prediction calibration;  
-* alternative-route usefulness;  
-* journey completion outcomes;  
-* recommendation adoption;  
-* data freshness;  
-* unsupported/unknown assessment frequency.
-
-Exact KPIs should be defined only once the corresponding product behaviour can actually be measured.
-
----
-
-# **Non-Goals**
-
-Scope discipline is a core design requirement.
+# Non-Goals
 
 The initial AnschlussPilot product will **not** attempt to:
 
-1. replace DB Navigator;  
-2. become a complete German public-transport application;  
-3. sell railway tickets;  
-4. process payments;  
-5. manage seat reservations;  
-6. sign in to Deutsche Bahn accounts;  
-7. import private tickets by default;  
-8. automatically file compensation claims;  
-9. provide guaranteed passenger-rights decisions;  
-10. guarantee that a passenger will make or miss a connection;  
-11. provide turn-by-turn indoor station navigation;  
-12. support the entire European railway network from the beginning;  
-13. combine rail, flights, coaches, taxis, car sharing, and other modes into a universal journey planner;  
-14. add an LLM chatbot merely to make the project appear AI-driven;  
-15. depend on unvalidated machine-learning predictions;  
-16. expose probabilities that have not been appropriately calibrated;  
-17. collect personal information unnecessary for the core use case;  
-18. claim that external railway information is always correct or realtime;  
-19. fabricate certainty when information is missing;  
-20. confuse an operational recommendation with a legal entitlement.
+1. replace DB Navigator;
+2. become another generic train-delay tracker;
+3. exist primarily as a connection-reliability score website;
+4. become a full German public-transport application;
+5. sell tickets;
+6. process payments;
+7. manage reservations;
+8. sign in to Deutsche Bahn accounts;
+9. import private tickets by default;
+10. automatically submit compensation claims;
+11. provide guaranteed passenger-rights decisions;
+12. guarantee that a passenger will make or miss a connection;
+13. provide indoor turn-by-turn station navigation;
+14. support all European railways from the beginning;
+15. become a universal rail + air + coach + taxi journey planner;
+16. add an LLM chatbot merely to appear AI-driven;
+17. deploy ML models without proving improvement over a baseline;
+18. expose uncalibrated probabilities as trustworthy numbers;
+19. collect personal information unnecessary for the core use case;
+20. present stale data as live;
+21. manufacture certainty when data is insufficient;
+22. confuse operational advice with legal entitlement.
 
-These are deliberate product boundaries, not missing features.
+These are deliberate product boundaries.
 
 ---
 
-# **Engineering Priorities**
+# Engineering Priorities
 
-For the initial GitHub project, the technical priorities are approximately:
+The initial engineering order should approximately be:
 
-Railway Domain Model  
-        ↓  
-Product Definition  
-        ↓  
-Data Engineering  
-        ↓  
-Backend / State Reconciliation  
-        ↓  
-Deterministic Risk Engine  
-        ↓  
-Frontend / UX  
-        ↓  
-Historical Data  
-        ↓  
-Statistical Validation  
-        ↓  
+```text
+Railway Domain Model
+        ↓
+Provider Boundary
+        ↓
+Realtime Data Ingestion
+        ↓
+Service Identity
+        ↓
+State Reconciliation
+        ↓
+Journey State
+        ↓
+Deterministic Risk Engine
+        ↓
+Alternative Evaluation
+        ↓
+Decision Engine
+        ↓
+Mobile Decision UX
+        ↓
+Historical Observation Pipeline
+        ↓
+Backtesting
+        ↓
+Statistical Modelling
+        ↓
 Machine Learning
+```
 
-Several disciplines cut across the entire system:
+Cross-cutting concerns include:
 
-QA  
-DevOps / SRE  
-Security  
-Privacy  
-Licensing  
+```text
+Testing
 Observability
+DevOps / SRE
+Security
+Privacy
+Licensing
+```
 
-This ordering is intentional.
+This order is intentional.
 
-**Machine learning is not the foundation of AnschlussPilot.**
+Machine learning is not the foundation of AnschlussPilot.
 
 The foundation is:
 
-> **reliable transport data \+ a correct railway domain model \+ a verifiable connection-risk system.**
+> **Reliable railway data + correct temporal state + a trustworthy railway domain model + verifiable journey decisions.**
 
 ---
 
-# **Disciplines Informing the Project**
+# Quality Assurance
 
-Although AnschlussPilot may be developed as an individual GitHub project, its design should be reviewed through several professional perspectives:
+Railway applications must be tested against difficult operational cases.
 
-* Railway domain engineering  
-* Mobility product management  
-* Data engineering  
-* Backend and distributed systems  
-* Applied machine learning  
-* Statistics and forecasting  
-* Frontend/mobile engineering  
-* Human-computer interaction  
-* QA and test automation  
-* DevOps/SRE  
-* Security and privacy engineering  
-* German/EU data licensing and GDPR  
-* Passenger-rights domain expertise  
-* German localization and UX writing  
-* Product analytics
+Relevant scenarios include:
 
-A single contributor may perform several of these roles.
+- normal transfer;
+- shrinking transfer margin;
+- incoming delay;
+- outgoing delay;
+- delay correction;
+- platform change;
+- cancellation;
+- partial cancellation;
+- changed stop pattern;
+- changed train number;
+- train splitting or joining;
+- duplicate realtime events;
+- out-of-order events;
+- stale information;
+- provider timeout;
+- missing realtime information;
+- same-name stations;
+- cross-midnight journeys;
+- terminated services;
+- earlier rerouting opportunities.
 
-The purpose of listing them is not to imply a large project team, but to make the quality bar explicit.
-
----
-
-# **Localization**
-
-The repository documentation may primarily use English to support international technical collaboration.
-
-A passenger-facing product intended for Germany should eventually treat German as a first-class product language rather than as an afterthought.
-
-Railway terminology should be reviewed in its actual transport context, including terms such as:
-
-* `Anschluss`  
-* `Umstieg`  
-* `Verspätung`  
-* `Zugausfall`  
-* `Gleisänderung`  
-* `voraussichtliche Ankunft`
-
-Product localization should prioritize natural German railway language over literal translation from English.
+Domain edge cases should become reproducible tests rather than production surprises.
 
 ---
 
-# **MVP Completion Criteria**
+# Observability
 
-The MVP should not be considered complete simply because a web application exists.
+If AnschlussPilot becomes publicly available, system reliability becomes part of the product.
 
-It should satisfy several categories of correctness.
+Operational monitoring should eventually include:
 
-## **Product Correctness**
+```text
+provider availability
+provider latency
+data freshness
+collector failures
+normalization failures
+state-reconciliation failures
+alternative-generation failures
+risk-engine failures
+decision-engine failures
+API latency
+database health
+application availability
+```
+
+A product designed to compensate for unreliable travel conditions must itself fail transparently.
+
+---
+
+# Product Metrics
+
+Success should not be measured primarily through page views.
+
+More meaningful measures may include:
+
+- useful warning lead time;
+- missed-connection detection;
+- false-warning rate;
+- unnecessary rerouting rate;
+- recommendation stability;
+- alternative quality;
+- expected versus actual destination delay;
+- prediction calibration;
+- decision-policy improvement over baseline;
+- unknown-state frequency;
+- realtime-data freshness.
+
+Ultimately, the product should be evaluated on whether it helps passengers make better decisions.
+
+---
+
+# Product Moat
+
+AnschlussPilot should not assume that a machine-learning model alone creates defensibility.
+
+Potential long-term assets include:
+
+```text
+Canonical German railway domain model
+                +
+Reliable historical observation store
+                +
+Temporal journey reconstruction
+                +
+Connection-outcome labels
+                +
+Transfer behaviour models
+                +
+Realtime state reconciliation
+                +
+Calibrated prediction models
+                +
+Decision-policy evaluation
+```
+
+The most valuable data is not necessarily:
+
+> How late was ICE 123?
+
+It may instead be:
+
+> **At time $t$, what information was available, what alternatives were possible, which action was preferable, and what journey outcome followed?**
+
+That is the dataset needed to improve a real decision-support system.
+
+---
+
+# MVP Completion Criteria
+
+The MVP should not be considered complete merely because the application runs.
+
+## Railway Correctness
 
 Given:
 
+```text
 A → B → C
+```
 
-the system must understand:
+the system must correctly represent:
 
-leg 1  
-connection at B  
+```text
+leg 1
+connection at B
 leg 2
+```
 
-and reassess the transfer at `B` when relevant railway state changes.
+and update the connection when relevant operational information changes.
 
-## **Data Correctness**
+## Temporal Correctness
 
-The same train run should not become multiple unrelated services because of realtime updates or corrections.
+Historical evaluation must not use information that became available only after the decision timestamp.
+
+## Data Correctness
 
 The system must distinguish:
 
-* delay;  
-* cancellation;  
-* partial cancellation;  
-* platform change;  
-* missing data;  
-* stale data.
+```text
+delay
+delay correction
+cancellation
+partial cancellation
+platform change
+stale data
+missing data
+```
 
-## **Decision Usefulness**
+and preserve service identity correctly.
 
-For a threatened transfer, the application should answer:
+## Risk Correctness
 
-What is happening?  
-How risky is the connection?  
-Why?  
-What can I do next?
+Connection feasibility should respond coherently to changing railway state.
 
-## **Reliability**
+## Decision Usefulness
 
-External-provider failure must not crash the user journey or silently transform stale data into apparently live information.
+For a threatened journey, AnschlussPilot should answer:
 
-## **Explainability**
+```text
+What changed?
+Is the current plan still feasible?
+Should I continue?
+What alternative is better?
+Why?
+What is the expected destination impact?
+```
 
-The user should be able to understand why the connection status changed without needing to understand the underlying implementation.
+## Reliability
+
+Provider failure must not silently turn stale information into apparently live information.
+
+## Explainability
+
+A recommendation should be understandable from the structured factors that produced it.
 
 ---
 
-# **Post-MVP Direction**
+# Post-MVP Direction
 
-Only after the core railway-data and connection-assessment pipeline is reliable should the project expand.
+Only after the realtime railway and deterministic decision pipeline is reliable should the project expand.
 
 A possible progression is:
 
-Reliable realtime data pipeline  
-            ↓  
-Historical reliability dataset  
-            ↓  
-Probabilistic risk modelling  
-            ↓  
-Arrival-delay distributions  
-            ↓  
-Calibrated connection probabilities  
-            ↓  
-Station-specific reliability modelling  
-            ↓  
-Personalized transfer requirements  
-            ↓  
-Notifications  
-            ↓  
-Passenger-rights assistance  
-            ↓  
+```text
+Reliable timetable integration
+            ↓
+Reliable realtime ingestion
+            ↓
+Canonical railway state
+            ↓
+Deterministic connection assessment
+            ↓
+Alternative evaluation
+            ↓
+Decision recommendations
+            ↓
+Historical observation dataset
+            ↓
+Backtesting framework
+            ↓
+Calibrated probabilistic models
+            ↓
+Action-dependent outcome models
+            ↓
+Personalized transfer preferences
+            ↓
+Notifications
+            ↓
+Passenger-rights assistance
+            ↓
 European expansion
+```
 
-Possible later capabilities such as:
+Features such as:
 
-* user accounts;  
-* push notifications;  
-* GPS;  
-* ticket integration;  
-* passenger-rights automation;  
-* compensation workflows;  
-* European railway coverage;
+- accounts;
+- push notifications;
+- GPS;
+- ticket integration;
+- compensation workflows;
+- legal passenger-rights automation;
+- European coverage;
 
-should each be treated as substantial product decisions rather than small additions to the MVP.
-
----
-
-# **Development**
-
-The repository should document concrete development instructions only after the corresponding implementation exists.
-
-Future versions of this section may contain verified information about:
-
-* technology stack;  
-* local development setup;  
-* supported runtime versions;  
-* environment variables;  
-* database setup;  
-* railway-provider configuration;  
-* test commands;  
-* linting and formatting;  
-* architecture documentation;  
-* deployment;  
-* monitoring.
-
-Until those choices exist in the repository, this README intentionally avoids inventing them.
+should each be treated as substantial product decisions rather than minor extensions.
 
 ---
 
-# **Contributing**
+# Development
 
-During the pre-MVP phase, proposed changes should be evaluated against the project's core use case:
+Concrete installation and development instructions should only be added after the corresponding implementation exists.
 
-> **Does this materially improve the passenger's ability to assess or react to a threatened German rail connection?**
+Future versions of this section may document verified:
 
-High-value contributions are expected to strengthen areas such as:
+```text
+technology stack
+runtime versions
+dependency installation
+environment variables
+database setup
+provider configuration
+development commands
+testing
+linting
+type checking
+migrations
+build process
+deployment
+monitoring
+```
 
-* railway-domain correctness;  
-* transport-data quality;  
-* realtime state reconciliation;  
-* connection-risk logic;  
-* uncertainty handling;  
-* alternative-journey reasoning;  
-* mobile decision UX;  
-* test coverage;  
-* operational reliability.
+This README intentionally avoids inventing technical implementation details.
+
+---
+
+# Contributing
+
+Changes should be evaluated against the core product question:
+
+> **Does this improve the passenger's ability to make a better decision during a disrupted German rail journey?**
+
+High-value contributions are likely to improve:
+
+- railway-domain correctness;
+- service identity;
+- temporal data handling;
+- provider normalization;
+- state reconciliation;
+- connection feasibility;
+- alternative evaluation;
+- destination-outcome comparison;
+- decision stability;
+- uncertainty handling;
+- mobile UX;
+- testing;
+- operational reliability.
 
 Feature count is not a project objective.
 
 ---
 
-# **Disclaimer**
+# Disclaimer
 
 AnschlussPilot is intended as an independent railway journey decision-support project.
 
-Schedules, realtime observations, estimates, predictions, and suggested alternatives may be delayed, incomplete, unavailable, or incorrect.
+Railway schedules, realtime observations, estimates, predictions, comparisons, and recommendations may be:
 
-The project must not be treated as:
+- delayed;
+- incomplete;
+- unavailable;
+- uncertain;
+- incorrect.
 
-* an official railway-operator service;  
-* a guarantee that a particular connection will be made;  
-* a guarantee that a suggested service may legally be boarded;  
-* authoritative fare advice;  
-* legal advice concerning passenger rights;  
-* a contractual transport guarantee.
+AnschlussPilot must not be treated as:
 
-Users should verify critical travel decisions against appropriate official information.
+- an official railway-operator service;
+- a contractual transport guarantee;
+- a guarantee that a connection will succeed;
+- a guarantee that a suggested service may legally be boarded;
+- authoritative fare advice;
+- authoritative passenger-rights advice.
+
+Critical travel decisions should be verified against appropriate official information.
 
 ---
 
-# **Project Principle**
+# Vision
 
-If AnschlussPilot succeeds at one thing, it should be this:
+AnschlussPilot should not merely tell passengers that their journey is going wrong.
 
-> **When a German rail journey starts going wrong, the passenger should understand the risk early enough to make a better decision.**
+It should help them decide **what to do while there is still time to improve the outcome**.
 
+> **Observe the disruption.
+> Understand the risk.
+> Compare the options.
+> Act before the journey fails.**
