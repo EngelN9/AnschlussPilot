@@ -157,6 +157,39 @@ trajectory    change in coverage between checkpoints
   direction. Report the raw numerator and denominator for both populations at
   both checkpoints. Otherwise the trajectory gate has not fired.
 
+#### The trajectory gate alone models the wrong threat
+
+A percentage-point trajectory models a competitor *gradually improving*. The
+actual threat is **discontinuous**: an incumbent that already holds the data, the
+dispatch relationship and the users makes one product decision, and the gap
+closes between two checkpoints. A trajectory gate cannot see a step function
+until after the step.
+
+So A5b is also **event-driven**. Any of the following triggers an immediate A5a
+re-run, without waiting for the next checkpoint:
+
+```text
+any existing tool ships an explicit continue-vs-change outcome comparison
+
+a "declare your intended connection" feature (passengers pre-registering a
+transfer, operator responding with alternatives) expands in scope or geography
+
+a public announcement of decision-grade connection guidance from an operator
+or a major aggregator
+
+a feed that exposes hold signals becomes available at a self-service tier
+    — this cuts both ways: it weakens A5b and strengthens A2c
+```
+
+> **Requires verification.** A feature of this kind has been reported to exist
+> regionally (Bavaria, *Anschluss-Voranmeldung*), and would matter because it
+> means the incumbent is already collecting intended-connection data. Treated as
+> an unconfirmed prior for the first benchmark run, not as an established fact
+> (`AGENTS.md` **I2**).
+
+Watching costs nothing until something fires. Not watching costs the difference
+between learning in week two and learning at the Phase 0 report.
+
 ### Baseline observation (2026-08-10, pre-benchmark)
 
 DB's own feature page for the digital travel companion describes realtime
@@ -251,6 +284,50 @@ They are separate questions and are not merged into the technical assumptions.
 | **B3** | **Acquisition friction** — reaching a useful decision is fast enough to be worth it | `time-to-first-useful-decision` including journey entry, **author's own trips** | Friction exceeds value → B2C not viable (§3, §4) |
 | **B4** | **Willingness to pay / integrate** — someone would pay, or a surface would embed it | Conversations, no product | Neither → the project stays a research artifact, which is a valid outcome |
 
+### Early B4 is evidence-only
+
+B4 is a cheap way to expose integration interest, so one exploratory round may
+run before the schema freeze under the property gate in `README.md` §4 and
+[`decisions.md`](decisions.md) **D037**. It is capped at half a day and collects
+evidence only.
+
+It does **not**:
+
+- change the Phase 0 observation schema or measurement question;
+- select B2C, B2B2C, or research-only;
+- authorize an API, interface, integration, or other product implementation;
+- trigger SB4 merely because an exploratory contact did not express interest.
+
+Phase 0 must first establish decision quality. Phase 0.5 then measures second-app
+friction and completes the formal B4 round. Only that combined evidence selects a
+commercial route (D042).
+
+```text
+B4 conversations        no product, no prototype, no commitment
+                        ≤ half a day, qualifies under the property gate
+                        in README §4
+```
+
+Its outcome is labelled exploratory context in the Phase 0 report, never a route
+verdict.
+
+### Exits, not only reversals
+
+B1–B4 had reversal conditions — statements that change what one believes — but no
+**exits**: conditions that stop or redirect the project. The technical track has
+twelve. The market track had none, which quietly made market evidence unable to
+change the plan.
+
+| | Exit condition | Verdict |
+| --- | --- | --- |
+| **SB1** | Comprehension fails in the confirmatory round *after* the materials were revised once | **Stop the decision-first UX premise**, not the layout. Either the hierarchy is wrong or the decision cannot be conveyed under time pressure. Research track continues. |
+| **SB2** | Participants understand the recommendation and still would not act on it, and the stated reason is not fixable by explanation or uncertainty display | **Drop P.** A correct recommendation nobody acts on has no product value. R stands. |
+| **SB3** | `time-to-first-useful-decision`, including journey entry, exceeds the decision's own value on the author's real trips | **B2C not viable** — pivot to B2B2C, where the surface already holds the user (§4). |
+| **SB4** | No buyer and no surface expresses interest after the formal post-Phase 0 B4 round | **Research-only.** Publish and stop building. The early exploratory round cannot fire this exit. |
+
+These sit alongside `README.md` §12's S-conditions and are reported in the same
+place. An exit fires on evidence, not on mood.
+
 ### Who gets live recommendations
 
 **Only the author.** Everyone else sees paper scenarios.
@@ -321,9 +398,73 @@ also the one that decides whether this is a product or a research result.
 Multiplying a measured share by a scenario bound produces a number with no
 defensible interpretation. Do not do it.
 
+### One order-of-magnitude ceiling check — once, early, explicitly crude
+
+The rule against market sizing stands. But refusing to size is not the same as
+refusing to notice a hard ceiling, and discovering one after a year of work would
+be avoidable waste.
+
+So: **one** deliberately crude funnel, computed once, written down, never
+refined.
+
+```text
+long-distance journeys per year          published figure        requires verification
+× share not arriving on time             published figure        requires verification
+× share with a transfer
+× share where a real alternative exists
+× share where the ticket permits acting
+× share who would open a second app
+= addressable events per year            order of magnitude only
+```
+
+Rules that keep this from becoming a forecast:
+
+- **Order of magnitude only.** Round to powers of ten. A result of "millions of
+  events, tens of thousands of plausible users" is the intended precision; any
+  figure with two significant digits is misuse.
+- **Every input carries its source and a `requires verification` flag** until
+  checked against a primary source (`AGENTS.md` **I2**).
+- **It cannot justify continuing** — only stopping. A large number means nothing;
+  a small number is informative.
+- Not repeated, not updated, not used in any report as a market estimate.
+
+> **Working prior, unverified.** Figures on the order of ~130 million German
+> long-distance passenger journeys per year and roughly one third not arriving on
+> time have been cited to this project but **not verified against a primary
+> source**. They are recorded here as inputs to check, not as facts, and no
+> conclusion rests on them.
+
 ---
 
-## 7. What This File Is Not
+## 7. Publishing Before the End
+
+The Phase 0 report is this project's only distribution asset — and it does not
+exist until the end, which is exactly when it is least useful.
+
+Two problems follow from holding everything back:
+
+- **No credibility during the build.** B2B2C conversations (B4) happen months
+  before the report. Something citable must exist by then.
+- **No external error correction.** Pre-registration protects against fooling
+  oneself *during* measurement. It does nothing about a wrong premise. A solo
+  project that produces no external output for a year has no mechanism to
+  discover that someone already knows the answer is no.
+
+**Publish the rights-and-access matrix around month two** — the provider
+verdict, the A2c/A3c access findings, the carrier-conditions snapshot. It is
+cheap, it is finished early, it is genuinely useful to others working on German
+rail data, and it is the fastest way to attract a correction if the reading of
+the terms is wrong.
+
+Subject to `AGENTS.md` **I15**: publish the *findings about* terms, never
+provider data whose redistribution is not permitted.
+
+Later publishable units, in order of readiness: the identity-resolution result
+(A7), the competitive benchmark method, then the Phase 0 report itself.
+
+---
+
+## 8. What This File Is Not
 
 Not a business plan, not a pitch, not a projection. It is a register of
 commercial hypotheses held to the same evidentiary standard as the technical

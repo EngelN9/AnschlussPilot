@@ -165,6 +165,14 @@ enter outcome comparison. The other states remain visible to measurement as
 unknown coverage; they are never converted into evidence that no alternative or
 opportunity existed.
 
+**That rule describes runtime.** Measurement classifies whole itineraries by a
+separate rule: an itinerary with any non-`evaluable` candidate produces **no
+opportunity / no-opportunity verdict at all** and is counted as uncovered
+([`phase0-protocol.md`](phase0-protocol.md) §2). The product still recommends
+among what it can see; the measurement declines to conclude. Applying the runtime
+rule to measurement would silently record an unobserved candidate as evidence
+that no better option existed.
+
 > **Consequence for measurement.** An "opportunity" whose action window had
 > already closed at decision time **is not an opportunity** — it is hindsight.
 > The A1 measurement must require a non-`EXPIRED` window at the evaluated

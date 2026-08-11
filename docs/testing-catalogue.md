@@ -250,6 +250,27 @@ mixed evaluable / unknown population
 n = 0
     ⇒ conditional rate is undefined; bounds and coverage counts still reported
 
+itinerary with any non-evaluable candidate
+    ⇒ counted in u with its reason; produces no opportunity verdict;
+      never counted as "no opportunity"
+
+runtime facing the same partially covered itinerary
+    ⇒ still ranks among evaluable candidates and recommends;
+      does not refuse to answer
+
+u/N above 20%
+    ⇒ S10 fires: re-scope, not stop;
+      A1 may be reported only as bounds and feeds no go/no-go
+
+confidence interval reported without the coverage gap beside it
+    ⇒ reporting-format defect
+
+coverage bounds and sampling CI merged into one interval
+    ⇒ defect; they answer different questions
+
+high UNKNOWN risk-state share with low u/N
+    ⇒ S4 path, not S10; re-scoping is not the remedy
+
 episode rules run with W_primary, W_narrow and W_wide
     ⇒ all three are recorded; any conclusion flip is explicit
 

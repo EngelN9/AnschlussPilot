@@ -65,6 +65,42 @@ closed.
 
 ---
 
+### Verified finding — the decisive signals exist, behind a partner gate
+
+Consulted 2026-08-10:
+[DB API Marketplace — RIS::Connections (DB Transporteure)](https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-connections-transporteure)
+
+| Field | What the product page states |
+| --- | --- |
+| Hold signal | *"Informationen ob Anschlüsse `warten` oder `nicht warten`"* — **A2b true** |
+| Transfer times | *"gleisscharfe Umsteigezeiten"*, with a personalized reachability assessment for occasional travellers, commuters and mobility-impaired travellers — **A3b true** |
+| Access | *"Zugang erfolgt nach positiver Prüfung **ausschließlich für Vertriebspartner der Deutschen Bahn AG**"* |
+| Pricing | *"Kostenpflichtig (Preis auf Anfrage)"* |
+| Terms | *"Nutzungsbedingungen werden vertraglich vereinbart"* — no published standard terms |
+
+**What this settles and what it does not.** The two assumptions most likely to
+cap this project — hold signals (A2) and platform-level transfer times (A3) —
+are not physically unobservable. They exist, in a documented feed. The open
+question is **A2c / A3c: whether this project may use them.** Access is limited
+to DB sales partners after review, priced individually, and governed by a
+negotiated contract rather than public terms.
+
+Three consequences:
+
+1. **The access question outranks the modelling questions.** It is investigated
+   in parallel with A5a (`README.md` §4), not deep inside Phase 0.
+2. **Any `UNKNOWN` rate this project measures is tier-relative.** It reflects the
+   feeds obtainable here, not a limit of German rail — see `README.md` A2 and
+   **S4**.
+3. **Revocability becomes a first-order risk** (**S11**). A moat built on access
+   the incumbent grants and can withdraw is not a moat, and it points the
+   strategy toward B2B2C or research (**S12**).
+
+The matrix above must still be filled for whichever feeds are actually
+obtainable. This finding narrows the search; it does not complete it.
+
+---
+
 ## 3. What Each Answer Decides
 
 This is the part that makes the matrix worth filling. Write the verdict, not just

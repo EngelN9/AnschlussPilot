@@ -23,6 +23,7 @@
 | Engineering rules | Defined (`AGENTS.md`) |
 | Phase 0 protocol manifest | `UNSET` / `BLOCKED` — freeze gates incomplete |
 | Competitive benchmark (A5a) | **Not started — cheapest existence check** |
+| Decisive-signal access (A2c / A3c) | **Not started — can invalidate the B2C path** |
 | Provider evaluation | Scaffold only; matrix unfilled — **blocking data-dependent work** |
 | Identity-resolution spike (A7) | **Not started — blocking** |
 | Observation collector | **Not started — blocking** |
@@ -107,11 +108,19 @@ rate × magnitude, evaluated under each ticket-binding scenario (A6).
 Measure separately:
 
 - **operational opportunity rate** — transfers where changing earlier was
-  materially better, assuming nothing about the passenger's ticket;
-- the same rate **under each binding scenario** (A6) — a sensitivity band, not a
-  second measurement;
+  materially better, assuming nothing about the passenger's ticket. This is not a
+  single number: it is reported as `o/n`, `o/N`, `(o+u)/N` and `u/N`
+  ([`docs/phase0-protocol.md`](docs/phase0-protocol.md) §4);
+- the same four quantities **under each binding scenario** (A6) — a sensitivity
+  band, not a second measurement;
 - mean destination-delay improvement per monitored journey;
 - share of opportunities saving ≥ 15 min.
+
+> **Which number is which.** `o/n` is the **headline descriptive figure** and is
+> never shown without the coverage gap `u/N` beside it. `(o+u)/N` is the quantity
+> **stop condition S2 tests**, so that missing data can never on its own end the
+> project. `u/N` gates reporting through **S10**. Any statement of "the
+> opportunity rate" that does not say which of these it means is not a result.
 
 > **Not measurable in Phase 0:** how often a *real passenger* encounters this.
 > That requires demand weighting the project does not have. The operational rate
@@ -125,28 +134,59 @@ rate, lower and upper bounds, and coverage gap defined in
 [`docs/phase0-protocol.md`](docs/phase0-protocol.md) §4. Thresholds are derived
 from the observed distribution rather than chosen in advance — see §12.
 
-### A2 — The decisive signal is observable
+### A2 — The decisive signal is observable *by this project*
 
 Whether a connection succeeds is frequently decided by dispatch
-(*Anschlusssicherung* — whether the outgoing service is held). If public data
-does not expose this reliably and early enough, decision quality has a hard
-ceiling regardless of modelling effort.
+(*Anschlusssicherung* — whether the outgoing service is held). If the data
+available to this project does not expose that reliably and early enough,
+decision quality has a hard ceiling regardless of modelling effort.
 
-- A system honestly obeying `AGENTS.md` **I4** would then return `UNKNOWN` in most
-  interesting situations. That is *correct* behaviour, but it may not be a
+This was one assumption. It is three, and they fail in different ways:
+
+| | Proposition | Status |
+| --- | --- | --- |
+| **A2a** | The signal exists in the world | **Verified true** |
+| **A2b** | The signal exists in some feed | **Verified true** — DB's `RIS::Connections` states whether connections *"warten"* or *"nicht warten"* |
+| **A2c** | **This project is permitted to use that feed** | **Unknown, and plausibly false** — access is restricted to DB sales partners |
+
+Source for A2b/A2c:
+[DB API Marketplace — RIS::Connections](https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-connections-transporteure),
+consulted 2026-08-10: *"Zugang erfolgt nach positiver Prüfung ausschließlich für
+Vertriebspartner der Deutschen Bahn AG"*, priced on request, terms agreed
+contractually.
+
+> **Consequence for how results may be worded.** A high `UNKNOWN` rate measured
+> on a weaker feed says *"unobservable at our access tier"*, **not**
+> *"unobservable on German rail"*. Stating the second would be a false claim
+> (`AGENTS.md` **I2**). S4 is bounded by A2c, not by physics.
+
+- A system honestly obeying `AGENTS.md` **I4** returns `UNKNOWN` whenever the
+  signal is missing. That is *correct* behaviour, but it may not be a
   *usable product*.
-- **Test:** measure how often, and how far in advance, hold/no-hold outcomes are
-  inferable from the candidate feeds.
+- **Test (A2c first):** the access investigation in §4 — eligibility, whether a
+  lower tier exposes any hold signal, and on what terms. It runs alongside A5a
+  because it can invalidate the B2C path before any collector exists.
+- **Test (A2 overall):** measure how often, and how far in advance, hold/no-hold
+  outcomes are inferable from the feeds this project can actually obtain.
 
-### A3 — Transfer requirement is estimable
+### A3 — Transfer requirement is estimable *by this project*
 
 The effective transfer buffer (§6) depends on `T_transfer`, the time the
 passenger actually needs to change trains. Station-level minimum transfer times
 are constants; they do not capture platform pairs, level changes, or luggage.
 
+The same three-layer split applies, with the same answer:
+
+| | Proposition | Status |
+| --- | --- | --- |
+| **A3a** | Platform-level transfer data exists | **Verified true** |
+| **A3b** | It exists in a feed | **Verified true** — the same product advertises *"gleisscharfe Umsteigezeiten"* and a per-traveller-type assessment |
+| **A3c** | **This project may use it** | **Unknown** — same access restriction as A2c |
+
 - If `T_transfer` can only be bounded very loosely, the honest output is a wide
-  interval, which pushes many cases into `ATTENTION`/`UNKNOWN`.
-- **Test:** identify an actual data source before implementing the risk engine.
+  interval, which pushes many cases into `ATTENTION`/`UNKNOWN` (**S5**).
+- **Test:** the transfer-data-source evaluation in §4, answering A3c explicitly
+  rather than only asking whether a source exists.
 
 ### A4 — The data may legally be stored
 
@@ -269,14 +309,35 @@ returns both.
 | **0.5 — P-minimal** | **Will anyone act on it?** Paper-prototype check, then the author uses it on their own real journeys. Laptop-hosted, single user, no reliability guarantees. Tests **B1–B4**. | Comprehension, trust, and friction — see [`docs/market-and-validation.md`](docs/market-and-validation.md) §5 |
 | **1 — P** | **Can we distribute and sustain it?** A prototype a handful of people can use, on one of the two commercial tracks | Only if 0 and 0.5 both say yes |
 
+An early B4 conversation round may collect at most half a day of exploratory
+evidence. It does not select B2C or B2B2C, alter the Phase 0 schema, or authorize
+product implementation. Phase 0 establishes decision quality; Phase 0.5 supplies
+the second-app friction evidence needed for the formal route choice.
+
 Every deliverable is tagged **`R`**, **`P`**, or **`RP`**. The rule this exists
 to enforce:
 
-> **Before the Phase 0 report exists, any `P`-tagged work is scope creep.**
+The tags describe *who the work serves*. They do **not** decide what may be done —
+a rule keyed to a self-assigned label is only as strong as one's discipline at
+the moment one most wants to break it, and it fails in both directions: it would
+block a zero-cost commercial conversation while waving through anything that
+produces code and gets labelled `RP`.
 
-Dual goals otherwise remove the ability to refuse work — every task can be
-justified as serving one of them. The tag makes that visible instead of
-arguable.
+The gate is therefore on **properties, not labels**:
+
+> **Before the Phase 0 report exists, a piece of work may proceed if and only if
+> it costs ≤ half a day, consumes no irreplaceable collection time, and
+> invalidates no frozen artefact version. Anything else needs an exception
+> recorded in [`docs/decisions.md`](docs/decisions.md) with its reason and its
+> rollback condition.**
+
+This deliberately permits cheap market evidence and deliberately blocks expensive
+`RP` work that would displace collection.
+
+**The failure mode this exists to prevent is not doing too much `P` work.** For a
+year-long solo project it is arriving at month twelve holding a report and having
+had zero contact with a potential user or buyer. A rule that forbids all
+market contact until the report exists guarantees exactly that outcome.
 
 **Phase 0 has no user interface and no live service.** Its only goal is to
 answer §3 with evidence.
@@ -323,7 +384,8 @@ looking"*. See [`docs/railway-domain.md`](docs/railway-domain.md) §9.
 
 | Deliverable | For | Est. | Purpose |
 | --- | --- | --- | --- |
-| **Competitive benchmark (A5a)** | `RP` | **½ d** | Fixed archetypes, two fresh cases per archetype, against the live tools. Does any already compare continue-vs-change counterfactually? **Runs first — the cheapest way to discover the project has no reason to exist.** Re-run at the report and at Phase 0.5 exit for A5b. |
+| **Competitive benchmark (A5a)** | `RP` | **½ d** | Fixed archetypes, two fresh cases per archetype, against the live tools. Does any already compare continue-vs-change counterfactually? **Runs first — the cheapest way to discover the project has no reason to exist.** Re-run at the report, at Phase 0.5 exit, and on any A5b trigger event. |
+| **Decisive-signal access investigation (A2c / A3c)** | `RP` | **½ d** | Runs *in parallel with A5a*. Eligibility for feeds carrying hold signals and platform-level transfer times; whether any lower access tier exposes either; terms, cost, revocability. **Can invalidate the B2C path before a line of collector code exists**, which is why it sits alongside A5a rather than inside the provider evaluation. |
 | `docs/provider-evaluation.md` | `RP` | 0.5 w | Which data feeds exist; what each exposes; storage / redistribution / training / commercial terms; attribution; station transfer and topology data. **Blocks all data-dependent work, but not A5a.** It does not establish carrier fare conditions. |
 | **Identity-resolution spike (A7)** | `RP` | **1 d** | Six hours of polling, then attempt to link runs across polls. Tests A7 before anything is built on it. **A failure here changes the collector's design, not just its schedule.** |
 | Transfer-data-source evaluation (A3) | `RP` | ½ w | Identify an actual source for `T_transfer`, or establish that only wide intervals are defensible. A3 currently has a test and no deliverable. |
@@ -372,6 +434,31 @@ indefinitely.
 > re-scope — shrink the corridor, shorten the window, simplify the policy. Do not
 > push through. An estimate that is 2× wrong is evidence the design is wrong, not
 > evidence that more hours are needed.
+
+### Sizing gate — run before the corridor is frozen
+
+The numbers above are already a warning. At 8 h/week the plan runs ~8 months,
+and **S8 fires at 2×**. That means the design, at the planning stage and before
+anything has gone wrong, sits one ordinary delay away from its own stop
+condition. **That is a sizing problem, not a discipline problem** — no amount of
+diligence fixes a plan that has no slack in it.
+
+Before corridor scope `v1` is frozen
+([`docs/phase0-protocol.md`](docs/phase0-protocol.md) §2), record:
+
+```text
+hours actually available per week        UNSET
+acceptable calendar ceiling              UNSET
+```
+
+Then **shrink the corridor — stations, time-of-day window, service classes —
+until the estimate fits inside half that ceiling.** Half, not all: the remaining
+half is the slack that S8 exists to protect.
+
+If no corridor small enough still yields the episode counts in
+[`docs/modelling-and-evaluation.md`](docs/modelling-and-evaluation.md) §2, that
+conflict is itself a Phase 0 finding and must be recorded rather than resolved by
+optimism about the schedule.
 
 ### The Phase 0 report
 
@@ -607,7 +694,10 @@ this file first.
 ## 11. Engineering Order
 
 ```text
-A5a live competitive benchmark
+Evidence Sprint 0 — parallel, each capped at half a day
+  A5a live competitive benchmark
+  A2c / A3c decisive-signal access investigation
+  exploratory B4 conversations (evidence only; no route or schema decision)
         ↓
 Provider matrix              ← blocks data-dependent work, not A5a
         ↓
@@ -656,8 +746,11 @@ target honest when it arrives.
 
 | Metric | Target | How the target gets set |
 | --- | --- | --- |
-| Operational opportunity rate (A1) | TBD | From the observed distribution over the first full measurement window, clustered by disruption episode |
-| Same rate under the `BOUND` scenario (A6) | TBD | Same window, same episodes, candidate set restricted by binding rules — a sensitivity band, not an observation |
+| **A1 — evaluable-conditional rate `o/n`** | TBD | Headline descriptive figure. Valid only alongside the coverage gap; **never used alone as a gate** |
+| **A1 — conservative lower bound `o/N`** | TBD | Assumes every uncovered itinerary is a non-opportunity |
+| **A1 — conservative upper bound `(o+u)/N`** | TBD | Assumes every uncovered itinerary is an opportunity. **This is the quantity S2 tests** |
+| **A1 — coverage gap `u/N`** | TBD | Data-scope property, not a decision property. Gates reporting via S10 |
+| Same four quantities under the `BOUND` scenario (A6) | TBD | Same window, same episodes, **same denominator and same evaluable set**, candidate set restricted by binding rules — a sensitivity band, not an observation |
 | Mean destination-delay improvement vs. deterministic baseline | TBD | Must exceed zero with a stated confidence interval; magnitude set from observed spread |
 | Share of opportunities saving ≥ 15 min | TBD | From the observed magnitude distribution |
 | Warning lead time — distribution of lead time on actually-missed connections | TBD | Percentile chosen once the achievable ceiling is known (A2 bounds it) |
@@ -681,14 +774,17 @@ section exists to prevent.
 | # | Condition | Verdict |
 | --- | --- | --- |
 | **S1** | Storage not permitted (A4) | **Hard stop** on Phase 0 as designed. Redesign as ephemeral live evaluation, or change provider. Nothing else proceeds. |
-| **S2** | Under the `UNBOUND` scenario: operational opportunity rate **< 3%**, or mean improvement **< 10 min** (A1) | **Stop the intervention product.** If the opportunity is thin even where the passenger is unconstrained, the decision layer is not earning its complexity. Fall back to warning-only, or stop. |
-| **S3** | `BOUND` ÷ `UNBOUND` scenario rate **< 1/3** (A6) | **Drop P, continue R.** The research result stands; the product would serve too narrow a population to justify building. |
-| **S4** | `UNKNOWN` exceeds **50%** of disrupted transfers at decision time (A2) | **Stop the decision product.** A system that declines to answer more often than it answers is not decision support. |
+| **S2** | Under the `UNBOUND` scenario, the **conservative upper bound `(o+u)/N`** is **< 3%**, or mean improvement **< 10 min** (A1) | **Stop the intervention product.** Tested against the *upper* bound so the project is never killed by missing data: stop only when even the most generous coverage assumption falls short. If the opportunity is thin even where the passenger is unconstrained, the decision layer is not earning its complexity. Fall back to warning-only, or stop. |
+| **S3** | `BOUND` ÷ `UNBOUND` rate **< 1/3** (A6), both computed on the **same denominator over the same evaluable set** | **Drop P, continue R.** The research result stands; the product would serve too narrow a population to justify building. A ratio across different denominators is meaningless — the constraint is part of the condition. |
+| **S4** | `UNKNOWN` exceeds **50%** of disrupted transfers at decision time, **on the feeds this project can actually obtain** (A2c) | **Stop the decision product** — or pursue access. A system that declines to answer more often than it answers is not decision support. The figure is bounded by A2c, not by physics: it must never be reported as "unobservable on German rail". |
 | **S5** | Transfer requirement cannot be bounded within **±5 min** (A3) | **Narrow** to stations where it can be. If none qualify, S4 applies. |
 | **S6** | A competing tool meets all four decision-grade criteria on a majority of **all** cases and a majority of `REROUTE_EARLY` cases (A5a), or overall coverage rises by at least **20 percentage points** and `REROUTE_EARLY` coverage also rises (A5b) | **Repivot.** The reason to exist is going or gone. Find a narrower gap, move to B2B2C, or stop. Report raw numerators / denominators; criteria and thresholds are in [`docs/market-and-validation.md`](docs/market-and-validation.md) §2. |
 | **S7** | Any deliverable exceeds **2×** its estimate (§4) | **Re-scope**, do not push through. |
 | **S8** | Phase 0 incomplete at **2×** its calendar estimate (§4) | **Stop and publish what exists.** A partial measurement honestly reported has value; an unfinished one has none. |
 | **S9** | Service-run linkage fails or is ambiguous for **> 5%** of runs, and cannot be reduced (A7) | **Redesign or stop.** Delay evolution and counterfactual labels are unreliable above this rate. Switch to a provider with stable journey identifiers, or stop — do not proceed and hope. |
+| **S10** | Coverage gap **`u/N` > 20%** | **Re-scope — this is not a stop.** Widen the corridor graph, extend the window, or narrow the enumerated population. Until it is fixed, A1 may be reported only as bounds and **may not feed any go/no-go decision**. |
+| **S11** | Access to the decisive signal is revocable at the provider's discretion, and no alternative feed carries it (A2c) | **Moat argument fails; B2C becomes conditional.** A defensibility claim resting on access the incumbent can withdraw is not defensibility. Continue R and B2B2C; record the downgrade as a decision. *A4 asks "may I retain this?"; S11 asks "can this permission be taken away?" — different failures.* |
+| **S12** | The decisive signal is obtainable only from the incumbent, and not on terms this project can accept (A2c) | **Mark B2C as non-viable under current access and stop B2C implementation.** Continue only research that remains valid. Do not select or build B2B2C yet; the formal route decision waits for Phase 0 decision-quality evidence and Phase 0.5 friction evidence (D042). |
 
 Reasoning behind the two most contestable numbers, so they can be argued with:
 
@@ -710,10 +806,32 @@ Reasoning behind the two most contestable numbers, so they can be argued with:
   noise and start shaping the delay-evolution statistics that everything else is
   derived from. The threshold matters less than the fact that it is checked on
   day one rather than discovered in week five.
+- **S10 — 20%, and a softer 5%.** The absolute width of the A1 interval *is*
+  `u/N`. Against an S2 threshold of 3%, a coverage gap of 20% produces bounds
+  spanning 20 percentage points — an interval with no discriminating power at
+  all. Above **5%**, A1 must not be presented as a single number; above **20%**,
+  it must not be used as a gate. **S10 fires on the corridor graph, not on the
+  railway** — which is why its remedy is re-scoping and not stopping.
+
+**S4 and S10 are different failures.** `UNKNOWN` is the decision layer declining
+to assess, and can occur with perfect coverage when A2/A3 signals are absent —
+a ceiling that re-scoping cannot lift. `u/N` is a property of what was collected,
+and widening the graph fixes it. Merging them would let a too-small corridor
+masquerade as a dead product.
 
 **A stop is not a failure.** S3, S5, S6 and S8 all leave a publishable research
 result intact. Only S1 forecloses everything, and it is knowable before a single
 line of collector code is written.
+
+### Market-side exits
+
+S1–S12 are technical. The market track has its own exits — **SB1** comprehension,
+**SB2** willingness to act, **SB3** acquisition friction, **SB4** buyer interest —
+defined in [`docs/market-and-validation.md`](docs/market-and-validation.md) §5 and
+reported here alongside the S-conditions.
+
+They exist because market evidence previously had reversal conditions but no
+exits, which quietly meant no market finding could stop or redirect the project.
 
 ### Advancement rule
 
@@ -767,8 +885,33 @@ retention, and deletion defined first.
 AnschlussPilot is an independent project and implies no Deutsche Bahn
 affiliation.
 
-**This repository currently has no `LICENSE` file.** Until one is added, no
-usage rights are granted. Provider data terms are documented alongside the
+### Licensing is three decisions, not one
+
+**This repository currently has no `LICENSE` file, and that is not a neutral
+state.** Absent a licence, all rights are reserved by default — which means the
+omission is itself a decision, made silently, in favour of the product track and
+against the research track. Academic and media reuse of an all-rights-reserved
+document is impractical, so the project's **strongest** layer (§3, the research
+output) is currently constrained by a choice nobody recorded.
+
+The three layers have different owners and must be decided separately:
+
+| Layer | Who decides | Note |
+| --- | --- | --- |
+| **Documentation** — this file, `docs/`, the Phase 0 report | The author | Wants to be citable and reusable if the research output is to function as a distribution asset ([`docs/market-and-validation.md`](docs/market-and-validation.md) §7). An open documentation licence is the obvious default. |
+| **Code** — collector, replay harness, policy | The author | Independent of the above; a permissive or copyleft choice changes nothing about the research goal. |
+| **Collected data** | **Not the author** | Governed by provider terms (A4, `AGENTS.md` **I15**). This layer cannot be licensed open merely by choosing to. |
+
+Bundling all three into one deferred decision hides that asymmetry: two are free
+choices, one is not available at all.
+
+**Status: undecided.** The licence values are the author's to pick; what is fixed
+here is that the decision is three-part, that the current state has a cost, and
+that it is recorded in [`docs/decisions.md`](docs/decisions.md) with a reversal
+condition rather than left implicit.
+
+Provider data terms are documented in
+[`docs/provider-evaluation.md`](docs/provider-evaluation.md) and alongside the
 provider code once integrations exist.
 
 ---
@@ -779,6 +922,20 @@ There are no installation or run instructions because there is nothing to
 install or run. This section will document the verified stack, environment,
 commands, and tests once they exist — see the *Definition of Done* in
 `AGENTS.md`.
+
+The deferred release sequence is:
+
+```text
+GitHub version control + local verification
+  → Web / API backend and domain
+    → Android / Google Play
+      → iOS / Apple App Store
+```
+
+This is a gated order, not current implementation scope. Web/API work starts only
+after Phase 0 evidence permits it. Android and iOS proceed only if Phase 0.5
+supports a standalone B2C product; a B2B2C decision replaces those stages with an
+API / integration path.
 
 > **Note on formatting:** the display formulas in §6 are written on single lines
 > on purpose. Multi-line LaTeX in this file was previously corrupted by a

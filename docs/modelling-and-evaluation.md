@@ -143,6 +143,40 @@ existed. A1 therefore reports evaluable-conditional coverage plus lower and uppe
 bounds over the full eligible population, with out-of-scope and insufficient-data
 cases explicit, as specified in the protocol manifest §4.
 
+### Two uncertainties, never merged
+
+A1 now carries **two independent kinds of uncertainty**, and reporting either
+without the other misleads:
+
+```text
+sampling uncertainty    how much the result would move on another draw
+                        → clustered bootstrap over disruption episodes
+
+coverage uncertainty    how much of the population was never observable
+                        → the o/N … (o+u)/N interval, width exactly u/N
+```
+
+Rules:
+
+- **Bootstrap inside each bound.** Compute the clustered interval separately for
+  the lower and the upper bound, and report the result as a nested interval:
+
+  ```text
+  o/N [CI_low]  …  (o+u)/N [CI_high]        coverage gap u/N = ..%
+  ```
+
+- **Never publish a confidence interval without the coverage gap beside it.** A
+  tight CI on `o/n` while `u/N` is 25% is the most misleading form this result
+  can take: it presents precision about a subpopulation as precision about the
+  question.
+- **Never combine them into one interval.** They answer different questions —
+  one is about resampling, the other about what was never in the sample. A merged
+  interval leaves neither recoverable.
+
+If the two point in different directions — a narrow CI inside a wide coverage
+band — the honest headline is the coverage band, and **S10** (`README.md` §12)
+governs whether the result may be used as a gate at all.
+
 **Stated limitation.** Enumerated itineraries are not distributed like real
 passenger demand — they over-represent routings nobody books. Any reported rate
 must say so. The measurement answers *"how often does the opportunity exist on
