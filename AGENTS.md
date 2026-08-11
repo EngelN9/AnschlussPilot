@@ -14,7 +14,7 @@ specific document that covers the layer you are touching.
 goes stale the moment code lands; the date below tells you how far to trust it.
 
 ```text
-Last verified:  2026-08-10
+Last verified:  2026-08-11
 Observed state: documentation only — no application code, no provider
                 integration, no dataset, no tests
 ```
@@ -28,8 +28,8 @@ interface. Phase 0 blockers, in order:
 
 1. A5a live competitive benchmark — can run without provider data and is the
    cheapest product-thesis check.
-2. `docs/provider-evaluation.md` — scaffold exists, matrix unfilled; blocks all
-   data-dependent work, but not A5a.
+2. `docs/provider-evaluation.md` — public matrix partially filled; rights gate
+   remains blocked and stops all data-dependent work, but not A5a.
 3. A7 identity spike, carrier / A3 checks, corridor and observation-schema
    freeze; then the collector as soon as licensing permits.
 4. Replay harness, deterministic baseline, full protocol freeze, opportunity
@@ -288,11 +288,12 @@ small ambiguity.
 | [`docs/market-and-validation.md`](docs/market-and-validation.md) | Customer hypotheses, competitive benchmark, distribution risk, commercial tracks, Phase 0.5 experiments |
 | [`docs/binding-scenarios.md`](docs/binding-scenarios.md) | Versioned ticket-binding ruleset behind the A6 scenario band. A sensitivity assumption, never a legal determination |
 | [`docs/decisions.md`](docs/decisions.md) | Why things are the way they are, and what would reverse each choice |
-| [`docs/provider-evaluation.md`](docs/provider-evaluation.md) | Feed capabilities and data rights. Blocks Phase 0 data-dependent work; matrix still unfilled |
+| [`docs/provider-evaluation.md`](docs/provider-evaluation.md) | Feed capabilities and data rights. Public matrix partially filled; rights gate still blocks Phase 0 data-dependent work |
 | [`README.md`](README.md) | Product definition, unvalidated assumptions, known constraints, success criteria |
 
-`docs/provider-evaluation.md` exists as a scaffold; its matrix is unfilled and
-blocks Phase 0 data-dependent work. It does not block the A5a live competitive
+`docs/provider-evaluation.md` contains a partially filled public-source matrix,
+but no provider has sufficient verified rights. The closed rights gate blocks
+Phase 0 data-dependent work. It does not block the A5a live competitive
 benchmark.
 
 ---

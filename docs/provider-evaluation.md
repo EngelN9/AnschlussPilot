@@ -1,19 +1,21 @@
 # Provider Evaluation
 
-Phase 0 data-dependent-work blocker (`README.md` §4). Until the matrix below is
-filled from primary sources, no collector may retain data and no capability may
-be described as supported (`AGENTS.md` I2, I15). This does not block A5a.
+Phase 0 data-dependent-work blocker (`README.md` §4). Until the capability and
+rights evidence below identifies an obtainable provider with sufficient rights,
+no collector may retain data and no capability may be described as supported
+(`AGENTS.md` I2, I15). This does not block A5a.
 
 This matrix evaluates **data providers only**. It does not establish carrier,
 ticket-issuer, fare-validity, binding-relief, or passenger-rights conditions.
 Those require the independent carrier-conditions evidence described in
 [`binding-scenarios.md`](binding-scenarios.md) §3.
 
-> **Status: PARTIAL EVIDENCE v1 — RIGHTS GATE BLOCKED.** Four DB products have
-> been checked against current DB primary sources. Public pages establish some
-> capabilities, access conditions and licences, but do not establish usable
-> retention and downstream-use rights for the decisive RIS data. `UNKNOWN`
-> means *not publicly answered*, never *probably fine*. No account, paid plan,
+> **Status: PARTIAL EVIDENCE v2 — RIGHTS GATE BLOCKED.** Four DB products, two
+> DB data streams and relevant DELFI public leads have been checked against
+> current primary sources. Public pages establish capabilities, general access
+> conditions and some licences, but do not establish usable retention and
+> downstream-use rights for the decisive realtime data. `UNKNOWN` means *not
+> publicly answered*, never *probably fine*. No account, paid plan, API call,
 > provider contact or partner application was used in this review.
 
 > **Update trigger:** re-verify whenever a provider changes terms, when adding a
@@ -48,10 +50,11 @@ Those require the independent carrier-conditions evidence described in
 ## 2. Matrix
 
 ```text
-Provider snapshot ID     db-public-primary-sources-2026-08-11-v1
-Verdict version          v1-partial
-Terms effective date     UNKNOWN — the consulted pages state no effective date
-Terms checked date       2026-08-11
+Provider snapshot ID          db-public-primary-sources-2026-08-11-v2
+Verdict version               v2-partial
+Marketplace general terms     Stand 05/2022
+Product-contract dates        UNKNOWN — the public product pages state no effective date
+Terms checked date            2026-08-11
 ```
 
 Once verified, these values and the chosen retention / payload policy are copied
@@ -65,7 +68,9 @@ closed.
 | **RIS::Connections** product `1.0.208`, API `1.18.0` | Current forecasts, disruption state and connection status are inputs; public page gives no latency guarantee | Yes — platform-precise connection assessment | **Yes** — waiting / not-waiting disposition status | Request uses `journeyID` + `arrivalID`; cross-observation stability remains unverified pending A7 | Platform-precise transfer times, indoor-routing inputs where available, fallback corporate transfer rules and station-area transfers | 100 req/s plus 5k–500k requests/day by plan | Positive review; **only DB sales partners**; paid, price on request | [Marketplace product](https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-connections-transporteure); [official API guide](https://developer-docs.deutschebahn.com/doku/apis/ris-connections-10686902) |
 | **RIS::Journeys** product `1.0.273`, API `2.12.0` | Yes — scheduled and forecast arrivals/departures, cancellations and journey changes; no public latency guarantee | Yes — platforms / bus bays | Not documented | `journeyID` and match/find endpoints exist; stability remains unverified pending A7 | No transfer-time or station-topology claim | 100 req/s plus 5k–500k requests/day by plan | Positive eligibility review; paid, price on request | [Marketplace product](https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-journeys-transporteure); [official API guide](https://developer-docs.deutschebahn.com/doku/apis/ris-journeys-10582266) |
 | **Timetables** product/API `1.0.274` | Yes — planned timetable plus current changes at a station; no public latency guarantee | `UNKNOWN` from the consulted public product page | Not documented | Station-scoped plan/change records; stable cross-station journey identity not established | No transfer-time or topology claim | 60 requests/minute | Marketplace registration/subscription; free plan | [Marketplace product](https://developers.deutschebahn.com/db-api-marketplace/apis/product/timetables) |
-| **RIS::Stations** product `1.29.3446`, API `1.29.1.1` | Primarily versioned station master data, not journey realtime | Yes — platform structures and sectors | Not applicable / not documented | Station, stop-place and platform keys; not a journey-identity source | Transfer times by traveller type, transfer areas, platform structure; official guide permits initial storage and incremental refresh of station master data | Test: 10 req/s and 10k/month; paid plans: 100 req/s and 150k–15m/month | Positive eligibility review; free test up to two months; paid plans EUR 4,200–84,000/year | [Marketplace product](https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-stations); [official API guide](https://developer-docs.deutschebahn.com/doku/apis/ris-stations-10686906) |
+| **RIS::Stations** product `1.29.3448`, API `1.29.1.1` | Primarily versioned station master data, not journey realtime | Yes — platform structures and sectors | Not applicable / not documented | Station, stop-place and platform keys; not a journey-identity source | Transfer times by traveller type, transfer areas, platform structure; official guide permits initial storage and incremental refresh of station master data | Test: 10 req/s and 10k/month; paid plans: 100 req/s and 150k–15m/month | Positive eligibility review; free test up to two months; paid plans EUR 4,200–84,000/year | [Marketplace product](https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-stations); [official API guide](https://developer-docs.deutschebahn.com/doku/apis/ris-stations-10686906) |
+| **DB GTFS / GTFS-RT data streams**, public documentation has no product/API version | Yes — planned and realtime trips for DB Fernverkehr and DB Regio; GTFS-RT covers delays, stop cancellations, added trips, platform changes and disruptions; realtime horizon 24 hours | Yes — planned platforms and realtime platform changes | Not documented | **Documented stable trip IDs across GTFS and GTFS-RT** | GTFS includes transfer times and accessible-boarding information; no platform-pair topology claim | No quota published; DB recommends GTFS every 5 minutes and GTFS-RT every 20 seconds with `ETag` | Credentials required via `DB-Api-Key`; public page does not state eligibility, price or test access | [Official data-stream guide](https://developer-docs.deutschebahn.com/doku/datenstroeme/stroeme-gtfs-10582270) |
+| **RiFahrt data stream**, public documentation has no product/API version | Yes — planned and realtime journey events for DB Fernverkehr and DB Regio; subscriptions may cover up to 14 days ahead | Yes — actual and planned platforms, including changes | Not documented | **Documented stable journey IDs**, linkable to DB APIs and GTFS / GTFS-RT | No transfer-time or topology claim | Event stream; no public quota or throughput commitment | Registration, a provider-supplied protobuf and RabbitMQ credentials required; eligibility and cost not published | [Official data-stream guide](https://developer-docs.deutschebahn.com/doku/datenstroeme/RiFahrt-13745610) |
 
 `Not documented` means the consulted primary source makes no claim for that
 field. It is not evidence of absence. Version numbers are snapshots, not a
@@ -79,6 +84,8 @@ compatibility commitment.
 | **RIS::Journeys** | `UNKNOWN` — contract required | `UNKNOWN` — contract required | `UNKNOWN` — contract required | `UNKNOWN` — contract required | `UNKNOWN` — contract required | `UNKNOWN` — contract required | `UNKNOWN` — approval and contract required; no public continuity promise |
 | **Timetables** | **Permitted for the CC BY 4.0 licensed dataset**; reproduction is licensed | No published retention cap found | **Permitted with CC BY 4.0 conditions** | `UNKNOWN` — model training is not expressly addressed; no legal interpretation is assumed | **Permitted by CC BY 4.0**, subject to attribution and other applicable rights | Preserve supplied creator/copyright/licence/disclaimer/source information, indicate modifications and link the licence when sharing | CC BY 4.0 grant is irrevocable while its conditions are followed; API availability itself has no public continuity commitment |
 | **RIS::Stations** | Official guide expressly supports storing and incrementally updating station master data; rights for the transfer/topology subset remain `UNKNOWN` pending contract/scope confirmation | `UNKNOWN` for the contract-governed API and transfer/topology subset | CC BY 4.0 applies to stated *Stationswissen*; exact inclusion of transfer/topology fields is `UNKNOWN` | `UNKNOWN` — not expressly addressed and licence scope is unresolved | `UNKNOWN` for the transfer/topology subset; contract required | CC BY 4.0 attribution for covered *Stationswissen*; OpenStreetMap attribution also applies to state-boundary data | `UNKNOWN` for API/contract access; the CC BY grant for material actually covered remains irrevocable while compliant |
+| **DB GTFS / GTFS-RT** | `UNKNOWN` — public stream documentation gives technical access instructions but no applicable content licence | `UNKNOWN` | `UNKNOWN` | `UNKNOWN` | `UNKNOWN` | `UNKNOWN` | `UNKNOWN` — credentials are required and no public continuity or termination terms for the streams were found |
+| **RiFahrt** | `UNKNOWN` — public documentation describes consumption, not content-use rights | `UNKNOWN` | `UNKNOWN` | `UNKNOWN` | `UNKNOWN` | `UNKNOWN` | `UNKNOWN` — registration and provider-issued credentials are required; applicable agreement not public |
 
 The CC BY conclusions above use the
 [CC BY 4.0 legal code](https://creativecommons.org/licenses/by/4.0/legalcode.en)
@@ -87,6 +94,44 @@ relevant database-right uses, subject to attribution. It grants only rights the
 licensor is authorised to grant; it does not settle privacy, trademark,
 third-party or contract scope. That is why training and the boundary of
 RIS::Stations *Stationswissen* remain `UNKNOWN` rather than inferred.
+
+### 2.3 Marketplace general terms do not grant data rights
+
+The [DB API Marketplace general terms](https://developers.deutschebahn.com/db-api-marketplace/apis/nutzungsbedingungen),
+version `Stand 05/2022`, were checked on 2026-08-11. They establish a general
+portal layer, not the product licence AnschlussPilot needs:
+
+- the Marketplace is described as available to commercial and private
+  developers, but there is no entitlement to registration or activation;
+- access to DB content remains subject to the applicable separate licence, and
+  registration or activation itself grants no content-use rights;
+- a separate licence or contract takes precedence over the general terms;
+- either side may terminate the general Marketplace agreement without notice,
+  and DB may limit calls, change or delete content, or stop the Marketplace.
+
+These facts strengthen the access-continuity risk. They do **not** prove that a
+future product contract would be terminable on the same terms, because the
+general terms expressly defer to the separate agreement. Product-level storage,
+retention, commercial use and revocability therefore remain `UNKNOWN`.
+
+### 2.4 Open auxiliary sources and unresolved leads
+
+The [DELFI nationwide schedule dataset](https://www.opendata-oepnv.de/ht/de/organisation/delfi/startseite?amp=&cHash=136faae755c82cae8604462f8c8b4f10&tx_vrrkit_view%5Baction%5D=details)
+is a useful auxiliary planning source: its public metadata says the GTFS / NeTEx
+dataset includes German local public transport and rail long-distance service,
+is licensed under Creative Commons Attribution, and requires registration for
+download. The page does not state the Creative Commons version. This source can
+support timetable population and enumeration, but it is not decision-time
+realtime evidence and exposes no hold signal.
+
+DELFI states that nationwide public-transport realtime data (`DELFI-Realtime`)
+has been made available through Mobilithek and that the streams use GTFS
+Realtime Trip Updates and SIRI Estimated Timetable. This pass did **not** locate
+an exact current public metadata record establishing endpoint, licence,
+retention, commercial use, stable identity or long-distance coverage. It remains
+an unresolved lead, not a provider capability or rights finding. Sources checked
+2026-08-11: [DELFI overview](https://www.delfi.de/) and
+[DELFI current information](https://www.delfi.de/de/aktuelles/).
 
 ---
 
@@ -121,9 +166,11 @@ Three consequences:
    the incumbent grants and can withdraw is not a moat, and it points the
    strategy toward B2B2C or research (**S12**).
 
-The matrix above now records the public evidence for four products. It still
-does not identify an obtainable decisive-signal feed with sufficient rights;
-that missing contract/access evidence keeps the gate closed.
+The matrix above now records the public evidence for four products and two data
+streams. GTFS / GTFS-RT and RiFahrt materially improve the public capability
+picture for realtime and stable service identity, but neither documents a hold
+signal or sufficient use rights. No obtainable decisive-signal feed with
+sufficient rights has been identified; the gate remains closed.
 
 ---
 
@@ -149,11 +196,11 @@ the facts.
 
 ## 4. Verdict
 
-> **Verdict v1-partial: BLOCKED.** Public primary sources establish useful
-> capabilities, but they do not establish that AnschlussPilot is eligible for
-> RIS::Connections or may retain its hold/connection data for longitudinal
-> replay. No Phase 0 provider is selected. A7, polling and collector work remain
-> prohibited.
+> **Verdict v2-partial: BLOCKED.** Public primary sources establish useful
+> capabilities, including stable IDs in DB GTFS / GTFS-RT and RiFahrt, but they
+> do not establish that AnschlussPilot is eligible for the required feeds or may
+> retain decisive realtime data for longitudinal replay. No Phase 0 provider is
+> selected. A7, polling and collector work remain prohibited.
 
 The project pursues a research result (**R**) and a product prototype (**P**) in
 sequence (`README.md` §4). **Their permission requirements differ, so the verdict
@@ -165,10 +212,10 @@ cost, and finding that only R is permitted is a useful result, not a failure.
 Requires: retention long enough to measure, and use for private analysis.
 
 ```text
-Retention permitted        UNKNOWN for decisive RIS data
-Retention window           UNKNOWN for decisive RIS data
-Analysis / research use    UNKNOWN for decisive RIS data
-Model training use         UNKNOWN for decisive RIS data
+Retention permitted        UNKNOWN for decisive realtime data
+Retention window           UNKNOWN for decisive realtime data
+Analysis / research use    UNKNOWN for decisive realtime data
+Model training use         UNKNOWN for decisive realtime data
 Verdict for R              BLOCKED pending eligibility and contractual rights
 ```
 
@@ -180,9 +227,9 @@ Phase 0 as designed. Redesign as ephemeral live evaluation, or change provider.
 Requires everything R requires, plus showing derived data to other people.
 
 ```text
-Redistribution / display to third parties   UNKNOWN for decisive RIS data
-Attribution required, exact wording         UNKNOWN for decisive RIS data
-Commercial use                              UNKNOWN for decisive RIS data
+Redistribution / display to third parties   UNKNOWN for decisive realtime data
+Attribution required, exact wording         UNKNOWN for decisive realtime data
+Commercial use                              UNKNOWN for decisive realtime data
 Verdict for P                               BLOCKED; no product route authorised
 ```
 
@@ -191,23 +238,27 @@ in [`decisions.md`](decisions.md), superseding **D005**.
 
 ### 4.3 Consequences
 
-1. **Provider selection:** none. Timetables is openly licensed but does not
-   document the decisive hold signal or transfer topology needed to answer A2
-   and A3. RIS::Connections documents those signals but is restricted to
-   approved DB sales partners under individually agreed terms.
+1. **Provider selection:** none. Timetables is CC BY 4.0; DELFI's public
+   schedule metadata identifies a Creative Commons Attribution licence without
+   stating its version. Both are useful planning sources, but neither documents
+   the decisive hold signal. DB GTFS / GTFS-RT and RiFahrt document realtime
+   data and stable IDs, but their public pages do not grant the required rights.
+   RIS::Connections documents the hold and transfer signals but is restricted
+   to approved DB sales partners under individually agreed terms.
 2. **Collector policy:** none can be frozen. No decisive-signal payload may be
    polled or retained until eligibility, storage and retention are expressly
    established.
 3. **Assumptions:** A2b and A3b remain verified; A2c, A3c and A4 remain
-   `UNKNOWN`; A7 remains untested despite `journeyID` being documented.
+   `UNKNOWN`; A7 remains untested despite stable identity being documented in
+   RIS::Journeys, DB GTFS / GTFS-RT and RiFahrt.
 4. **Research and product:** both R and P remain blocked for the designed
    longitudinal decision experiment. This result does not authorise an
    ephemeral redesign or a B2B2C implementation.
 5. **Stop conditions:** S1, S11 and S12 are not declared triggered because the
    required contractual facts are absent, not negative. The rights gate is
    nevertheless closed under I15. The next evidence action requires separate
-   authorisation to contact DB or apply for access; this public-source sprint
-   does neither.
+   authorisation to contact DB or DELFI, register or apply for access; this
+   public-source sprint does none of those things.
 
 ### 4.4 Evidence still required to change the verdict
 
@@ -217,5 +268,192 @@ in [`decisions.md`](decisions.md), superseding **D005**.
   third-party display, commercial use, attribution and termination.
 - Confirmation that the licensed scope of RIS::Stations includes the specific
   transfer/topology fields Phase 0 would retain.
+- Exact DELFI-Realtime metadata covering endpoint, current access procedure,
+  licence, long-distance coverage, stable identity and downstream-use rights.
 - Only after those rights pass: a bounded A7 identity spike and cadence/coverage
   feasibility check using the authorised products.
+
+---
+
+## 5. External Confirmation Draft — User Must Review and Send
+
+This draft is not evidence and sending it is not authorised by this repository
+change. The author must choose the legal identity used for the enquiry, supply
+truthful contact details, review the wording, and personally send or submit it.
+
+Public routing addresses checked 2026-08-11 are
+`api-marketplace@deutschebahn.com` for Marketplace questions,
+`ris-api@deutschebahn.com` for RIS products,
+`ris-gtfs@deutschebahn.com` for DB GTFS streams, and `info@delfi.de` for DELFI.
+The author must decide the recipients and must not include credentials, API keys
+or personal travel data.
+
+### 5.1 German primary draft
+
+```text
+Betreff: Anfrage zu Zugangsberechtigung und Datennutzungsrechten für ein
+unabhängiges Forschungsprojekt zur Anschlussentscheidung
+
+Guten Tag,
+
+ich prüfe für das unabhängige Projekt „AnschlussPilot“, ob sich die
+Entscheidungsqualität bei gefährdeten Bahnanschlüssen in einer begrenzten
+Forschungsphase untersuchen lässt. Das Projekt ist nicht mit der Deutschen Bahn
+verbunden und würde vor einer ausdrücklichen Erlaubnis weder Daten abrufen noch
+speichern.
+
+Bitte teilen Sie mir mit, welche der folgenden Produkte oder Datenströme für ein
+unabhängiges Projekt ohne Status als DB-Vertriebspartner grundsätzlich in Frage
+kommen: RIS::Connections, RIS::Stations, DB GTFS / GTFS-RT und RiFahrt. Gibt es
+hierfür einen Testzugang oder eine alternative Zugangsmöglichkeit?
+
+Für die Beurteilung benötige ich bitte eine schriftliche Klärung der folgenden
+Punkte für das jeweils anwendbare Produkt:
+
+1. Dürfen rohe Antworten und normalisierte Beobachtungen gespeichert werden?
+2. Welche maximale Aufbewahrungsfrist und welche Löschpflichten gelten?
+3. Sind private Forschungsanalyse und die Veröffentlichung aggregierter,
+   nicht personenbezogener Ergebnisse erlaubt?
+4. Dürfen abgeleitete Informationen Dritten angezeigt und später in einem
+   kommerziellen Produkt verwendet werden?
+5. Sind statistische Auswertung und Modelltraining mit gespeicherten Daten
+   erlaubt?
+6. Welche genaue Quellenangabe und welche weiteren Lizenzpflichten gelten?
+7. Welche Kündigungs-, Widerrufs- und Löschpflichten gelten bei Vertragsende?
+8. Umfasst die CC-BY-Lizenz für RIS::Stations („Stationswissen“) auch die für
+   Phase 0 benötigten Umsteigezeiten, Umsteigebereiche und Gleisstrukturen?
+9. Welche Preise, Abrufgrenzen und Zusagen zur fortlaufenden Verfügbarkeit
+   gelten für Test- und Produktivzugänge?
+10. Falls diese Produkte nicht zugänglich sind: Welche offizielle Alternative
+    empfehlen Sie für ein unabhängiges Forschungsprojekt?
+
+Geplanter Rahmen:
+- Rechtsform / Rolle: [Privatperson, Unternehmen oder Forschungseinrichtung]
+- Korridor: [UNSET — vor Versand ausfüllen]
+- Forschungs- und Aufbewahrungszeitraum: [UNSET — vor Versand ausfüllen]
+- Geplantes Abrufintervall und Abrufvolumen: [UNSET — vor Versand ausfüllen]
+- Rohdatenaufbewahrung: [UNSET — vor Versand ausfüllen]
+- Datenschutz: keine Fahrgastkonten, Tickets, Zahlungsdaten oder dauerhafte
+  Standortverläufe vorgesehen
+
+Mit freundlichen Grüßen
+[Name]
+[Organisation oder „Privatperson / unabhängiges Forschungsprojekt“]
+[Land / Rechtsordnung]
+[Kontakt]
+```
+
+### 5.2 English reference translation
+
+```text
+Subject: Eligibility and data-use rights for an independent connection-decision
+research project
+
+Hello,
+
+I am assessing whether the independent “AnschlussPilot” project can run a
+bounded research phase on decision quality for threatened rail connections. The
+project is not affiliated with Deutsche Bahn and would not retrieve or retain
+data before receiving explicit permission.
+
+Please confirm which of RIS::Connections, RIS::Stations, DB GTFS / GTFS-RT and
+RiFahrt may be available to an independent project that is not a DB sales
+partner, including any test or alternative access route.
+
+For each applicable product, please confirm in writing:
+
+1. whether raw responses and normalized observations may be stored;
+2. the maximum retention period and deletion duties;
+3. whether private research analysis and publication of aggregated,
+   non-personal findings are permitted;
+4. whether derived information may be displayed to third parties and later
+   used in a commercial product;
+5. whether statistical analysis and model training on retained data are
+   permitted;
+6. the exact attribution and other licence obligations;
+7. termination, revocation and deletion duties at contract end;
+8. whether the RIS::Stations CC BY “Stationswissen” scope includes transfer
+   times, transfer areas and platform structures needed for Phase 0;
+9. prices, rate limits and continuity commitments for test and production
+   access; and
+10. any official alternative for an independent research project if these
+    products are unavailable.
+
+Proposed parameters:
+- legal role: [individual, company or research organisation]
+- corridor: [UNSET — complete before sending]
+- research and retention period: [UNSET — complete before sending]
+- intended polling cadence and request volume: [UNSET — complete before sending]
+- raw-payload retention: [UNSET — complete before sending]
+- privacy: no passenger accounts, tickets, payment data or continuous location
+  history are planned
+
+Kind regards,
+[Name]
+[Organisation or “individual / independent research project”]
+[Country / jurisdiction]
+[Contact details]
+```
+
+Before sending, the author must replace every placeholder and decide whether
+the request is made personally, through a company, or through a research
+organisation. Any acceptance, subscription, price or contract requires a
+separate decision; this draft authorises none.
+
+### 5.3 DELFI-Realtime metadata and rights draft
+
+```text
+Betreff: Anfrage zu DELFI-Realtime auf der Mobilithek
+
+Guten Tag,
+
+für das unabhängige Forschungsprojekt „AnschlussPilot“ prüfe ich öffentlich
+verfügbare Datenquellen für eine begrenzte Untersuchung gefährdeter
+Bahnanschlüsse. Auf Ihren öffentlichen Seiten wird DELFI-Realtime als
+deutschlandweiter Echtzeitdatenstrom über die Mobilithek in GTFS Realtime Trip
+Updates und SIRI Estimated Timetable beschrieben.
+
+Könnten Sie bitte den aktuellen Mobilithek-Datensatz beziehungsweise die
+Angebots-ID und die geltenden Nutzungsbedingungen nennen und folgende Punkte
+bestätigen?
+
+1. Welche Verkehre und Betreiber sind enthalten, insbesondere SPNV und SPFV?
+2. Welche stabilen Fahrt-IDs ermöglichen die Verknüpfung mit den DELFI-Solldaten?
+3. Sind Registrierung, Freischaltung oder ein Vertrag erforderlich?
+4. Welche Lizenz gilt für Abruf, Speicherung, Aufbewahrung, Forschungsanalyse,
+   Veröffentlichung aggregierter Ergebnisse, Anzeige abgeleiteter Informationen
+   und kommerzielle Nutzung?
+5. Welche Quellenangabe, Abrufgrenzen, Löschpflichten und Kündigungsbedingungen
+   gelten?
+
+Vor einer ausdrücklichen Klärung werden keine Daten abgerufen oder gespeichert.
+
+Mit freundlichen Grüßen
+[Name / Organisation / Land / Kontakt]
+
+--- English reference ---
+
+Subject: DELFI-Realtime Mobilithek metadata and use rights
+
+Hello,
+
+For the independent “AnschlussPilot” research project, I am assessing public
+data sources for a bounded study of threatened rail connections. Your public
+pages describe DELFI-Realtime as a nationwide realtime feed on Mobilithek in
+GTFS Realtime Trip Updates and SIRI Estimated Timetable formats.
+
+Please provide the current Mobilithek dataset or offer ID and applicable terms,
+and confirm:
+
+1. included modes and operators, especially regional and long-distance rail;
+2. stable trip identifiers for linking with DELFI schedule data;
+3. registration, approval or contract requirements;
+4. the licence for retrieval, storage, retention, research analysis, aggregate
+   publication, display of derived information and commercial use; and
+5. attribution, rate limits, deletion duties and termination conditions.
+
+No data will be retrieved or stored before explicit clarification.
+
+Kind regards,
+[Name / organisation / country / contact]
+```
