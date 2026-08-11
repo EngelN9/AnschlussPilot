@@ -45,7 +45,7 @@ reversal conditions.
 | --- | --- |
 | Phase 0 scope, order and delivery | D001, D002, D007, D008, D009, D010, D011, D027, D033, D037, D039 |
 | Population, episodes and evaluation | D003, D006, D013, D020, D021, D024, D027, D030, D031, D032 |
-| Binding and observation evidence | D004, D012, D015, D022 (retention principle only), D023, D029, D034 |
+| Binding and observation evidence | D004, D012, D015, D022 (retention principle only), D023, D029, D034, D043 |
 | Competitive, market and validation | D005, D017, D018, D019, D025, D026, D028, D035 (risk classification only), D036 (exit definitions only), D038, D041, D042 |
 | Open — awaiting a decision from the author | **D040** (licence values) |
 
@@ -54,7 +54,7 @@ D027; D016 is superseded by D027; D022's combined status vocabulary is
 superseded by D029 while its missing-data and retain-when-permitted principles
 remain active; **D005's tag-based pre-report rule is superseded by D037**, while
 its two-track sequencing remains active; **the single-proposition forms of A2 and
-A3 are superseded by D034; **D035's immediate route selection and D036's B4
+A3 are superseded by D034**; **D035's immediate route selection and D036's B4
 schema-coupling rule are superseded by D042**.
 
 > **This index is load-bearing.** It is the retrieval path into a document too
@@ -860,3 +860,30 @@ schema-coupling rule are superseded by D042**.
 - **What would reverse this:** A binding commercial commitment with explicit data
   access and a concrete integration requirement. That would be new evidence, not
   a speculative conversation.
+
+### D043 — Public provider evidence is insufficient to open the rights gate
+
+- **Date:** 2026-08-11
+- **Status:** active
+- **Evidence available at the time:** A primary-source pass covered
+  RIS::Connections, RIS::Journeys, Timetables and RIS::Stations. DB documents
+  hold disposition, platform-precise transfers and indoor-routing inputs in
+  RIS::Connections, but restricts access to approved DB sales partners under
+  individually agreed terms. RIS::Journeys is likewise approval- and
+  contract-gated. Timetables is CC BY 4.0 but does not document the decisive
+  hold/transfer signals. RIS::Stations exposes relevant master data, but the
+  public materials do not prove that the CC BY scope covers every transfer and
+  topology field needed by Phase 0.
+- **Decision:** Record provider verdict `v1-partial` as `BLOCKED`; select no
+  provider and keep A2c, A3c and A4 `UNKNOWN`. Do not poll, run A7, retain
+  payloads or build the collector. A missing public answer is not a negative
+  contractual finding, so S1, S11 and S12 are not fired. Changing the verdict
+  requires written eligibility and applicable contract terms; seeking them is a
+  separate externally consequential action requiring explicit authorisation.
+- **Alternatives rejected:** Treating documented capability as permission
+  (violates I15); treating CC BY Timetables as a substitute for decisive signals
+  (answers a different question); declaring the product dead from absent public
+  contract terms (confuses `UNKNOWN` with refusal).
+- **What would reverse this:** Written provider evidence establishing eligible
+  access plus storage, retention, research, redistribution, commercial,
+  attribution and termination terms adequate for the frozen Phase 0 use.
