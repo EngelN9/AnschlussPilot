@@ -176,6 +176,10 @@ For every non-trivial change:
 10. **Report truthfully**: what changed, why, what was tested, **what was not
     tested**, known limitations. Never fabricate validation.
 
+**Progress is uncertainty removed, not output produced.** Every PR states the
+uncertainty it targets, the evidence added, and which decision that evidence can
+change. Files, features, and models completed are activity measures, not progress.
+
 ---
 
 ## 4. Definition of Done
@@ -209,8 +213,12 @@ Run at the end of each deliverable in `README.md` §4 — not per commit.
 - [ ] Any decision a reasonable contributor could have made differently is
       recorded in [`docs/decisions.md`](docs/decisions.md), with its reversal
       condition
-- [ ] `P`-tagged work was not started before the Phase 0 report exists
-      (`README.md` §4)
+- [ ] The Active Decision Index in that file lists every new entry — an index
+      that lags the entries makes the whole log unusable as a lookup
+- [ ] Any new file under `docs/` carries an update trigger, or it is invisible
+      to this checklist forever
+- [ ] Any pre-report work satisfies the property gate in `README.md` §4, or has
+      a recorded exception and rollback condition
 - [ ] No new licensing assumptions
 - [ ] Anything unverified is stated as unverified
 
@@ -316,6 +324,19 @@ formatter reading `=` and `-` continuation lines as setext headings.
 
 **Commits.** Keep changes focused. Do not combine feature work, refactoring,
 dependency upgrades, formatting, and schema redesign in one commit.
+
+**Branches and pull requests.** Non-trivial work uses one `codex/<deliverable>`
+branch and one PR per coherent deliverable. Direct `main` changes require an
+explicit user instruction. A PR body states: uncertainty targeted, evidence
+added, decisions affected, checks executed, and anything still unverified.
+Merge only after the applicable §4 checks pass. Use squash merge normally; use
+a merge commit when a frozen protocol cites a branch commit SHA.
+
+**Synchronization.** Start from a clean, up-to-date `main` using fetch/prune and
+fast-forward-only pull. Push the working branch before ending a work session.
+After merge, update local `main`, confirm `main...origin/main` is `0/0` with a
+clean worktree, then delete the merged branch. GitHub Desktop must point to this
+same local repository; CLI upstream state is the synchronization authority.
 
 ---
 

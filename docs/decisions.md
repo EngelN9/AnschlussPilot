@@ -43,15 +43,24 @@ reversal conditions.
 
 | Area | Active decisions |
 | --- | --- |
-| Phase 0 scope, order and delivery | D001, D002, D005, D007, D008, D009, D010, D011, D027 |
-| Population, episodes and evaluation | D003, D006, D013, D020, D021, D024, D027 |
-| Binding and observation evidence | D004, D012, D015, D022 (retention principle only), D023, D029 |
-| Competitive, market and validation | D017, D018, D019, D025, D026, D028 |
+| Phase 0 scope, order and delivery | D001, D002, D007, D008, D009, D010, D011, D027, D033, D037, D039 |
+| Population, episodes and evaluation | D003, D006, D013, D020, D021, D024, D027, D030, D031, D032 |
+| Binding and observation evidence | D004, D012, D015, D022 (retention principle only), D023, D029, D034 |
+| Competitive, market and validation | D005, D017, D018, D019, D025, D026, D028, D035 (risk classification only), D036 (exit definitions only), D038, D041, D042 |
+| Open — awaiting a decision from the author | **D040** (licence values) |
 
 Superseded entries remain below for provenance: D014 is superseded by D021 and
 D027; D016 is superseded by D027; D022's combined status vocabulary is
 superseded by D029 while its missing-data and retain-when-permitted principles
-remain active.
+remain active; **D005's tag-based pre-report rule is superseded by D037**, while
+its two-track sequencing remains active; **the single-proposition forms of A2 and
+A3 are superseded by D034; **D035's immediate route selection and D036's B4
+schema-coupling rule are superseded by D042**.
+
+> **This index is load-bearing.** It is the retrieval path into a document too
+> long to read linearly; once it drifts, the log stops being consulted and
+> becomes an archive. It drifted once already — D030–D033 were added without
+> updating it. Keeping it in sync is a checklist item in `AGENTS.md` §4.
 
 ---
 
@@ -170,6 +179,12 @@ remain active.
   reversed; cross-references switched to stable invariant IDs to reduce
   recurrence. **The split stands, but its cost is now measured rather than
   assumed.**
+- **2026-08-10 — triggered a second time.** Adding `S10` to `README.md` §12 left
+  `phase0-protocol.md` §4 still routing `u/N` into `S4` — a live contradiction
+  between two documents for the duration of one edit. Repaired in the same
+  session. **Two triggers in one day is the signal, not the noise:** every
+  cross-document invariant added since D027 raises this cost, and the split is
+  still worth it only while the detail documents genuinely differ in audience.
 
 ### D008 — Service identity is promoted to an assumption and tested first
 
@@ -590,3 +605,258 @@ remain active.
   default regardless of rights (violates I15).
 - **What would reverse this:** Nothing likely; a schema may encode the dimensions
   differently, but it must preserve the same distinctions.
+
+### D030 — S2 tests the coverage upper bound; coverage adequacy is its own condition
+
+- **Date:** 2026-08-10
+- **Status:** active
+- **Evidence available at the time:** `phase0-protocol.md` §4 defines four
+  quantities — `o/n`, `o/N`, `(o+u)/N`, `u/N` — while S2 said only "operational
+  opportunity rate < 3%". With a coverage gap of any size the choice of
+  denominator decides the verdict, so the stop condition was not reproducible.
+  Separately, `u/N` was routed into S4, which measures something else entirely.
+- **Decision:** S2 tests the **upper bound `(o+u)/N`** — stop only when even the
+  most generous coverage assumption falls short, so missing data can never on its
+  own end the project. S3 requires both scenarios on the same denominator and the
+  same evaluable set. Coverage adequacy becomes **S10** (`u/N > 20%` ⇒ re-scope,
+  not stop; above 5% no single-number reporting).
+- **Alternatives rejected:** Testing the lower bound (kills the project for
+  missing data, which is a scope problem); testing `o/n` (a rate over a
+  subpopulation, silently excluding what was never observed); leaving `u/N` in S4
+  (an undersized corridor would masquerade as a dead product).
+- **What would reverse this:** Nothing. If coverage turns out near-complete the
+  bounds converge and the choice stops mattering — which is the good case.
+
+### D031 — Itinerary evaluability requires full candidate coverage
+
+- **Date:** 2026-08-10
+- **Status:** active; refines **D027**
+- **Evidence available at the time:** Coverage states attach to candidates while
+  `N`/`n`/`u` count itineraries, and the mapping was undefined. The default
+  reading — compare the evaluable candidates and record the outcome — converts an
+  unobserved candidate into evidence that no better option existed, which both
+  `phase0-protocol.md` §2 and the testing catalogue explicitly forbid.
+- **Decision:** For **measurement**, an itinerary is `evaluable` only when the
+  continue baseline and every enumerated candidate are `evaluable`; otherwise it
+  counts in `u` with its reason and yields no verdict. For **runtime**, unchanged:
+  rank among evaluable candidates, represent the rest as explicit uncertainty.
+- **Alternatives rejected:** Applying the runtime rule to measurement (the defect
+  itself); a `partially_evaluable` fourth state (needs a rule for when a missing
+  candidate could have dominated, which is exactly what is unknowable).
+- **What would reverse this:** Nothing. The cost — `u` grows, sometimes sharply —
+  is accepted, and S10 exists to detect when it grows too far.
+
+### D032 — Coverage bounds and sampling intervals are reported nested, never merged
+
+- **Date:** 2026-08-10
+- **Status:** active; extends **D013**
+- **Evidence available at the time:** A1 acquired two independent uncertainties —
+  clustered sampling error and coverage gap — with no rule for reporting them
+  together. A tight CI on `o/n` beside a 25% coverage gap presents precision about
+  a subpopulation as precision about the question.
+- **Decision:** Bootstrap within each bound and report nested:
+  `o/N [CI] … (o+u)/N [CI]`, with `u/N` always adjacent. No confidence interval
+  may be published without the coverage gap beside it, and the two are never
+  combined into a single interval.
+- **Alternatives rejected:** One combined interval (leaves neither recoverable);
+  reporting only the conditional rate with a CI (the misleading form this rule
+  exists to prevent).
+- **What would reverse this:** Nothing. Near-complete coverage makes the nesting
+  trivial rather than wrong.
+
+### D033 — The spike has its own gate; the manifest holds copies, not originals
+
+- **Date:** 2026-08-10
+- **Status:** active
+- **Evidence available at the time:** The A7 spike polls a provider for hours —
+  collection under I15 and S1 — but the protocol defined only collector and
+  measurement gates. Separately, version values live both in their artefact and in
+  the manifest, with no stated precedence.
+- **Decision:** A third gate precedes the collector gate: the spike runs only
+  under a provider verdict permitting polling at the intended cadence, retains no
+  more than that verdict allows, and keeps scratch observations out of the
+  measurement store. Being exploratory changes what the output is used for, not
+  whose terms apply. The manifest records copies; the artefact named in *Canonical
+  detail* owns the value, and on mismatch the artefact wins.
+- **Alternatives rejected:** Treating the spike as exempt because it is throwaway
+  (terms do not have a throwaway clause); making the manifest authoritative
+  (guarantees the manifest drifts from the rules it indexes).
+- **What would reverse this:** Nothing.
+
+### D034 — A2 and A3 are split into existence, feed, and access layers
+
+- **Date:** 2026-08-10
+- **Status:** active; supersedes the single-proposition form of A2 and A3
+- **Evidence available at the time:** Each assumption compressed three claims into
+  one. Checking DB's `RIS::Connections` product page settled two and left the
+  third open: the hold signal and platform-level transfer times **exist in a
+  documented feed**, but access is *"ausschließlich für Vertriebspartner der
+  Deutschen Bahn AG"*, priced on request, on contractually agreed terms.
+- **Decision:** Split into `A2a/A2b/A2c` and `A3a/A3b/A3c` — exists in the world,
+  exists in a feed, permitted to this project. A2a/A2b and A3a/A3b are recorded
+  verified. **A2c/A3c become the live assumptions**, tested by a half-day access
+  investigation running in parallel with A5a. S4 is bounded to *"at the access
+  tier this project can obtain"*.
+- **Alternatives rejected:** Leaving one assumption (the three fail differently
+  and one test cannot separate them); deferring access into the provider
+  evaluation (it can invalidate the product track before any collector exists, so
+  it cannot sit behind a 0.5-week deliverable).
+- **What would reverse this:** Obtaining access on acceptable terms, which
+  collapses A2c/A3c back to the original single form.
+
+### D035 — Access revocability and incumbent-only supply get their own exits
+
+- **Date:** 2026-08-10
+- **Status:** active for risk classification; immediate route-selection wording
+  superseded by **D042**
+- **Evidence available at the time:** A4 asks whether data may be retained. It
+  cannot see two adjacent failures: permission being *withdrawable*, and the
+  decisive signal being available only from the incumbent this product routes
+  around.
+- **Decision:** Add **S11** (revocable access, no alternative feed ⇒ moat argument
+  fails, B2C conditional) and **S12** (signal obtainable only from the incumbent
+  on unacceptable terms ⇒ pivot immediately to B2B2C or research-only, without
+  completing Phase 0 first).
+- **Alternatives rejected:** Folding both into S6 (a competitive condition, not a
+  supply condition); relying on A4 (a different failure).
+- **What would reverse this:** A self-service tier exposing hold signals, which
+  weakens S11, S12 and A5b at once.
+
+### D036 — The market track gets exits, and B4 moves before the schema freeze
+
+- **Date:** 2026-08-10
+- **Status:** active for the SB1–SB4 exit definitions; B4 timing and schema
+  coupling superseded by **D042**
+- **Evidence available at the time:** B1–B4 had reversals but no exits, so no
+  market evidence could stop or redirect the project while the technical track had
+  ten such conditions. Separately B4 sat last, after the schema freeze, although
+  **D016** already establishes that cheap kill-checks run first.
+- **Decision:** Add **SB1–SB4** as market-side exits, reported alongside the
+  S-conditions. Move B4 ahead of the schema freeze on the feedback-coupling
+  argument: if a buyer wants an arrival-reliability report rather than realtime
+  rerouting, that changes what the schema must retain, and the freeze cannot be
+  undone.
+- **Alternatives rejected:** Reversals only (belief changes that cannot change the
+  plan); keeping B4 last (learning after the decision it should inform).
+- **What would reverse this:** Nothing. Exits can be re-tuned; their absence was
+  the defect.
+
+### D037 — The pre-report gate keys on properties, not on tags
+
+- **Date:** 2026-08-10
+- **Status:** active; supersedes the rule form introduced with D005
+- **Evidence available at the time:** "Any `P`-tagged work before the report is
+  scope creep" keys on a self-assigned label. It over-blocks — a zero-cost buyer
+  conversation is forbidden — and under-blocks, since expensive work passes once
+  labelled `RP`. For a year-long solo project the real failure is not excess
+  product work; it is month twelve with a report and no contact with any user or
+  buyer, which the old rule guaranteed.
+- **Decision:** Work may proceed before the report if it costs ≤ half a day,
+  consumes no irreplaceable collection time, and invalidates no frozen artefact
+  version. Anything else requires a recorded exception with a rollback condition.
+  Tags remain, describing who the work serves, not what is permitted.
+- **Alternatives rejected:** Keeping the tag rule (fails both ways); removing the
+  gate (restores the resource competition it was built for).
+- **What would reverse this:** Exceptions being recorded routinely rather than
+  rarely, which would mean the thresholds are set wrong.
+
+### D038 — A5b is event-driven as well as trajectory-based
+
+- **Date:** 2026-08-10
+- **Status:** active; extends D025
+- **Evidence available at the time:** The trajectory gate models gradual
+  improvement. The real threat is discontinuous — an incumbent holding the data,
+  the dispatch relationship and the users makes one product decision and the gap
+  closes between checkpoints. A trajectory gate cannot detect a step function
+  until after the step.
+- **Decision:** Keep the trajectory gate and add trigger events forcing an
+  immediate A5a re-run: any tool shipping an explicit continue-vs-change
+  comparison; expansion of a declare-your-connection feature; a public
+  announcement of decision-grade connection guidance; a hold-signal feed becoming
+  self-service.
+- **Alternatives rejected:** Continuous monitoring (unbounded effort); trajectory
+  only (blind to the actual threat).
+- **What would reverse this:** Nothing; watching costs nothing until something
+  fires.
+
+### D039 — Corridor scope is sized to half the calendar ceiling
+
+- **Date:** 2026-08-10
+- **Status:** active; extends D009
+- **Evidence available at the time:** §4 estimates ~8 months at 8 h/week while
+  **S8** fires at 2× the calendar estimate. At the planning stage, before anything
+  has gone wrong, the design already sits one ordinary delay from its own stop
+  condition. D009 applied the sizing argument to the *number* of corridors and
+  never to the *size* of the one chosen.
+- **Decision:** Before corridor scope `v1` is frozen, record hours actually
+  available per week and an acceptable calendar ceiling, then shrink the corridor
+  — stations, time-of-day window, service classes — until the estimate fits within
+  **half** that ceiling. The other half is the slack S8 protects.
+- **Alternatives rejected:** Relying on discipline (a plan with no slack is a
+  sizing problem); raising the S8 multiplier (hides the problem).
+- **What would reverse this:** No corridor small enough still yielding the episode
+  counts in `modelling-and-evaluation.md` §2 — in which case that conflict is
+  itself a Phase 0 finding, recorded rather than resolved by schedule optimism.
+
+### D040 — Licensing is three decisions; the current silence has a cost
+
+- **Date:** 2026-08-10
+- **Status:** active; **open — values not yet chosen**
+- **Evidence available at the time:** With no `LICENSE`, all rights are reserved
+  by default. The omission is therefore a silent decision favouring the product
+  track over the research track, because all-rights-reserved documentation is
+  impractical for academic or media reuse — and the research output is the
+  strongest layer and the only early distribution asset.
+- **Decision:** Treat documentation, code and collected data as three separate
+  licensing decisions. The first two are the author's free choices; the third is
+  constrained by provider terms (A4, I15) and cannot be opened by choosing to.
+  Record the current state as undecided **with its cost stated**, not left
+  implicit.
+- **Alternatives rejected:** One deferred decision (hides that two layers are free
+  and one is not); selecting licences here (the values are the author's).
+- **What would reverse this:** The author choosing values, which closes this entry
+  rather than reversing it.
+
+### D041 — Publish the rights matrix early; one crude ceiling check
+
+- **Date:** 2026-08-10
+- **Status:** active
+- **Evidence available at the time:** The only distribution asset appears at the
+  end, when it is least useful — B2B2C conversations happen months earlier. A solo
+  project producing no external output for a year also has no external error
+  correction: pre-registration guards against self-deception during measurement,
+  not against a wrong premise.
+- **Decision:** Publish the rights-and-access matrix around month two, subject to
+  I15 — findings about terms, never redistributed provider data. Separately run
+  **one** order-of-magnitude funnel, rounded to powers of ten, every input flagged
+  `requires verification`, usable only to stop and never to justify continuing.
+  The rule against market sizing otherwise stands.
+- **Alternatives rejected:** Publishing nothing until the report (no credibility
+  during B4, no error correction); a real market model (the anchor problem D006
+  prevents).
+- **What would reverse this:** Provider terms forbidding publication of the
+  findings themselves — an unusual restriction, and itself worth recording.
+
+### D042 — Early market evidence cannot select or redesign the product route
+
+- **Date:** 2026-08-11
+- **Status:** active; refines **D035**, **D036**, and **D037**
+- **Evidence available at the time:** The project identified second-app friction
+  as a top-three risk, but D036 allowed a half-day exploratory buyer conversation
+  to alter an observation schema whose purpose is to test decision quality. D035
+  also selected B2B2C before the evidence needed to show that the decision policy
+  works or that passengers reject a second app.
+- **Decision:** An early B4 round may spend at most half a day collecting
+  exploratory evidence. It cannot change the Phase 0 schema, select B2C or
+  B2B2C, fire SB4, or authorize product implementation. Phase 0 establishes
+  decision quality. Phase 0.5 supplies second-app friction and the formal B4
+  evidence; only then is the commercial route selected. Provider access may mark
+  a route conditional or non-viable earlier, but does not authorize building the
+  alternative route.
+- **Alternatives rejected:** Deferring all market contact (needlessly preserves a
+  cheap uncertainty); letting one exploratory conversation redesign Phase 0
+  (couples technical validation to weak evidence); selecting B2B2C solely because
+  B2C data access is difficult (does not prove buyer demand).
+- **What would reverse this:** A binding commercial commitment with explicit data
+  access and a concrete integration requirement. That would be new evidence, not
+  a speculative conversation.
