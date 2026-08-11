@@ -96,8 +96,9 @@ Sample           exactly 2 qualifying cases per archetype at the first run
                  toward 20–30 by the Phase 0 report;
                  stratified across archetypes, not drawn freely
 
-Tools            AnschlussPilot (once it exists), DB Navigator,
-                 significant third-party tools
+Tools            AnschlussPilot (once it exists); initial checkpoint:
+                 DB Navigator, Trainline and Google Maps mobile apps
+                 (a test set, not a market-share claim)
 
 Cadence          Phase 0 start, Phase 0 report, Phase 0.5 exit
                  — checkpoints, not continuous monitoring
@@ -108,9 +109,12 @@ Recorded         per run: product name and version, date and time, account
                  comparison, elapsed time
 ```
 
-**Comparisons are across samples, not paired.** Different cases each run is the
-price of running at all; report per archetype so a change in one is not hidden by
-the mix.
+**Across checkpoints, comparisons are across samples, not paired.** Different
+fresh cases each run are the price of running at all; report per archetype so a
+change in one is not hidden by the mix. **Within one checkpoint, the same case
+is observed on every frozen surface.** A missing surface leaves that case and
+the checkpoint denominator incomplete; it is not replaced by a web surface or a
+different disruption.
 
 Kept deliberately small at first: the first run stops after half a day. If ten
 qualifying cases cannot be found in that time, record the checkpoint as
@@ -132,6 +136,12 @@ four must hold:
 4. reachable             within a small, recorded number of interactions
                          from the disrupted journey
 ```
+
+For the initial checkpoint, *reachable* means within at most three purposeful
+navigation taps and two minutes from the disrupted journey detail. Scrolling is
+recorded but does not consume a navigation tap unless it opens or changes a
+view. The operational freeze, evidence schema and run status are in
+[`benchmarks/a5a-phase0-start-2026-08-12.md`](benchmarks/a5a-phase0-start-2026-08-12.md).
 
 Anything less — an alternatives list, a "connection at risk" badge, a
 push notification — is **not** a counterfactual comparison, however useful.

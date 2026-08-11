@@ -46,7 +46,7 @@ reversal conditions.
 | Phase 0 scope, order and delivery | D001, D002, D007, D008, D009, D010, D011, D027, D033, D037, D039, D044 |
 | Population, episodes and evaluation | D003, D006, D013, D020, D021, D024, D027, D030, D031, D032 |
 | Binding and observation evidence | D004, D012, D015, D022 (retention principle only), D023, D029, D034, D043, D044 |
-| Competitive, market and validation | D005, D017, D018, D019, D025, D026, D028, D035 (risk classification only), D036 (exit definitions only), D038, D041, D042 |
+| Competitive, market and validation | D005, D017, D018, D019, D025, D026, D028, D035 (risk classification only), D036 (exit definitions only), D038, D041, D042, D045 |
 | Open — awaiting a decision from the author | **D040** (licence values) |
 
 Superseded entries remain below for provenance: D014 is superseded by D021 and
@@ -916,3 +916,33 @@ schema-coupling rule are superseded by D042**.
   funding becomes available, or a provider supplies written no-cost eligibility
   and sufficient rights. Either event triggers a fresh provider and budget
   decision; neither automatically authorises collection.
+
+### D045 — The first A5a checkpoint pairs three mobile surfaces
+
+- **Date:** 2026-08-12
+- **Status:** active; refines **D025**, **D028**, and **D044**
+- **Evidence available at the time:** The unmerged `codex/a5a-20260811` branch
+  contains two partial bahn.de cases and two failed Trainline web attempts. No
+  screenshot was retained, every evidence path is `NOT_CAPTURED`, DB Navigator
+  was not observed, and every complete denominator is `0/10`. That work is
+  useful provenance but cannot support a product-level or A5a verdict. Mixing a
+  native incumbent app with incomplete web surfaces would preserve the same
+  ambiguity.
+- **Decision:** The Phase 0-start checkpoint uses the same ten fresh cases on
+  DB Navigator, Trainline and Google Maps mobile apps. Each surface is anonymous,
+  guest or incognito; no account is created and no web substitute is allowed.
+  A case starts at the disrupted journey detail and allows at most three
+  purposeful navigation taps and two minutes. The effort cap is four active
+  hours; pauses awaiting a mobile observation do not consume it, but an expired
+  action window invalidates that case. Across later checkpoints the cases remain
+  fresh and therefore unpaired, as D025 requires.
+- **Alternatives rejected:** Importing the prior unauditable rows (would turn
+  missing evidence into a negative observation); mixed mobile/web surfaces
+  (surface differences could masquerade as product differences); unpaired tools
+  within one checkpoint (context differences would dominate ten cases); unlimited
+  exploration (makes friction and reachability runner-dependent).
+- **What would reverse this:** Before a future checkpoint begins, evidence that
+  one frozen app is unavailable to the target traveller or that another tool is
+  materially more relevant may change the surface set. The replacement and new
+  interaction budget must be frozen before sampling and cannot be applied
+  retrospectively to this checkpoint.
