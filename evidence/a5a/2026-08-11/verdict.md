@@ -25,8 +25,8 @@ thresholds remain in
 | Surface | Completed paired cases | Partial observations | Limitation |
 | --- | ---: | ---: | --- |
 | DB Navigator mobile | 0 | 0 | Awaiting user-supplied, de-identified screenshots and interaction steps |
-| bahn.de web | 0 | 1 | Anonymous search result, not a saved disrupted journey |
-| Trainline web | 0 | 1 attempted | Search inputs were accepted, but no result page was produced in the controlled session |
+| bahn.de web | 0 | 2 | Anonymous search results, not saved disrupted journeys |
+| Trainline web | 0 | 2 attempted | Search inputs were accepted, but no result page was produced in either controlled session |
 
 The partial case `a5a-20260811-cancel-01` was observed before departure. bahn.de
 marked the Berlin–Konstanz itinerary as cancelled, showed the planned 22:16
@@ -34,6 +34,16 @@ destination arrival and exposed other search results. It did **not** show a
 single-view comparison of the final outcome of continuing versus changing. The
 same case was not completed on DB Navigator or Trainline, so it contributes to
 neither the 10-case denominator nor any competitor numerator.
+
+The second partial case, `a5a-20260811-cancel-02`, completed the two planned
+examples for the cancellation archetype **on bahn.de only**. Before its 14:20
+departure, ICE 224 was shown as starting instead at Frankfurt Airport; its
+München and Mannheim stops were cancelled. The cancelled itinerary retained a
+planned 17:34 destination arrival, while a separate alternative search result
+arrived at 17:48. The surface did not label these as continue/change branches or
+compare them. Trainline accepted the matching route inputs, but its enabled
+search action produced no result, navigation or new controlled tab. Neither
+surface observation can substitute for the missing DB Navigator evidence.
 
 ## Verdict
 
