@@ -9,10 +9,12 @@ ticket-issuer, fare-validity, binding-relief, or passenger-rights conditions.
 Those require the independent carrier-conditions evidence described in
 [`binding-scenarios.md`](binding-scenarios.md) §3.
 
-> **Status: UNFILLED SCAFFOLD.** Every cell below is `?`. A `?` means *not
-> verified*, never *probably fine*. Do not copy answers from documentation
-> summaries, blog posts, community wikis, or model output — only from the
-> provider's own current terms page, with the URL and date recorded.
+> **Status: PARTIAL EVIDENCE v1 — RIGHTS GATE BLOCKED.** Four DB products have
+> been checked against current DB primary sources. Public pages establish some
+> capabilities, access conditions and licences, but do not establish usable
+> retention and downstream-use rights for the decisive RIS data. `UNKNOWN`
+> means *not publicly answered*, never *probably fine*. No account, paid plan,
+> provider contact or partner application was used in this review.
 
 > **Update trigger:** re-verify whenever a provider changes terms, when adding a
 > provider, and at minimum before any change to what the collector retains.
@@ -37,37 +39,60 @@ Those require the independent carrier-conditions evidence described in
 | Attribution | Is attribution required, and in what exact form? |
 | Rate limits | Requests per interval; is a corridor-wide poll at the intended cadence feasible? |
 | Access | Registration, key, approval process, cost |
+| Cost | Published price or `UNKNOWN` / price on request |
+| Revocability | Whether continued access is contractually protected or can be withdrawn |
 | Source | URL of the terms consulted + date consulted |
 
 ---
 
 ## 2. Matrix
 
-Add one row per candidate. Names left blank deliberately — fill in what you
-actually evaluated.
-
 ```text
-Provider snapshot ID     UNSET
-Verdict version          UNSET
-Terms effective date     UNSET
-Terms checked date       UNSET
+Provider snapshot ID     db-public-primary-sources-2026-08-11-v1
+Verdict version          v1-partial
+Terms effective date     UNKNOWN — the consulted pages state no effective date
+Terms checked date       2026-08-11
 ```
 
 Once verified, these values and the chosen retention / payload policy are copied
 into [`phase0-protocol.md`](phase0-protocol.md). Until then the collector gate is
 closed.
 
-| Provider | Realtime | Platform | Hold signal | Identity | Transfer times | Topology | Storage | Redistribution | Training | Commercial | Attribution | Rate limits | Access | Source (URL + date) |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| ? | ? | ? | ? | ? | ? | ? | ? | ? | ? | ? | ? | ? | ? | ? |
-| ? | ? | ? | ? | ? | ? | ? | ? | ? | ? | ? | ? | ? | ? | ? |
-| ? | ? | ? | ? | ? | ? | ? | ? | ? | ? | ? | ? | ? | ? | ? |
+### 2.1 Capability and access evidence
+
+| Product and version | Realtime | Platform | Hold signal | Service identity | Transfer / topology | Rate limits | Access and cost | Source, checked 2026-08-11 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| **RIS::Connections** product `1.0.208`, API `1.18.0` | Current forecasts, disruption state and connection status are inputs; public page gives no latency guarantee | Yes — platform-precise connection assessment | **Yes** — waiting / not-waiting disposition status | Request uses `journeyID` + `arrivalID`; cross-observation stability remains unverified pending A7 | Platform-precise transfer times, indoor-routing inputs where available, fallback corporate transfer rules and station-area transfers | 100 req/s plus 5k–500k requests/day by plan | Positive review; **only DB sales partners**; paid, price on request | [Marketplace product](https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-connections-transporteure); [official API guide](https://developer-docs.deutschebahn.com/doku/apis/ris-connections-10686902) |
+| **RIS::Journeys** product `1.0.273`, API `2.12.0` | Yes — scheduled and forecast arrivals/departures, cancellations and journey changes; no public latency guarantee | Yes — platforms / bus bays | Not documented | `journeyID` and match/find endpoints exist; stability remains unverified pending A7 | No transfer-time or station-topology claim | 100 req/s plus 5k–500k requests/day by plan | Positive eligibility review; paid, price on request | [Marketplace product](https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-journeys-transporteure); [official API guide](https://developer-docs.deutschebahn.com/doku/apis/ris-journeys-10582266) |
+| **Timetables** product/API `1.0.274` | Yes — planned timetable plus current changes at a station; no public latency guarantee | `UNKNOWN` from the consulted public product page | Not documented | Station-scoped plan/change records; stable cross-station journey identity not established | No transfer-time or topology claim | 60 requests/minute | Marketplace registration/subscription; free plan | [Marketplace product](https://developers.deutschebahn.com/db-api-marketplace/apis/product/timetables) |
+| **RIS::Stations** product `1.29.3446`, API `1.29.1.1` | Primarily versioned station master data, not journey realtime | Yes — platform structures and sectors | Not applicable / not documented | Station, stop-place and platform keys; not a journey-identity source | Transfer times by traveller type, transfer areas, platform structure; official guide permits initial storage and incremental refresh of station master data | Test: 10 req/s and 10k/month; paid plans: 100 req/s and 150k–15m/month | Positive eligibility review; free test up to two months; paid plans EUR 4,200–84,000/year | [Marketplace product](https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-stations); [official API guide](https://developer-docs.deutschebahn.com/doku/apis/ris-stations-10686906) |
+
+`Not documented` means the consulted primary source makes no claim for that
+field. It is not evidence of absence. Version numbers are snapshots, not a
+compatibility commitment.
+
+### 2.2 Rights evidence
+
+| Product | Storage | Retention | Redistribution | Training | Commercial use | Attribution | Revocability |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| **RIS::Connections** | `UNKNOWN` — contract required | `UNKNOWN` — contract required | `UNKNOWN` — contract required | `UNKNOWN` — contract required | `UNKNOWN` — contract required | `UNKNOWN` — contract required | `UNKNOWN` — approval and contract required; no public continuity promise |
+| **RIS::Journeys** | `UNKNOWN` — contract required | `UNKNOWN` — contract required | `UNKNOWN` — contract required | `UNKNOWN` — contract required | `UNKNOWN` — contract required | `UNKNOWN` — contract required | `UNKNOWN` — approval and contract required; no public continuity promise |
+| **Timetables** | **Permitted for the CC BY 4.0 licensed dataset**; reproduction is licensed | No published retention cap found | **Permitted with CC BY 4.0 conditions** | `UNKNOWN` — model training is not expressly addressed; no legal interpretation is assumed | **Permitted by CC BY 4.0**, subject to attribution and other applicable rights | Preserve supplied creator/copyright/licence/disclaimer/source information, indicate modifications and link the licence when sharing | CC BY 4.0 grant is irrevocable while its conditions are followed; API availability itself has no public continuity commitment |
+| **RIS::Stations** | Official guide expressly supports storing and incrementally updating station master data; rights for the transfer/topology subset remain `UNKNOWN` pending contract/scope confirmation | `UNKNOWN` for the contract-governed API and transfer/topology subset | CC BY 4.0 applies to stated *Stationswissen*; exact inclusion of transfer/topology fields is `UNKNOWN` | `UNKNOWN` — not expressly addressed and licence scope is unresolved | `UNKNOWN` for the transfer/topology subset; contract required | CC BY 4.0 attribution for covered *Stationswissen*; OpenStreetMap attribution also applies to state-boundary data | `UNKNOWN` for API/contract access; the CC BY grant for material actually covered remains irrevocable while compliant |
+
+The CC BY conclusions above use the
+[CC BY 4.0 legal code](https://creativecommons.org/licenses/by/4.0/legalcode.en)
+linked by DB: it permits reproduction, sharing and adapted material, including
+relevant database-right uses, subject to attribution. It grants only rights the
+licensor is authorised to grant; it does not settle privacy, trademark,
+third-party or contract scope. That is why training and the boundary of
+RIS::Stations *Stationswissen* remain `UNKNOWN` rather than inferred.
 
 ---
 
 ### Verified finding — the decisive signals exist, behind a partner gate
 
-Consulted 2026-08-10:
+Re-checked 2026-08-11:
 [DB API Marketplace — RIS::Connections (DB Transporteure)](https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-connections-transporteure)
 
 | Field | What the product page states |
@@ -96,8 +121,9 @@ Three consequences:
    the incumbent grants and can withdraw is not a moat, and it points the
    strategy toward B2B2C or research (**S12**).
 
-The matrix above must still be filled for whichever feeds are actually
-obtainable. This finding narrows the search; it does not complete it.
+The matrix above now records the public evidence for four products. It still
+does not identify an obtainable decisive-signal feed with sufficient rights;
+that missing contract/access evidence keeps the gate closed.
 
 ---
 
@@ -123,7 +149,11 @@ the facts.
 
 ## 4. Verdict
 
-_Not written yet — requires §2._
+> **Verdict v1-partial: BLOCKED.** Public primary sources establish useful
+> capabilities, but they do not establish that AnschlussPilot is eligible for
+> RIS::Connections or may retain its hold/connection data for longitudinal
+> replay. No Phase 0 provider is selected. A7, polling and collector work remain
+> prohibited.
 
 The project pursues a research result (**R**) and a product prototype (**P**) in
 sequence (`README.md` §4). **Their permission requirements differ, so the verdict
@@ -135,11 +165,11 @@ cost, and finding that only R is permitted is a useful result, not a failure.
 Requires: retention long enough to measure, and use for private analysis.
 
 ```text
-Retention permitted        ?
-Retention window           ?
-Analysis / research use    ?
-Model training use         ?   (affects modelling-and-evaluation.md §5, not R itself)
-Verdict for R              ?
+Retention permitted        UNKNOWN for decisive RIS data
+Retention window           UNKNOWN for decisive RIS data
+Analysis / research use    UNKNOWN for decisive RIS data
+Model training use         UNKNOWN for decisive RIS data
+Verdict for R              BLOCKED pending eligibility and contractual rights
 ```
 
 If retention is **not** permitted → `README.md` §12 **S1** applies: hard stop on
@@ -150,19 +180,42 @@ Phase 0 as designed. Redesign as ephemeral live evaluation, or change provider.
 Requires everything R requires, plus showing derived data to other people.
 
 ```text
-Redistribution / display to third parties   ?
-Attribution required, exact wording         ?
-Commercial use                              ?
-Verdict for P                               ?
+Redistribution / display to third parties   UNKNOWN for decisive RIS data
+Attribution required, exact wording         UNKNOWN for decisive RIS data
+Commercial use                              UNKNOWN for decisive RIS data
+Verdict for P                               BLOCKED; no product route authorised
 ```
 
 If R passes and P fails → drop P, continue R unchanged. Record it as a decision
 in [`decisions.md`](decisions.md), superseding **D005**.
 
-### 4.3 Then state plainly
+### 4.3 Consequences
 
-1. Which provider Phase 0 will use, and why.
-2. Exactly what the collector may retain, and for how long.
-3. Which of `README.md` A2 / A3 / A4 / A7 are now answered, bounded, or open.
-4. What each of R and P must give up as a result.
-5. Which stop conditions in `README.md` §12 are now triggered, if any.
+1. **Provider selection:** none. Timetables is openly licensed but does not
+   document the decisive hold signal or transfer topology needed to answer A2
+   and A3. RIS::Connections documents those signals but is restricted to
+   approved DB sales partners under individually agreed terms.
+2. **Collector policy:** none can be frozen. No decisive-signal payload may be
+   polled or retained until eligibility, storage and retention are expressly
+   established.
+3. **Assumptions:** A2b and A3b remain verified; A2c, A3c and A4 remain
+   `UNKNOWN`; A7 remains untested despite `journeyID` being documented.
+4. **Research and product:** both R and P remain blocked for the designed
+   longitudinal decision experiment. This result does not authorise an
+   ephemeral redesign or a B2B2C implementation.
+5. **Stop conditions:** S1, S11 and S12 are not declared triggered because the
+   required contractual facts are absent, not negative. The rights gate is
+   nevertheless closed under I15. The next evidence action requires separate
+   authorisation to contact DB or apply for access; this public-source sprint
+   does neither.
+
+### 4.4 Evidence still required to change the verdict
+
+- Written eligibility for AnschlussPilot's intended research and possible
+  product use, including whether non-sales-partner access is possible.
+- Contract terms covering payload storage, retention, research analysis,
+  third-party display, commercial use, attribution and termination.
+- Confirmation that the licensed scope of RIS::Stations includes the specific
+  transfer/topology fields Phase 0 would retain.
+- Only after those rights pass: a bounded A7 identity spike and cadence/coverage
+  feasibility check using the authorised products.

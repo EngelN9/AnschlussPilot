@@ -23,8 +23,8 @@
 | Engineering rules | Defined (`AGENTS.md`) |
 | Phase 0 protocol manifest | `UNSET` / `BLOCKED` — freeze gates incomplete |
 | Competitive benchmark (A5a) | **Not started — cheapest existence check** |
-| Decisive-signal access (A2c / A3c) | **Not started — can invalidate the B2C path** |
-| Provider evaluation | Scaffold only; matrix unfilled — **blocking data-dependent work** |
+| Decisive-signal access (A2c / A3c) | **Public-source pass complete; eligibility and contractual rights remain `UNKNOWN`** |
+| Provider evaluation | **v1 partial / `BLOCKED` — four DB products checked; no provider selected** |
 | Identity-resolution spike (A7) | **Not started — blocking** |
 | Observation collector | **Not started — blocking** |
 | Domain model / risk engine / decision engine | Not started |
