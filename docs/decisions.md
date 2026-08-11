@@ -43,9 +43,9 @@ reversal conditions.
 
 | Area | Active decisions |
 | --- | --- |
-| Phase 0 scope, order and delivery | D001, D002, D007, D008, D009, D010, D011, D027, D033, D037, D039 |
+| Phase 0 scope, order and delivery | D001, D002, D007, D008, D009, D010, D011, D027, D033, D037, D039, D044 |
 | Population, episodes and evaluation | D003, D006, D013, D020, D021, D024, D027, D030, D031, D032 |
-| Binding and observation evidence | D004, D012, D015, D022 (retention principle only), D023, D029, D034, D043 |
+| Binding and observation evidence | D004, D012, D015, D022 (retention principle only), D023, D029, D034, D043, D044 |
 | Competitive, market and validation | D005, D017, D018, D019, D025, D026, D028, D035 (risk classification only), D036 (exit definitions only), D038, D041, D042 |
 | Open — awaiting a decision from the author | **D040** (licence values) |
 
@@ -887,3 +887,32 @@ schema-coupling rule are superseded by D042**.
 - **What would reverse this:** Written provider evidence establishing eligible
   access plus storage, retention, research, redistribution, commercial,
   attribution and termination terms adequate for the frozen Phase 0 use.
+
+### D044 — Phase 0 uses an individual, zero-spend provider path
+
+- **Date:** 2026-08-11
+- **Status:** active; operationalises the next evidence action in **D043**
+- **Evidence available at the time:** The author is acting as an individual and
+  has no Phase 0 funding. Public evidence v2 identifies free planning sources and
+  some free tests, but none currently establishes both the decisive realtime
+  signals and the retention rights needed for the longitudinal experiment.
+  A5a can run without provider data. Registration itself accepts general terms
+  but does not answer product eligibility or downstream rights.
+- **Decision:** Spend nothing on provider access before Phase 0 evidence
+  justifies reconsideration. Do not provide payment details, form a company,
+  register for a platform, accept terms or request credentials before written
+  eligibility and rights answers are reviewed. Send separate enquiries as an
+  individual to DB RIS / Marketplace, DB data streams and DELFI. A free trial is
+  usable only if it has no automatic paid conversion and expressly grants the
+  storage and retention needed for the bounded research period. Continue A5a in
+  parallel, one auditable mobile case at a time.
+- **Alternatives rejected:** Paying before the product thesis is tested
+  (converts uncertainty into sunk cost); registering first (accepts terms without
+  resolving the rights gate); treating a free schedule feed as a decisive-signal
+  provider (answers a different question); declaring that the project must
+  remain zero-budget forever (the current constraint is Phase 0, not a permanent
+  business model).
+- **What would reverse this:** Phase 0 evidence supports continuing and external
+  funding becomes available, or a provider supplies written no-cost eligibility
+  and sufficient rights. Either event triggers a fresh provider and budget
+  decision; neither automatically authorises collection.
