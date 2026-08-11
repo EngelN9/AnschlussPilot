@@ -275,185 +275,174 @@ in [`decisions.md`](decisions.md), superseding **D005**.
 
 ---
 
-## 5. External Confirmation Draft — User Must Review and Send
+## 5. Zero-Budget External Confirmation Package — User Must Send
 
-This draft is not evidence and sending it is not authorised by this repository
-change. The author must choose the legal identity used for the enquiry, supply
-truthful contact details, review the wording, and personally send or submit it.
+These drafts are evidence-gathering tools, not evidence. The author has chosen
+to write as an individual independent researcher and to spend nothing before
+Phase 0 evidence justifies reconsideration (**D044**). No account is created, no
+terms are accepted, no API is called and no payment information is supplied
+before a written eligibility and rights response is reviewed.
 
-Public routing addresses checked 2026-08-11 are
-`api-marketplace@deutschebahn.com` for Marketplace questions,
-`ris-api@deutschebahn.com` for RIS products,
-`ris-gtfs@deutschebahn.com` for DB GTFS streams, and `info@delfi.de` for DELFI.
-The author must decide the recipients and must not include credentials, API keys
-or personal travel data.
+Send the three messages separately so that each recipient can answer for the
+products it owns. Public routing addresses checked 2026-08-11 are
+`ris-api@deutschebahn.com` with `api-marketplace@deutschebahn.com` copied for
+RIS / Marketplace questions, `ris-gtfs@deutschebahn.com` for DB data streams,
+and `info@delfi.de` for DELFI. The author must replace the identity placeholders,
+personally send each message and keep credentials, API keys and travel data out
+of the correspondence.
 
-### 5.1 German primary draft
+### 5.1 DB API Marketplace and RIS
 
 ```text
-Betreff: Anfrage zu Zugangsberechtigung und Datennutzungsrechten für ein
-unabhängiges Forschungsprojekt zur Anschlussentscheidung
+An: ris-api@deutschebahn.com
+Cc: api-marketplace@deutschebahn.com
+Betreff: Kostenfreier Forschungszugang zu RIS::Connections und RIS::Stations
 
 Guten Tag,
 
-ich prüfe für das unabhängige Projekt „AnschlussPilot“, ob sich die
-Entscheidungsqualität bei gefährdeten Bahnanschlüssen in einer begrenzten
-Forschungsphase untersuchen lässt. Das Projekt ist nicht mit der Deutschen Bahn
-verbunden und würde vor einer ausdrücklichen Erlaubnis weder Daten abrufen noch
-speichern.
+ich prüfe als Privatperson für das unabhängige, nicht mit der Deutschen Bahn
+verbundene Forschungsprojekt „AnschlussPilot“, ob sich Entscheidungen bei
+gefährdeten Bahnanschlüssen in einer begrenzten Phase untersuchen lassen. Das
+Projekt verfügt in Phase 0 über kein Budget. Untersucht werden soll ein einzelner
+deutscher Fernverkehrskorridor; der genaue Korridor wird erst nach Klärung des
+Datenzugangs festgelegt.
 
-Bitte teilen Sie mir mit, welche der folgenden Produkte oder Datenströme für ein
-unabhängiges Projekt ohne Status als DB-Vertriebspartner grundsätzlich in Frage
-kommen: RIS::Connections, RIS::Stations, DB GTFS / GTFS-RT und RiFahrt. Gibt es
-hierfür einen Testzugang oder eine alternative Zugangsmöglichkeit?
+Kann eine Privatperson ohne Status als DB-Vertriebspartner einen vollständig
+kostenfreien Forschungs- oder Testzugang zu RIS::Connections und RIS::Stations
+erhalten? Bitte bestätigen Sie auch, ob ein Testzugang automatisch endet, ohne
+in einen kostenpflichtigen Vertrag überzugehen.
 
-Für die Beurteilung benötige ich bitte eine schriftliche Klärung der folgenden
-Punkte für das jeweils anwendbare Produkt:
+Für jedes grundsätzlich verfügbare Produkt benötige ich bitte eine schriftliche
+Klärung:
 
-1. Dürfen rohe Antworten und normalisierte Beobachtungen gespeichert werden?
-2. Welche maximale Aufbewahrungsfrist und welche Löschpflichten gelten?
-3. Sind private Forschungsanalyse und die Veröffentlichung aggregierter,
-   nicht personenbezogener Ergebnisse erlaubt?
-4. Dürfen abgeleitete Informationen Dritten angezeigt und später in einem
-   kommerziellen Produkt verwendet werden?
-5. Sind statistische Auswertung und Modelltraining mit gespeicherten Daten
-   erlaubt?
-6. Welche genaue Quellenangabe und welche weiteren Lizenzpflichten gelten?
-7. Welche Kündigungs-, Widerrufs- und Löschpflichten gelten bei Vertragsende?
-8. Umfasst die CC-BY-Lizenz für RIS::Stations („Stationswissen“) auch die für
-   Phase 0 benötigten Umsteigezeiten, Umsteigebereiche und Gleisstrukturen?
-9. Welche Preise, Abrufgrenzen und Zusagen zur fortlaufenden Verfügbarkeit
-   gelten für Test- und Produktivzugänge?
-10. Falls diese Produkte nicht zugänglich sind: Welche offizielle Alternative
-    empfehlen Sie für ein unabhängiges Forschungsprojekt?
+1. Dürfen rohe Antworten und daraus normalisierte Beobachtungen gespeichert
+   werden, und wie lange?
+2. Sind private Forschungsanalyse und die Veröffentlichung aggregierter,
+   nicht personenbezogener Ergebnisse zulässig?
+3. Sind die Anzeige abgeleiteter Informationen, spätere kommerzielle Nutzung
+   und Modelltraining zulässig oder ausgeschlossen?
+4. Welche Quellenangaben sowie Kündigungs- und Löschpflichten gelten?
+5. Umfasst die CC-BY-Lizenz für RIS::Stations auch Umsteigezeiten,
+   Umsteigebereiche und Gleisstrukturen?
+6. Welche Abrufgrenzen und Zusagen zur fortlaufenden Verfügbarkeit gelten?
 
-Geplanter Rahmen:
-- Rechtsform / Rolle: [Privatperson, Unternehmen oder Forschungseinrichtung]
-- Korridor: [UNSET — vor Versand ausfüllen]
-- Forschungs- und Aufbewahrungszeitraum: [UNSET — vor Versand ausfüllen]
-- Geplantes Abrufintervall und Abrufvolumen: [UNSET — vor Versand ausfüllen]
-- Rohdatenaufbewahrung: [UNSET — vor Versand ausfüllen]
-- Datenschutz: keine Fahrgastkonten, Tickets, Zahlungsdaten oder dauerhafte
-  Standortverläufe vorgesehen
+Falls dieser Zugang für Privatpersonen nicht möglich ist, welche offizielle
+kostenfreie Datenquelle empfehlen Sie für diese Forschungsfrage? Vor einer
+schriftlichen Klärung werde ich weder ein Marketplace-Konto anlegen noch Daten
+abrufen oder speichern.
 
 Mit freundlichen Grüßen
 [Name]
-[Organisation oder „Privatperson / unabhängiges Forschungsprojekt“]
+Privatperson / unabhängiges Forschungsprojekt
 [Land / Rechtsordnung]
-[Kontakt]
+[E-Mail]
 ```
 
-### 5.2 English reference translation
+### 5.2 DB GTFS / GTFS-RT and RiFahrt
 
 ```text
-Subject: Eligibility and data-use rights for an independent connection-decision
-research project
+An: ris-gtfs@deutschebahn.com
+Betreff: Kostenfreier Forschungszugang zu DB GTFS / GTFS-RT und RiFahrt
 
-Hello,
+Guten Tag,
 
-I am assessing whether the independent “AnschlussPilot” project can run a
-bounded research phase on decision quality for threatened rail connections. The
-project is not affiliated with Deutsche Bahn and would not retrieve or retain
-data before receiving explicit permission.
+ich prüfe als Privatperson für das unabhängige Forschungsprojekt
+„AnschlussPilot“, ob sich Entscheidungen bei gefährdeten Bahnanschlüssen in
+einer begrenzten Phase auf einem einzelnen deutschen Fernverkehrskorridor
+untersuchen lassen. Das Projekt verfügt in Phase 0 über kein Budget und ist
+nicht mit der Deutschen Bahn verbunden.
 
-Please confirm which of RIS::Connections, RIS::Stations, DB GTFS / GTFS-RT and
-RiFahrt may be available to an independent project that is not a DB sales
-partner, including any test or alternative access route.
+Können DB GTFS / GTFS-RT und RiFahrt einer Privatperson für diese Untersuchung
+vollständig kostenfrei bereitgestellt werden? Falls ja, wie können die benötigten
+Zugangsdaten beantragt werden, und endet ein Testzugang ohne automatische
+Umstellung auf einen kostenpflichtigen Vertrag?
 
-For each applicable product, please confirm in writing:
+Bitte bestätigen Sie für jeden verfügbaren Datenstrom:
 
-1. whether raw responses and normalized observations may be stored;
-2. the maximum retention period and deletion duties;
-3. whether private research analysis and publication of aggregated,
-   non-personal findings are permitted;
-4. whether derived information may be displayed to third parties and later
-   used in a commercial product;
-5. whether statistical analysis and model training on retained data are
-   permitted;
-6. the exact attribution and other licence obligations;
-7. termination, revocation and deletion duties at contract end;
-8. whether the RIS::Stations CC BY “Stationswissen” scope includes transfer
-   times, transfer areas and platform structures needed for Phase 0;
-9. prices, rate limits and continuity commitments for test and production
-   access; and
-10. any official alternative for an independent research project if these
-    products are unavailable.
+1. welche Verkehre und Betreiber enthalten sind und ob stabile Fahrt-IDs die
+   Verknüpfung von Plan- und Echtzeitdaten erlauben;
+2. ob rohe Feeds und normalisierte Beobachtungen gespeichert werden dürfen und
+   welche maximale Aufbewahrungsfrist gilt;
+3. ob private Forschungsanalyse, aggregierte Veröffentlichung, Anzeige
+   abgeleiteter Informationen, spätere kommerzielle Nutzung und Modelltraining
+   jeweils erlaubt sind;
+4. welche Quellenangaben, Abrufgrenzen, Verfügbarkeitszusagen sowie Kündigungs-
+   und Löschpflichten gelten.
 
-Proposed parameters:
-- legal role: [individual, company or research organisation]
-- corridor: [UNSET — complete before sending]
-- research and retention period: [UNSET — complete before sending]
-- intended polling cadence and request volume: [UNSET — complete before sending]
-- raw-payload retention: [UNSET — complete before sending]
-- privacy: no passenger accounts, tickets, payment data or continuous location
-  history are planned
+Falls kein Zugang für Privatpersonen besteht, welche offizielle kostenfreie
+Alternative empfehlen Sie? Vor Ihrer schriftlichen Antwort werde ich keine
+Zugangsdaten beantragen und keine Daten abrufen oder speichern.
 
-Kind regards,
+Mit freundlichen Grüßen
 [Name]
-[Organisation or “individual / independent research project”]
-[Country / jurisdiction]
-[Contact details]
+Privatperson / unabhängiges Forschungsprojekt
+[Land / Rechtsordnung]
+[E-Mail]
 ```
 
-Before sending, the author must replace every placeholder and decide whether
-the request is made personally, through a company, or through a research
-organisation. Any acceptance, subscription, price or contract requires a
-separate decision; this draft authorises none.
-
-### 5.3 DELFI-Realtime metadata and rights draft
+### 5.3 DELFI-Realtime
 
 ```text
+An: info@delfi.de
 Betreff: Anfrage zu DELFI-Realtime auf der Mobilithek
 
 Guten Tag,
 
-für das unabhängige Forschungsprojekt „AnschlussPilot“ prüfe ich öffentlich
-verfügbare Datenquellen für eine begrenzte Untersuchung gefährdeter
-Bahnanschlüsse. Auf Ihren öffentlichen Seiten wird DELFI-Realtime als
-deutschlandweiter Echtzeitdatenstrom über die Mobilithek in GTFS Realtime Trip
-Updates und SIRI Estimated Timetable beschrieben.
+ich prüfe als Privatperson für das unabhängige, derzeit vollständig
+unfinanzierte Forschungsprojekt „AnschlussPilot“ Datenquellen für eine begrenzte
+Untersuchung gefährdeter Bahnanschlüsse auf einem einzelnen deutschen
+Fernverkehrskorridor.
 
-Könnten Sie bitte den aktuellen Mobilithek-Datensatz beziehungsweise die
-Angebots-ID und die geltenden Nutzungsbedingungen nennen und folgende Punkte
-bestätigen?
+Bitte nennen Sie mir den aktuellen Mobilithek-Datensatz beziehungsweise die
+Angebots-ID für DELFI-Realtime und bestätigen Sie:
 
 1. Welche Verkehre und Betreiber sind enthalten, insbesondere SPNV und SPFV?
 2. Welche stabilen Fahrt-IDs ermöglichen die Verknüpfung mit den DELFI-Solldaten?
-3. Sind Registrierung, Freischaltung oder ein Vertrag erforderlich?
-4. Welche Lizenz gilt für Abruf, Speicherung, Aufbewahrung, Forschungsanalyse,
-   Veröffentlichung aggregierter Ergebnisse, Anzeige abgeleiteter Informationen
-   und kommerzielle Nutzung?
-5. Welche Quellenangabe, Abrufgrenzen, Löschpflichten und Kündigungsbedingungen
-   gelten?
+3. Ist der Zugang für eine Privatperson vollständig kostenfrei, und sind
+   Registrierung, Freischaltung oder ein Vertrag erforderlich?
+4. Dürfen Rohdaten und normalisierte Beobachtungen gespeichert werden, und wie
+   lange?
+5. Sind private Forschungsanalyse, aggregierte Veröffentlichung, Anzeige
+   abgeleiteter Informationen, spätere kommerzielle Nutzung und Modelltraining
+   jeweils erlaubt?
+6. Welche Quellenangaben, Abrufgrenzen, Verfügbarkeitszusagen sowie Kündigungs-
+   und Löschpflichten gelten?
 
-Vor einer ausdrücklichen Klärung werden keine Daten abgerufen oder gespeichert.
+Falls DELFI-Realtime hierfür nicht verfügbar ist, welche offizielle kostenfreie
+Alternative empfehlen Sie? Vor einer schriftlichen Klärung werde ich mich nicht
+registrieren und keine Daten abrufen oder speichern.
 
 Mit freundlichen Grüßen
-[Name / Organisation / Land / Kontakt]
-
---- English reference ---
-
-Subject: DELFI-Realtime Mobilithek metadata and use rights
-
-Hello,
-
-For the independent “AnschlussPilot” research project, I am assessing public
-data sources for a bounded study of threatened rail connections. Your public
-pages describe DELFI-Realtime as a nationwide realtime feed on Mobilithek in
-GTFS Realtime Trip Updates and SIRI Estimated Timetable formats.
-
-Please provide the current Mobilithek dataset or offer ID and applicable terms,
-and confirm:
-
-1. included modes and operators, especially regional and long-distance rail;
-2. stable trip identifiers for linking with DELFI schedule data;
-3. registration, approval or contract requirements;
-4. the licence for retrieval, storage, retention, research analysis, aggregate
-   publication, display of derived information and commercial use; and
-5. attribution, rate limits, deletion duties and termination conditions.
-
-No data will be retrieved or stored before explicit clarification.
-
-Kind regards,
-[Name / organisation / country / contact]
+[Name]
+Privatperson / unabhängiges Forschungsprojekt
+[Land / Rechtsordnung]
+[E-Mail]
 ```
+
+### 5.4 Sending, follow-up and evidence handling
+
+Before sending, the author reviews the German text, replaces only `[Name]`,
+`[Land / Rechtsordnung]` and `[E-Mail]`, and sends from the matching personal
+address. Do not add a company name, invented affiliation, API credential,
+payment information or personal travel example.
+
+For each message:
+
+1. record the sent date and recipient privately;
+2. after seven business days without a response, send one reply in the same
+   thread: `Guten Tag, ich möchte höflich an meine unten stehende Anfrage
+   erinnern. Können Sie mir bitte mitteilen, ob und an welche zuständige Stelle
+   ich sie gegebenenfalls weiterleiten soll? Vielen Dank.`;
+3. after another seven business days without a response, record
+   `inconclusive / no response`; never convert silence into refusal;
+4. keep the raw email and identity data in the private mailbox, outside Git;
+5. commit only a redacted evidence mapping: organisation / department, response
+   date, products addressed, each rights field answered or `UNKNOWN`, and the
+   resulting gate effect.
+
+A free account, trial or subscription is considered only after the written
+response and applicable terms have both been reviewed. It must require no
+payment method, must not auto-convert to a paid plan and must grant the retention
+needed for the bounded research period. Otherwise it does not open the rights
+gate. Provider-response evidence gets its own
+`codex/provider-outreach-evidence-v1` branch and never enters the A5a PR.
