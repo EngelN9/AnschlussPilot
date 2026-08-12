@@ -17,8 +17,9 @@ asserted as fact unless it was verified against a primary source
 
 > **Nothing here establishes product viability.** No user has been interviewed
 > and no segment has been measured. The first D045 benchmark run closed
-> `inconclusive` after one of thirty app observations; D046 is the current
-> pre-registered kill-check.
+> `inconclusive` after one of thirty app observations. The initial D046 run is
+> also `inconclusive / BLOCKED`: no candidate reached the frozen three-app
+> denominator, so neither a continuation nor a stop/pivot result is supported.
 
 ---
 
@@ -76,6 +77,15 @@ most five, live-disrupted Bavarian `Fernverkehr → Nahverkehr` cases with an
 actionable pre-transfer divergence. The scored apps are DB Navigator, MoBY and
 Wohin·Du·Willst. This is a hypothesis-driven test set, not a market-share or
 feature-completeness claim.
+
+The initial D046 attempt inspected two candidates. One lacked a live timing or
+connection disruption. The other was visible anonymously in DB Navigator and
+MoBY while its action window remained open, but Wohin·Du·Willst repeatedly
+failed to load any place or regional version before journey search. It was
+therefore excluded under the frozen three-surface rule. The raw result is 0/5
+complete cases and 0/15 scored observations; this run-specific
+`surface_unavailable` result is not evidence that a product feature is absent.
+See the [run artifact](benchmarks/phase0a-reroute-early-start-2026-08-12.md).
 
 The baseline ladder is:
 

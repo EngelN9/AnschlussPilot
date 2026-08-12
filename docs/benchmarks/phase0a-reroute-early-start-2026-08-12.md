@@ -18,7 +18,7 @@ provider-data permission.
 run_id                         phase0a-reroute-early-2026-08-12-v1
 method_frozen_at_utc           2026-08-12T00:34:58Z
 method_frozen_at_berlin        2026-08-12T02:34:58+02:00
-status                         PRE_REGISTERED — no Phase 0A candidate inspected
+status                         INCONCLUSIVE / BLOCKED — no complete case denominator
 target_sample                  3 unique cases
 maximum_sample                 5 unique cases
 active_effort_cap              8 hours
@@ -35,6 +35,23 @@ The archived D045 run in
 [`a5a-phase0-start-2026-08-12.md`](a5a-phase0-start-2026-08-12.md) remains
 provenance only. Its one case and one observation are not imported into this
 denominator.
+
+### Run environment and surface setup
+
+Observed on a physically connected RMX3661 running Android 15 (API 35), with
+device locale `zh-TW`, system timezone `Europe/Berlin`, automatic time enabled
+and automatic timezone disabled. The timezone was set by the device owner; no
+location was supplied or simulated.
+
+| Surface | Version | Install source | Observed account state | Permission state at setup | Phase 0A scoring effect |
+| --- | --- | --- | --- | --- | --- |
+| DB Navigator | `26.14.0` (`240000760`) | Pre-installed before this run | Anonymous surface previously reached; no account created or used | Not re-requested during setup | Ready for an included case; no setup screen is scored |
+| MoBY | `6.165.3.2900787` (`604900787`) | Google Play | Onboarding completed with optional pseudonymous analytics left off; anonymous connection-search home reached without login | Notifications and precise location not granted | Ready for an included case; onboarding is outside the tap/time denominator |
+| Wohin·Du·Willst | `4.2.3` (`29733721`) | Google Play | Introductory flow reached without login, but both the text search and regional-version list returned `Sorry, we could't load any places. Please try again!`; no version or journey-search surface could be selected | Notifications, precise location and special alarm access not granted | `surface_unavailable` for this run; the fixed denominator is not reduced and no product-capability inference is made |
+
+Installation and onboarding checks establish only that the app package and an
+anonymous entry path are present. They do not show an eligible live journey or
+any decision-grade comparison.
 
 ## 2. Product-Support Enquiry
 
@@ -75,9 +92,34 @@ eligible for an actual Anschlussvormeldung.
 
 Record every inspected candidate, including exclusions:
 
+### Discovery deviations
+
+| Observed UTC | Deviation | Containment and effect |
+| --- | --- | --- |
+| 2026-08-12T00:41Z–00:44Z | The eight `bahnhof.de` station pages selected their current window from the browser's Asia/Taipei clock while displaying German station wall times. | The complete München-to-Rosenheim sweep was rejected as a discovery attempt: no displayed service was accepted, excluded or used as a metric operand. Subsequent discovery uses a journey search with the date and time explicitly set to Europe/Berlin. |
+| 2026-08-12T00:45Z | The current DB long-distance traffic page listed no result when both `Fernverkehr` and `Bayern` filters were active, although the unfiltered long-distance view listed a Stuttgart–Nürnberg infrastructure disruption. | A broad traffic bulletin is retained only as a lead. A case still requires an exact itinerary, contemporaneous journey detail, action deadline and alternative; the bulletin alone cannot establish `t_early`. |
+
 | Candidate ID | Discovered UTC / Berlin | Seed station and services | Journey | Live disruption | Pre-transfer reroute and deadline | Three anonymous surfaces | Include / exclude reason |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| — | — | — | — | — | — | — | No Phase 0A candidate inspected before freeze |
+| `C001` | 2026-08-12T00:46:22Z / 2026-08-12T02:46:22+02:00 | Augsburg / ICE 619 → RE16 → RE80 | Stuttgart Hbf → Augsburg Hbf → Treuchtlingen → Ansbach; 03:50–07:39 | Journey detail showed scheduled and predicted times equal; the only current message concerned a defective vehicle boarding aid | Origin-level IC 2063 at 06:05, arriving 07:49; later regional options arrived 08:49 | not checked after exclusion | exclude — no observed timing or connection disruption, and the visible alternative was forecast later than continuing |
+| `C002` | 2026-08-12T00:56Z–01:14Z / 2026-08-12T02:56–03:14+02:00 | Nürnberg / IC 2063 → replacement Bus RE30 | Planned Stuttgart Hbf 06:05 → Nürnberg Hbf 08:18/08:30 → Bayreuth Hbf 09:55 | Current journey detail carried a heat-damage notice for Stuttgart–Nürnberg: omitted stops and delays up to 20 minutes; its displayed itinerary still used scheduled times and therefore did not establish an adjusted continue ETA | 03:50 ICE 619 via Augsburg, RE16, replacement Bus RE31 and RE30; arrives 09:41, diverges at Stuttgart and closes at 03:50 | DB Navigator and MoBY displayed the same journey anonymously while the window remained open; Wohin·Du·Willst could not load any place or regional version and never reached journey search | exclude — fixed condition 5 failed. The displayed 14-minute alternative advantage, two extra transfers and 03:50 deadline remain candidate-screening facts, not accepted metric operands or a scored 2/3 denominator |
+
+### Active-effort ledger
+
+| UTC interval | Active minutes | Work |
+| --- | ---: | --- |
+| 2026-08-12T00:41Z–00:49Z | 8 | Timezone-contaminated station sweep, containment, current long-distance bulletin review and one exact Berlin-time journey check |
+| 2026-08-12T00:49Z–00:54Z | 5 | Installed the two frozen Bavarian apps from their official Google Play listings, recorded package versions and checked the anonymous onboarding path without granting location |
+| 2026-08-12T00:54Z–00:58Z | 4 | Refreshed the public disruption bulletin and checked a Stuttgart–Nürnberg–Bayreuth journey plus a pre-transfer alternative; retained C002 as pending rather than prematurely including it |
+| 2026-08-12T00:58Z–01:03Z | 5 | Completed anonymous onboarding checks without granting notification, location or special alarm access; reached MoBY search and the Wohin·Du·Willst version-selection boundary |
+| 2026-08-12T01:03Z–01:11Z | 8 | Repeated Wohin·Du·Willst text and regional-version loading checks, then independently found C002 in DB Navigator and MoBY while its 03:50 action window remained open |
+| 2026-08-12T01:11Z–01:15Z | 4 | Repeated the failing Wohin·Du·Willst surface check, preserved de-identified exclusion evidence and recomputed the frozen denominator and gates |
+
+Total active effort was 34 minutes. The run stopped before the eight-hour cap
+because a mandatory frozen surface could not reach journey search after
+repeated anonymous setup attempts, making a complete three-app case denominator
+impossible in this environment. This is an incomplete-run stop, not S6 and not
+evidence that the missing product capability does not exist.
 
 ## 4. Observation Contract
 
@@ -133,13 +175,13 @@ evidence_paths; evidence_sha256; limitations
 
 | Case ID | Journey and disruption | `t_early` | `t_late` | Continue ETA | Best reroute ETA / deadline | Freshness / source | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| — | — | — | — | — | — | — | No included case yet |
+| — | — | — | — | — | — | — | No included case; C001 and C002 were excluded before scoring |
 
 ### Tool observations
 
 | Case ID | Observed UTC / Berlin | Tool and environment | Account state | Taps / scrolls / seconds | Four criteria | `all_four` | Evidence | Limitations |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| — | — | — | — | — | — | — | — | No observation yet |
+| — | — | — | — | — | — | — | — | No scored observation; two anonymous C002 journey checks and one unavailable-surface check were retained only as exclusion evidence |
 
 ## 5. Evidence and Privacy
 
@@ -154,7 +196,9 @@ evidence/phase0a/2026-08-12/<case_id>/<tool>/<sequence>-<description>.png
 
 | Case ID | Tool | Sanitised path | SHA-256 | Criterion or operand supported | Accepted / rejected reason |
 | --- | --- | --- | --- | --- | --- |
-| — | — | — | — | — | No Phase 0A evidence yet |
+| `C002` | DB Navigator | `evidence/phase0a/2026-08-12/c002/db-navigator/01-results.png` | `513757EF0B13FDDB1C2FB6C8A281FDE6912FFFE6CEC08C848BD9298CFF9ED67B` | Same 06:05–09:55 IC 2063 / replacement-bus journey visible at 03:14 Berlin; current result list carried a disruption marker | Accepted for candidate-exclusion provenance; rejected from scoring because the case failed the three-surface inclusion condition |
+| `C002` | MoBY | `evidence/phase0a/2026-08-12/c002/moby/01-results.png` | `8B1B26630DC364E8AF08161AC3466757F38B2172C8B6180480C44C6B8D79C155` | Same 06:05–09:55 IC 2063 / replacement-bus journey visible at 03:13 Berlin; result flagged a disruption and partial absence of realtime information | Accepted for candidate-exclusion provenance; rejected from scoring because the case failed the three-surface inclusion condition |
+| `C002` | Wohin·Du·Willst | `evidence/phase0a/2026-08-12/c002/wohin-du-willst/01-surface-unavailable.png` | `FD33DDFF8AD56C9F756945C33573EFA01A5DE97F27568846C2020F6864318278` | Text-place search returned `Sorry, we could't load any places. Please try again!` at 03:11 Berlin before any journey could be entered | Accepted for the run-specific `surface_unavailable` finding only; it does not establish absence of any feature |
 
 ## 6. Frozen Metrics and Baselines
 
@@ -192,7 +236,7 @@ An unobserved counterfactual outcome stays `UNKNOWN`.
 
 | Case ID | Gain operands / minutes | Decayed options operands / count | Lead-time operands / minutes | Extra transfers | Binding | Freshness | Reversal | False-intervention outcome |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| — | — | — | — | — | — | — | — | No metrics yet |
+| — | — | — | — | — | — | — | — | No accepted metric operands; C002's displayed 09:55 versus 09:41 candidate-screening comparison is not promoted into this table |
 
 ## 7. Frozen Gates and Verdict Logic
 
@@ -235,15 +279,22 @@ not create a replacement product automatically.
 
 | Gate | Raw numerator / denominator | State | Reason |
 | --- | --- | --- | --- |
-| Competitor stop | 0 / 0 complete cases per app | `NOT_EVALUATED` | No Phase 0A observation yet |
-| Early-reroute opportunity | 0 / 5 complete cases | `NOT_EVALUATED` | No Phase 0A case yet |
-| Informational sufficiency | 0 / 5 complete cases | `NOT_EVALUATED` | No Phase 0A case yet |
+| Competitor stop | DB Navigator 0 / 0; MoBY 0 / 0; Wohin·Du·Willst 0 / 0 complete cases | `NOT_EVALUATED` | No unique case produced three complete app observations; S6 is not triggered and no denominator is reduced |
+| Early-reroute opportunity | 0 / 5 complete cases | `INCONCLUSIVE` | Two inspected candidates were excluded; the 3/5 counts and five-case mean cannot be computed |
+| Informational sufficiency | 0 / 5 complete cases; 0 / 15 complete app observations | `INCONCLUSIVE` | No accepted `t_early` / `t_late` pair or complete three-surface case |
 | Acquisition rights | — | `BLOCKED` | No provider has sufficient verified storage and retention rights |
 | Anschlussvormeldung live lane | 0 observations | `UNKNOWN` | No genuine in-route German observation |
 
 ```text
-phase0a_status       PRE_REGISTERED
-phase0a_verdict      NOT_ISSUED
+phase0a_status       INCONCLUSIVE_BLOCKED
+phase0a_verdict      INCONCLUSIVE / BLOCKED
 provider_rights      BLOCKED
 engineering_allowed NO
 ```
+
+Neither a continuation recommendation nor an S6 stop/pivot result is supported.
+The fixed competitor lane is incomplete, the live Anschlussvormeldung lane is
+unobserved, the product-support enquiry is awaiting response and acquisition
+rights remain blocked. A later run may begin only as a new pre-registered
+denominator after the frozen app surface is genuinely available; this run is
+not rewritten or backfilled.

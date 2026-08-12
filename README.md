@@ -22,7 +22,7 @@
 | Product direction | Defined; current kill-check narrowed to `REROUTE_EARLY` |
 | Engineering rules | Defined (`AGENTS.md`) |
 | Phase 0 protocol manifest | `UNSET` / `BLOCKED` — freeze gates incomplete |
-| Competitive benchmark (Phase 0A / A5a) | **Phase 0A pre-registered; D045 archived `inconclusive` at 1/30 observations** |
+| Competitive benchmark (Phase 0A / A5a) | **Initial Phase 0A run `inconclusive / BLOCKED`: 0/5 complete cases and 0/15 scored app observations; mandatory Wohin·Du·Willst journey-search surface unavailable in this run** |
 | Decisive-signal access (A2c / A3c) | **Public-source pass complete; eligibility and contractual rights remain `UNKNOWN`** |
 | Provider evaluation | **v1 partial / `BLOCKED` — four DB products checked; no provider selected** |
 | Identity-resolution spike (A7) | **Not started — blocking** |

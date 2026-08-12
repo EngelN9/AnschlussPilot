@@ -66,6 +66,11 @@ pre-registered in
 Even if the interface and opportunity gates pass, missing acquisition rights
 keep data-dependent Phase 0 work `BLOCKED`.
 
+The first D046 execution produced no accepted metric operands: 0/5 complete
+cases and 0/15 scored observations. A mandatory anonymous app surface could not
+reach journey search, so the run is `inconclusive / BLOCKED`; the displayed
+screening comparison for an excluded candidate is not promoted into a metric.
+
 ### Target n
 
 The A1 criterion has two halves — how often the opportunity occurs, and how much

@@ -17,7 +17,8 @@ goes stale the moment code lands; the date below tells you how far to trust it.
 Last verified:  2026-08-12
 Observed state: documentation only — no application code, no provider
                 integration, no dataset, no tests; D045 archived inconclusive
-                at 1/30 observations; D046 Phase 0A pre-registered
+                at 1/30 observations; initial D046 Phase 0A run inconclusive /
+                blocked at 0/5 complete cases and 0/15 scored observations
 ```
 
 If the date is old or the state does not match what you see, trust the
@@ -27,9 +28,11 @@ The project is in **Phase 0** (see [`README.md`](README.md) §4): determine
 whether the product thesis holds, using one corridor, offline replay, and no user
 interface. Phase 0 blockers, in order:
 
-1. D046 Phase 0A `REROUTE_EARLY` live kill-check — target three, at most five
-   Bavarian cases across DB Navigator, MoBY and Wohin·Du·Willst. D045 remains
-   archived `inconclusive` evidence and is not imported into the new denominator.
+1. D046 Phase 0A `REROUTE_EARLY` live kill-check — the initial run is
+   `inconclusive / BLOCKED`: Wohin·Du·Willst could not load a place or regional
+   version, so neither inspected candidate formed the mandatory three-app
+   denominator. D045 remains archived `inconclusive` evidence and is not
+   imported into D046.
 2. `docs/provider-evaluation.md` — public matrix partially filled; rights gate
    remains blocked and stops all data-dependent work, but not the live-surface
    kill-check. A product enquiry about Anschlussvormeldung was sent on
