@@ -46,7 +46,7 @@ reversal conditions.
 | Phase 0 scope, order and delivery | D001, D002, D007, D008, D009, D010, D011, D027, D033, D037, D039, D044 |
 | Population, episodes and evaluation | D003, D006, D013, D020, D021, D024, D027, D030, D031, D032 |
 | Binding and observation evidence | D004, D012, D015, D022 (retention principle only), D023, D029, D034, D043, D044 |
-| Competitive, market and validation | D005, D017, D018, D019, D025, D026, D028, D035 (risk classification only), D036 (exit definitions only), D038, D041, D042, D045 |
+| Competitive, market and validation | D005, D017, D018, D019, D025, D026, D028, D035 (risk classification only), D036 (exit definitions only), D038, D041, D042, D046 |
 | Open — awaiting a decision from the author | **D040** (licence values) |
 
 Superseded entries remain below for provenance: D014 is superseded by D021 and
@@ -920,7 +920,7 @@ schema-coupling rule are superseded by D042**.
 ### D045 — The first A5a checkpoint pairs three mobile surfaces
 
 - **Date:** 2026-08-12
-- **Status:** active; refines **D025**, **D028**, and **D044**
+- **Status:** superseded by **D046**
 - **Evidence available at the time:** The unmerged `codex/a5a-20260811` branch
   contains two partial bahn.de cases and two failed Trainline web attempts. No
   screenshot was retained, every evidence path is `NOT_CAPTURED`, DB Navigator
@@ -946,3 +946,50 @@ schema-coupling rule are superseded by D042**.
   materially more relevant may change the surface set. The replacement and new
   interaction budget must be frozen before sampling and cannot be applied
   retrospectively to this checkpoint.
+
+### D046 — Phase 0A isolates the `REROUTE_EARLY` kill-check
+
+- **Date:** 2026-08-12
+- **Status:** active; supersedes **D045** for future sampling and refines
+  **D025**, **D028**, **D042**, and **D044**
+- **Evidence available at the time:** D045 inspected two candidates, included
+  one `REROUTE_EARLY` case and completed one of thirty planned app observations.
+  The case's action window expired before Trainline and Google Maps were
+  observed, so D045 closed `inconclusive`; its evidence cannot be rescued by a
+  later device-timezone change. The product thesis is narrower than five
+  disruption archetypes: it depends on useful action before a threatened
+  transfer, compared with existing warnings, manual alternative search and
+  connection protection. The official DB Regio Bayern FAQ documents
+  Anschlussvormeldung in MoBY and Wohin·Du·Willst, including route-position
+  validation and late processing, but does not by itself show a simultaneous
+  continue-versus-early-reroute destination comparison. A product-support
+  enquiry was sent on 2026-08-12 and is awaiting response.
+- **Decision:** Run a bounded Phase 0A on `REROUTE_EARLY` only, with DB Navigator,
+  MoBY and Wohin·Du·Willst in anonymous or guest mode. Target three unique
+  `Fernverkehr → Nahverkehr` Bavarian cases and extend to at most five within
+  eight active hours. Each case must have a live disruption, an actionable
+  pre-transfer divergence and all three anonymous surfaces. Score the existing
+  four decision-grade criteria within three taps and two minutes, and additionally
+  record projected arrival gain at `t_early`, option decay by `t_late` and
+  decision lead time versus the baseline ladder. Anschlussvormeldung is the
+  connection-protection baseline embedded in the latter two apps, not a fourth
+  surface. Do not simulate German location or submit a connection request; its
+  live lane remains `UNKNOWN` without a genuine in-route observer. The same app
+  reaching `2/3` complete cases triggers S6 immediately; if not, extend to five,
+  where `3/5` triggers S6. A continue recommendation requires five cases,
+  fifteen app observations, complete temporal operands, the frozen opportunity
+  thresholds and sufficient acquisition rights. Any incomplete denominator or
+  rights answer leaves the overall result `inconclusive / BLOCKED`.
+- **Alternatives rejected:** Completing D045 after its only case expired (would
+  violate decision-time validity); using Trainline or Google Maps in the new
+  denominator (tests broad journey planning rather than the strongest Bavarian
+  connection-protection baseline); treating Anschlussvormeldung as a fourth app
+  (it is an embedded workflow); simulating location or sending a request (would
+  falsify the observation context and create an operational side effect);
+  proceeding directly to a collector (rights remain blocked).
+- **What would reverse this:** Before the first Phase 0A candidate is inspected,
+  current primary evidence may show that one frozen surface cannot be viewed by
+  the target traveller or that the official workflow has materially changed.
+  After sampling starts, method changes require a new version and denominator.
+  A verified competitor stop, a failed early-reroute opportunity gate, or
+  insufficient rights stops or repivots the project under the frozen rules.

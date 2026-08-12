@@ -19,10 +19,10 @@
 
 | Claim | Status |
 | --- | --- |
-| Product direction | Defined (this file) |
+| Product direction | Defined; current kill-check narrowed to `REROUTE_EARLY` |
 | Engineering rules | Defined (`AGENTS.md`) |
 | Phase 0 protocol manifest | `UNSET` / `BLOCKED` — freeze gates incomplete |
-| Competitive benchmark (A5a) | **Not started — cheapest existence check** |
+| Competitive benchmark (Phase 0A / A5a) | **Phase 0A pre-registered; D045 archived `inconclusive` at 1/30 observations** |
 | Decisive-signal access (A2c / A3c) | **Public-source pass complete; eligibility and contractual rights remain `UNKNOWN`** |
 | Provider evaluation | **v1 partial / `BLOCKED` — four DB products checked; no provider selected** |
 | Identity-resolution spike (A7) | **Not started — blocking** |
@@ -199,24 +199,30 @@ assumed** (`AGENTS.md` **I15**).
 
 ### A5 — The delta over existing tools is real, and lasts
 
-Existing tools already show delays, alternatives, and connection warnings. The
-differentiator claimed here is narrow: **counterfactual comparison of
-continue-vs-change at decision time, including changing before the threatened
-transfer station.**
+Existing tools already show delays, alternatives, connection warnings and
+connection-protection workflows. The differentiator under test is narrower:
+**before the action window closes, compare the destination outcome of continuing
+the current journey with rerouting before the threatened transfer station.**
 
 A one-off check is not enough, because the gap can close during the build. Split
 in two:
 
-- **A5a — the gap exists today.** No current tool compares the outcome of
-  continuing against the outcome of changing.
+- **Phase 0A — the narrow kill-check.** Determine whether incumbent surfaces
+  already make the `REROUTE_EARLY` comparison decision-grade, whether forecast
+  arrival gain and option decay are material, and whether the minimum operands
+  and rights are obtainable.
+- **A5a — the gap exists today.** If Phase 0A survives, re-run the broader
+  competitive checkpoint under a newly frozen denominator.
 - **A5b — the gap is defensible long enough** to justify a multi-month build.
 
-**Test:** fixed, versioned archetypes populated with fresh qualifying cases and
-run against the live products at Phase 0 start, Phase 0 report, and Phase 0.5
-exit — never from memory. Design in
-[`docs/market-and-validation.md`](docs/market-and-validation.md) §2. First run is
-capped at half a day; an incomplete sample is `inconclusive`, never evidence that
-a competitor lacks the capability.
+**Current test:** three, extending to at most five, fresh Bavarian
+`Fernverkehr → Nahverkehr` cases with actionable pre-transfer divergences,
+observed in DB Navigator, MoBY and Wohin·Du·Willst. The frozen protocol and raw
+gates are in
+[`docs/benchmarks/phase0a-reroute-early-start-2026-08-12.md`](docs/benchmarks/phase0a-reroute-early-start-2026-08-12.md).
+It is capped at eight active hours. Any incomplete sample, surface, temporal
+anchor, connection-protection lane or acquisition-rights answer is
+`inconclusive / BLOCKED`, never evidence that a competitor lacks the capability.
 
 ### A6 — The recommendation is one the passenger can actually take
 
@@ -384,7 +390,7 @@ looking"*. See [`docs/railway-domain.md`](docs/railway-domain.md) §9.
 
 | Deliverable | For | Est. | Purpose |
 | --- | --- | --- | --- |
-| **Competitive benchmark (A5a)** | `RP` | **½ d** | Fixed archetypes, two fresh cases per archetype, against the live tools. Does any already compare continue-vs-change counterfactually? **Runs first — the cheapest way to discover the project has no reason to exist.** Re-run at the report, at Phase 0.5 exit, and on any A5b trigger event. |
+| **Phase 0A `REROUTE_EARLY` kill-check** | `RP` | **≤ 8 active h** | Three, extending to at most five, fresh Bavarian `Fernverkehr → Nahverkehr` cases in DB Navigator, MoBY and Wohin·Du·Willst. Compare continue versus reroute before the action deadline; measure projected arrival gain, option decay and decision lead time against warnings, manual alternative search and Anschlussvormeldung. **Runs before collector, model or product work.** |
 | **Decisive-signal access investigation (A2c / A3c)** | `RP` | **½ d** | Runs *in parallel with A5a*. Eligibility for feeds carrying hold signals and platform-level transfer times; whether any lower access tier exposes either; terms, cost, revocability. **Can invalidate the B2C path before a line of collector code exists**, which is why it sits alongside A5a rather than inside the provider evaluation. |
 | `docs/provider-evaluation.md` | `RP` | 0.5 w | Which data feeds exist; what each exposes; storage / redistribution / training / commercial terms; attribution; station transfer and topology data. **Blocks all data-dependent work, but not A5a.** It does not establish carrier fare conditions. |
 | **Identity-resolution spike (A7)** | `RP` | **1 d** | Six hours of polling, then attempt to link runs across polls. Tests A7 before anything is built on it. **A failure here changes the collector's design, not just its schedule.** |
@@ -694,8 +700,8 @@ this file first.
 ## 11. Engineering Order
 
 ```text
-Evidence Sprint 0 — parallel, each capped at half a day
-  A5a live competitive benchmark
+Evidence Sprint 0 — parallel, bounded kill-checks
+  Phase 0A REROUTE_EARLY live competitive benchmark (≤ 8 active h)
   A2c / A3c decisive-signal access investigation
   exploratory B4 conversations (evidence only; no route or schema decision)
         ↓
@@ -778,7 +784,7 @@ section exists to prevent.
 | **S3** | `BOUND` ÷ `UNBOUND` rate **< 1/3** (A6), both computed on the **same denominator over the same evaluable set** | **Drop P, continue R.** The research result stands; the product would serve too narrow a population to justify building. A ratio across different denominators is meaningless — the constraint is part of the condition. |
 | **S4** | `UNKNOWN` exceeds **50%** of disrupted transfers at decision time, **on the feeds this project can actually obtain** (A2c) | **Stop the decision product** — or pursue access. A system that declines to answer more often than it answers is not decision support. The figure is bounded by A2c, not by physics: it must never be reported as "unobservable on German rail". |
 | **S5** | Transfer requirement cannot be bounded within **±5 min** (A3) | **Narrow** to stations where it can be. If none qualify, S4 applies. |
-| **S6** | A competing tool meets all four decision-grade criteria on a majority of **all** cases and a majority of `REROUTE_EARLY` cases (A5a), or overall coverage rises by at least **20 percentage points** and `REROUTE_EARLY` coverage also rises (A5b) | **Repivot.** The reason to exist is going or gone. Find a narrower gap, move to B2B2C, or stop. Report raw numerators / denominators; criteria and thresholds are in [`docs/market-and-validation.md`](docs/market-and-validation.md) §2. |
+| **S6** | In Phase 0A, the same competing app meets all four decision-grade criteria in at least **2/3** complete cases, or (after extension) **3/5**; at later A5b checkpoints, overall coverage rises by at least **20 percentage points** and `REROUTE_EARLY` coverage also rises | **Repivot.** The reason to exist is going or gone. Find a narrower gap, move to B2B2C, or stop. Report raw numerators / denominators. Missing surfaces or the unobserved Anschlussvormeldung live lane leave the overall result `inconclusive`, not passed. Criteria and gates are in [`docs/market-and-validation.md`](docs/market-and-validation.md) §2. |
 | **S7** | Any deliverable exceeds **2×** its estimate (§4) | **Re-scope**, do not push through. |
 | **S8** | Phase 0 incomplete at **2×** its calendar estimate (§4) | **Stop and publish what exists.** A partial measurement honestly reported has value; an unfinished one has none. |
 | **S9** | Service-run linkage fails or is ambiguous for **> 5%** of runs, and cannot be reduced (A7) | **Redesign or stop.** Delay evolution and counterfactual labels are unreliable above this rate. Switch to a provider with stable journey identifiers, or stop — do not proceed and hope. |

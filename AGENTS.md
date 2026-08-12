@@ -14,9 +14,10 @@ specific document that covers the layer you are touching.
 goes stale the moment code lands; the date below tells you how far to trust it.
 
 ```text
-Last verified:  2026-08-11
+Last verified:  2026-08-12
 Observed state: documentation only — no application code, no provider
-                integration, no dataset, no tests
+                integration, no dataset, no tests; D045 archived inconclusive
+                at 1/30 observations; D046 Phase 0A pre-registered
 ```
 
 If the date is old or the state does not match what you see, trust the
@@ -26,14 +27,19 @@ The project is in **Phase 0** (see [`README.md`](README.md) §4): determine
 whether the product thesis holds, using one corridor, offline replay, and no user
 interface. Phase 0 blockers, in order:
 
-1. A5a live competitive benchmark — can run without provider data and is the
-   cheapest product-thesis check.
+1. D046 Phase 0A `REROUTE_EARLY` live kill-check — target three, at most five
+   Bavarian cases across DB Navigator, MoBY and Wohin·Du·Willst. D045 remains
+   archived `inconclusive` evidence and is not imported into the new denominator.
 2. `docs/provider-evaluation.md` — public matrix partially filled; rights gate
-   remains blocked and stops all data-dependent work, but not A5a.
-3. A7 identity spike, carrier / A3 checks, corridor and observation-schema
-   freeze; then the collector as soon as licensing permits.
-4. Replay harness, deterministic baseline, full protocol freeze, opportunity
-   measurement.
+   remains blocked and stops all data-dependent work, but not the live-surface
+   kill-check. A product enquiry about Anschlussvormeldung was sent on
+   2026-08-12 and is awaiting response; it does not open the rights gate.
+3. Only if the competitor, early-reroute opportunity and minimum-data gates are
+   complete and pass: A7 identity spike, carrier / A3 checks, corridor and
+   observation-schema freeze; then the collector as soon as licensing permits.
+4. Replay harness, deterministic baseline, full protocol freeze and opportunity
+   measurement remain out of order while Phase 0A or provider rights are
+   incomplete.
 
 Work that does not serve Phase 0 requires an explicit reason. Building the UI,
 adding ML, or widening geographic scope now is out of order, not merely early.

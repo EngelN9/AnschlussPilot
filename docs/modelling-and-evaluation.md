@@ -41,6 +41,31 @@ measurement window is frozen in
 [`phase0-protocol.md`](phase0-protocol.md). This document owns the statistical
 rules; the manifest records the exact versions and Git commit used for a run.
 
+### Phase 0A product-thesis proxies
+
+Before any collector or model, D046 runs a separate live-surface kill-check for
+`REROUTE_EARLY`. Its metrics are deliberately labelled as forecast and interface
+evidence rather than realized causal outcomes:
+
+| Metric | Frozen interpretation |
+| --- | --- |
+| `projected_arrival_gain_t0` | Continue destination ETA minus best reroute destination ETA at `t_early`; a contemporaneous forecast advantage, never actual time saved |
+| `option_decay_count` | Alternatives forecast-better and actionable at `t_early` that are no longer actionable at `t_late` |
+| `decision_lead_time` | Best reroute deadline minus the first time a complete comparison is observable; also report lead over the first connection-warning, manual-search or connection-protection baseline |
+
+Report operands, timestamps, source and freshness for every value. Extra
+transfers, ticket-binding status, recommendation reversal and observed
+false-intervention outcomes are guardrails, not terms silently folded into the
+three metrics. Ticket executability and unobserved counterfactual outcomes stay
+`UNKNOWN`.
+
+These five-case thresholds are kill-checks, not population estimates or model
+performance claims. The exact denominator, evidence contract and stop rules are
+pre-registered in
+[`benchmarks/phase0a-reroute-early-start-2026-08-12.md`](benchmarks/phase0a-reroute-early-start-2026-08-12.md).
+Even if the interface and opportunity gates pass, missing acquisition rights
+keep data-dependent Phase 0 work `BLOCKED`.
+
 ### Target n
 
 The A1 criterion has two halves — how often the opportunity occurs, and how much
