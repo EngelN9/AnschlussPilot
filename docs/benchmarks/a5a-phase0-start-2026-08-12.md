@@ -17,7 +17,7 @@ run_id                         a5a-phase0-start-2026-08-12-v1
 checkpoint                     Phase 0 start
 method_frozen_at_utc           2026-08-11T22:40:26Z
 method_frozen_at_berlin        2026-08-12T00:40:26+02:00
-status                         PRE_REGISTERED — no v1 candidate inspected
+status                         CLOSED — incomplete / inconclusive
 active_effort_cap              4 hours
 sample                         10 unique cases; 2 per frozen archetype
 within-checkpoint comparison   same case on every frozen mobile surface
@@ -82,11 +82,19 @@ Berlin Hbf → Frankfurt(Main)Hbf → Hamburg Hbf → Hannover Hbf → Köln Hbf
 Repeat the order only if a quota remains. Record every inspected candidate,
 including exclusions; do not silently discard an inconvenient case.
 
+### Discovery deviation log
+
+| Observed UTC | Deviation | Containment and effect |
+| --- | --- | --- |
+| 2026-08-11T22:46:11Z | The public station boards rendered their clock in the browser's Asia/Taipei timezone rather than Europe/Berlin. | No candidate was accepted from the shifted display alone. Europe/Berlin time was set explicitly in the public bahn.de journey-search UI for itinerary and alternative verification. This preserves the frozen 120-minute window but adds discovery friction. |
+| 2026-08-12T00:32:39Z | `C002` had passed its last observed change deadline before all three mobile surfaces were completed. | The one in-window DB Navigator observation remains evidence. Trainline and Google Maps are unobserved, not negative results. Changing the device timezone after expiry cannot recreate the decision-time state, so the run closed incomplete. |
+
 ### Candidate ledger
 
 | Candidate ID | Discovered UTC / Berlin | Seed station and service | Proposed itinerary | Live disruption evidence | Alternative evidence | Include / exclude | Reason | Assigned archetype | Action deadline |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| — | — | — | — | — | — | — | No v1 candidate inspected before the freeze commit | — | — |
+| `C001` | 2026-08-11T22:47Z / 2026-08-12T00:47+02:00 | Berlin Hbf / ICE 947 | Hannover Hbf → Berlin Hbf → Dresden Hbf | Public train detail showed a technical fault and more than three hours' delay | Later Hannover–Dresden journeys were visible | exclude | The original disrupted itinerary was no longer returned by the current public journey search, so the same disrupted journey detail could not be opened on all scored surfaces; its scheduled Hannover departure was also outside the then-current 120-minute window | — | — |
+| `C002` | 2026-08-11T22:52:32Z / 2026-08-12T00:52:32+02:00 | Frankfurt(Main)Hbf / ICE 619 | Frankfurt(Main)Hbf → München Hbf → Rosenheim | Public journey detail showed ICE 619 planned 01:28, predicted 02:10; München arrival planned 06:14, predicted 06:40; onward RE5 planned 06:42, with 2 minutes shown against an approximately 10-minute walk | A separate public result showed ICE 699 from Frankfurt at 02:25, arriving Rosenheim 08:24 | include | German long-distance journey with a transfer, a live delay, an origin-level alternative before the transfer station, and an open action window | `reroute_early` | 2026-08-12T02:10+02:00, subject to live change |
 
 ## 3. Mobile Observation Contract
 
@@ -146,7 +154,7 @@ the associated criterion `unobserved`.
 
 | Case ID | Archetype | Origin → transfer → destination | Services and scheduled times | Included at UTC / Berlin | Action window | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| — | — | — | — | — | — | No included v1 case yet |
+| `C002` | `reroute_early` | Frankfurt(Main)Hbf → München Hbf → Rosenheim | ICE 619: Frankfurt planned 01:28 / predicted 02:10 at inclusion; DB Navigator later showed 02:09 and München 06:39; RE5 planned München 06:42, Rosenheim 07:27 | 2026-08-11T22:52:32Z / 2026-08-12T00:52:32+02:00 | Last observed deadline 02:09 Europe/Berlin; expired before the remaining surfaces were completed | Closed incomplete: DB Navigator observed; Trainline and Google Maps unobserved |
 
 ### Tool observation schema
 
@@ -161,11 +169,18 @@ outcome_stated; at_decision_time; reachable; all_four; evidence_paths;
 evidence_sha256; limitations
 ```
 
+### Recorded tool observations
+
+| Case ID | Observed UTC / Berlin | Tool and environment | Account state | Action window | Continue / change destination arrival | Taps / scrolls / seconds | `both_branches` | `outcome_stated` | `at_decision_time` | `reachable` | `all_four` | Limitations |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `C002` | 2026-08-11T23:13:53.961Z / 2026-08-12T01:13:53.961+02:00 | DB Navigator 26.14.0; realme RMX3661; Android 15 / API 35; locale `zh-TW` | anonymous after declining login and allowing necessary cookies only | open; ICE 619 predicted 02:09 | continue 07:27 / origin-level alternative 08:24 | 3 / 2 / 95.6 | no | no | yes | no | no | The detail showed the disrupted plan and the list showed alternatives with arrival times, but no reachable view explicitly compared continue and change with both destination arrivals together. First-run onboarding occurred before the timer. The device remained in Asia/Taipei timezone for this observation. |
+
 ### Evidence manifest
 
 | Case ID | Tool | Sanitised path | SHA-256 | Criterion supported | Accepted / rejected reason |
 | --- | --- | --- | --- | --- | --- |
-| — | — | — | — | — | No evidence received |
+| `C002` | DB Navigator | `evidence/a5a/2026-08-12/c002/db-navigator/00-disrupted-journey-detail.png` | `101711E251C10F6703A2B1EAF1ADE1EF6FD9F0989A802FAF94E5C2E6989B0266` | Live disruption and continue branch | accepted; visually checked, no account or precise-location data |
+| `C002` | DB Navigator | `evidence/a5a/2026-08-12/c002/db-navigator/01-connection-list-alternatives.png` | `646F4F8DD225564211836DFB3D370DBEAB33E843F14080ACDB19BFE61A549B93` | Alternative branch and destination arrival | accepted; visually checked, no account or precise-location data; does not by itself satisfy the same-view comparison criterion |
 
 ## 5. Result and Stop Rule
 
@@ -178,15 +193,32 @@ reroute_early cases   exactly 2 / 2 with all_four=yes
 
 | Tool | Complete denominator | `all_four` numerator | `reroute_early` denominator | `reroute_early` numerator | Surface status | S6 |
 | --- | ---: | ---: | ---: | ---: | --- | --- |
-| DB Navigator | 0 / 10 | 0 | 0 / 2 | 0 | not started | not evaluated |
-| Trainline | 0 / 10 | 0 | 0 / 2 | 0 | not started | not evaluated |
-| Google Maps | 0 / 10 | 0 | 0 / 2 | 0 | not started | not evaluated |
+| DB Navigator | 1 / 10 | 0 | 1 / 2 | 0 | one in-window observation | not evaluable |
+| Trainline | 0 / 10 | 0 | 0 / 2 | 0 | unobserved | not evaluable |
+| Google Maps | 0 / 10 | 0 | 0 / 2 | 0 | unobserved | not evaluable |
 
 ```text
-checkpoint_status   PRE_REGISTERED
-a5a_verdict         NOT_ISSUED
-s6                   NOT_EVALUATED
+checkpoint_status   CLOSED_INCOMPLETE
+a5a_verdict         INCONCLUSIVE
+s6                   NOT_EVALUABLE
 ```
+
+Achieved counts at closure:
+
+```text
+candidates inspected                  2
+unique included cases                 1 / 10
+included by archetype                 reroute_early 1 / 2; all others 0 / 2
+complete app observations             1 / 30
+cases complete on all three surfaces  0 / 10
+```
+
+The single DB Navigator score describes only the recorded `C002` interaction
+under this run's limits. It does not establish that DB Navigator lacks the
+capability generally. No scored observation exists for Trainline or Google Maps,
+and no capability inference is made for either tool. With every required
+denominator incomplete, neither the `6/10` nor the `2/2` threshold can be
+recomputed; S6 is therefore not evaluable rather than passed or failed.
 
 Exactly ten unique cases, two per archetype, and thirty complete tool
 observations are required for a complete checkpoint. Any missing archetype,
@@ -194,8 +226,7 @@ surface, screenshot-backed score or denominator makes the checkpoint
 `inconclusive`. Incompleteness never supports a claim that a competitor lacks
 the capability.
 
-At four active hours, stop immediately, append achieved counts and calculate
-only the verdict the denominators permit. The result update also changes the
-repository status in `README.md`, the baseline section in
-[`../market-and-validation.md`](../market-and-validation.md), and the current
-reality in `AGENTS.md`. It is committed separately from this freeze.
+This run closed when its only included case expired before the three-surface
+observation was complete. The preserved evidence is superseded for future
+sampling by a separately pre-registered Phase 0A protocol; it is not imported
+into that new denominator.
