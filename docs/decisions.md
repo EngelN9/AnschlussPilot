@@ -46,7 +46,7 @@ reversal conditions.
 | Phase 0 scope, order and delivery | D001, D002, D007, D008, D009, D010, D011, D027, D033, D037, D039, D044 |
 | Population, episodes and evaluation | D003, D006, D013, D020, D021, D024, D027, D030, D031, D032 |
 | Binding and observation evidence | D004, D012, D015, D022 (retention principle only), D023, D029, D034, D043, D044 |
-| Competitive, market and validation | D005, D017, D018, D019, D025, D026, D028, D035 (risk classification only), D036 (exit definitions only), D038, D041, D042, D046 |
+| Competitive, market and validation | D005, D017, D018, D019, D025, D026, D028, D035 (risk classification only), D036 (exit definitions only), D038, D041, D042, D046, D047 |
 | Open — awaiting a decision from the author | **D040** (licence values) |
 
 Superseded entries remain below for provenance: D014 is superseded by D021 and
@@ -993,3 +993,36 @@ schema-coupling rule are superseded by D042**.
   After sampling starts, method changes require a new version and denominator.
   A verified competitor stop, a failed early-reroute opportunity gate, or
   insufficient rights stops or repivots the project under the frozen rules.
+
+### D047 — Synthetic users are an optional Phase 0.5 preflight, never gate evidence
+
+- **Date:** 2026-08-13
+- **Status:** active
+- **Evidence available at the time:** The repository remains documentation-only;
+  Phase 0 has not passed, D046 is `inconclusive / BLOCKED`, provider rights are
+  incomplete, and no recommendation output or user interface exists. MatrAIx is
+  a newly public simulated-user evaluation framework whose own repository calls
+  it useful for exploration, stress testing and hypothesis generation rather
+  than a replacement for evidence from real people. Its runtime, persona source,
+  model-provider terms and cost have not been approved for this project.
+- **Decision:** Document, but do not implement, an optional **Phase 0.5-S**. It
+  becomes eligible only after a passing Phase 0 report and separate author
+  approval of the pinned MatrAIx commit, applicable licences and terms, provider,
+  budget and data handling. The future flow is one-way: a human-authored frozen
+  scenario enters an isolated MatrAIx task, a deterministic scorer produces
+  structured UX-risk findings, and a human reviews them. Synthetic outputs may
+  reject a wording candidate or generate hypotheses, but cannot satisfy A1–A7,
+  S1–S12, B1–B4 or SB1–SB4 and never enter a production decision or confidence
+  score. Start with a 48-cell calibration; only after human review may a
+  400-cell paired-variant pilot run. Real Phase 0.5 participants remain mandatory.
+- **Alternatives rejected:** Implementing the harness before Phase 0 (product
+  work without a validated decision); importing Persona 1M before a separate
+  rights and provenance review; treating `ATTENTION` or `UNKNOWN` as actions;
+  inventing low/medium/high recommendation confidence; using synthetic response
+  rates as passenger population estimates or promotion evidence.
+- **What would reverse this:** If human calibration finds no meaningful signal,
+  or licensing, model-provider terms, privacy, cost or maintenance are
+  unacceptable, remove Phase 0.5-S without changing the Phase 0 or real Phase 0.5
+  protocols. Any proposal to give synthetic evidence stronger status requires a
+  new explicit decision supported by independent human validation; no existing
+  synthetic result may be reclassified retroactively.

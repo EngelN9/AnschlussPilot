@@ -14,11 +14,13 @@ specific document that covers the layer you are touching.
 goes stale the moment code lands; the date below tells you how far to trust it.
 
 ```text
-Last verified:  2026-08-12
+Last verified:  2026-08-13
 Observed state: documentation only — no application code, no provider
                 integration, no dataset, no tests; D045 archived inconclusive
                 at 1/30 observations; initial D046 Phase 0A run inconclusive /
-                blocked at 0/5 complete cases and 0/15 scored observations
+                blocked at 0/5 complete cases and 0/15 scored observations;
+                optional MatrAIx Phase 0.5-S contract documented only and
+                DEFERRED / NOT_IMPLEMENTED
 ```
 
 If the date is old or the state does not match what you see, trust the
@@ -55,7 +57,7 @@ Numbered so they can be cited in review. Violating one is a defect regardless of
 how well the code works. Numbers are stable — new rules get appended, never
 renumbered.
 
-Sixteen is more than anyone recalls under pressure, so they cluster into five
+Seventeen is more than anyone recalls under pressure, so they cluster into five
 ideas. None is optional; the grouping is a memory aid, not a ranking.
 
 | Cluster | Invariants | The idea |
@@ -64,7 +66,7 @@ ideas. None is optional; the grouping is a memory aid, not a ranking.
 | Uncertainty | I4, I5, I8, I9 | Unknown stays unknown, all the way to the screen |
 | Layering | I6, I7 | Provider data and time both flow one way |
 | Decision discipline | I3, I10, I11, I12 | Compare actions; never react to a risk label |
-| Boundaries | I13, I14, I15, I16 | Know what this system is not allowed to claim |
+| Boundaries | I13, I14, I15, I16, I17 | Know what this system is not allowed to claim |
 
 **I1 — The repository is the source of truth.**
 Never infer implementation status from this file, the README, plans, issues, or
@@ -140,6 +142,13 @@ commercial use. Verify current terms; document them next to the provider code.
 Collect the minimum personal data. Never commit secrets. Treat all provider
 responses as untrusted input and validate at the boundary. Enforce authorization
 server-side if authentication is ever introduced.
+
+**I17 — Synthetic-user evidence is preflight evidence only.**
+Synthetic-user evidence may identify communication and usability risks, but
+cannot satisfy technical, behavioral, commercial, safety, rights, legal, or
+promotion gates requiring railway evidence, real people, provider evidence, or
+human review. It never feeds a journey recommendation, route selection, ticket
+or entitlement decision, or production confidence score.
 
 ---
 
@@ -295,6 +304,7 @@ small ambiguity.
 | [`docs/phase0-protocol.md`](docs/phase0-protocol.md) | Single versioned freeze record for the Phase 0 corridor, data contracts, population, episode rules, policy and measurement window |
 | [`docs/testing-catalogue.md`](docs/testing-catalogue.md) | Railway edge cases, decision cases, provider contract tests |
 | [`docs/market-and-validation.md`](docs/market-and-validation.md) | Customer hypotheses, competitive benchmark, distribution risk, commercial tracks, Phase 0.5 experiments |
+| [`docs/synthetic-ux-preflight.md`](docs/synthetic-ux-preflight.md) | Deferred Phase 0.5-S synthetic-user UX preflight contract and evidence boundary |
 | [`docs/binding-scenarios.md`](docs/binding-scenarios.md) | Versioned ticket-binding ruleset behind the A6 scenario band. A sensitivity assumption, never a legal determination |
 | [`docs/decisions.md`](docs/decisions.md) | Why things are the way they are, and what would reverse each choice |
 | [`docs/provider-evaluation.md`](docs/provider-evaluation.md) | Feed capabilities and data rights. Public matrix partially filled; rights gate still blocks Phase 0 data-dependent work |

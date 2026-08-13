@@ -29,6 +29,7 @@
 | Observation collector | **Not started — blocking** |
 | Domain model / risk engine / decision engine | Not started |
 | Historical dataset, backtesting, ML | Not started |
+| Synthetic UX preflight (Phase 0.5-S) | Contract documented; **`DEFERRED / NOT_IMPLEMENTED`** until Phase 0 passes and a separate human-approved implementation gate opens |
 | Deployment, monitoring, GDPR review | Not started |
 
 Capabilities are described as implemented only once they are verifiably present
@@ -312,8 +313,18 @@ returns both.
 | Phase | Question it answers | Gate to the next |
 | --- | --- | --- |
 | **0 — R** | **Can we make a useful decision?** A measurement report: does the policy beat the baseline, and by how much? | The report itself. Also the product go/no-go. |
+| **0.5-S — optional synthetic preflight** | **Can likely communication failures be found before recruiting real participants?** Human-authored frozen scenarios may be shown to isolated simulated users after Phase 0 passes. | Exploratory UX-risk findings only. It cannot satisfy or replace Phase 0.5. |
 | **0.5 — P-minimal** | **Will anyone act on it?** Paper-prototype check, then the author uses it on their own real journeys. Laptop-hosted, single user, no reliability guarantees. Tests **B1–B4**. | Comprehension, trust, and friction — see [`docs/market-and-validation.md`](docs/market-and-validation.md) §5 |
 | **1 — P** | **Can we distribute and sustain it?** A prototype a handful of people can use, on one of the two commercial tracks | Only if 0 and 0.5 both say yes |
+
+Phase 0.5-S is optional and currently only a documented contract. It may be
+implemented only after the Phase 0 report passes its technical gates and after
+the author approves the pinned MatrAIx version, licences and terms, model
+provider, cost ceiling and data handling. Synthetic results may narrow wording
+candidates or identify risks for human review; they do not establish A1–A7,
+S1–S12, B1–B4, SB1–SB4, real passenger behaviour or production safety. See
+[`docs/synthetic-ux-preflight.md`](docs/synthetic-ux-preflight.md) and
+[`docs/decisions.md`](docs/decisions.md) D047.
 
 An early B4 conversation round may collect at most half a day of exploratory
 evidence. It does not select B2C or B2B2C, alter the Phase 0 schema, or authorize

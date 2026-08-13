@@ -20,6 +20,7 @@ asserted as fact unless it was verified against a primary source
 > `inconclusive` after one of thirty app observations. The initial D046 run is
 > also `inconclusive / BLOCKED`: no candidate reached the frozen three-app
 > denominator, so neither a continuation nor a stop/pivot result is supported.
+> No synthetic-user evaluation has been implemented or run.
 
 ---
 
@@ -358,6 +359,33 @@ Phase 0 reports.
 
 Phase 0 asks *can we make a useful decision?* These ask *will anyone act on it?*
 They are separate questions and are not merged into the technical assumptions.
+
+### Optional Phase 0.5-S — synthetic UX preflight
+
+Phase 0.5-S is a **deferred, optional preflight** between a passing Phase 0
+report and recruitment for the real Phase 0.5 pilot. Its contract is recorded in
+[`synthetic-ux-preflight.md`](synthetic-ux-preflight.md); no harness, cohort,
+dataset, model integration or result exists now.
+
+If its separate implementation gate later opens, simulated users may inspect
+human-authored frozen recommendation presentations to surface likely wording,
+hierarchy and uncertainty-communication failures. A human may use those findings
+to remove an obviously risky wording candidate or formulate questions for the
+real pilot. The output remains hypothesis-generating evidence even when the raw
+numerator and denominator are reproducible.
+
+It does **not**:
+
+- prove recommendation correctness, transfer feasibility, ticket permissibility,
+  connection-hold observability or any A1–A7 proposition;
+- measure real comprehension, trust, willingness to act, acquisition friction,
+  willingness to pay, market size or safety;
+- satisfy B1–B4, fire SB1–SB4, change S1–S12 or promote a product;
+- replace D026's 2–3-person exploratory pilot and 5–8-person confirmatory round.
+
+Abandoning the synthetic lane because its outputs are implausible, too costly or
+legally unusable is not evidence against AnschlussPilot. Conversely, a favourable
+synthetic run is not evidence that a passenger would understand or act.
 
 | | Hypothesis | Test | Reversal |
 | --- | --- | --- | --- |
