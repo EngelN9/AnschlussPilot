@@ -19,8 +19,9 @@ Observed state: documentation only — no application code, no provider
                 integration, no dataset, no tests; D045 archived inconclusive
                 at 1/30 observations; initial D046 Phase 0A run inconclusive /
                 blocked at 0/5 complete cases and 0/15 scored observations;
-                v2 pre-registered after all three anonymous app entries passed
-                physical-device setup preflight; no v2 candidate inspected;
+                v2 running after all three anonymous app entries passed
+                physical-device setup preflight and a first fixed-order sweep
+                produced no included case; v2 remains at 0/5 and 0/15;
                 optional MatrAIx Phase 0.5-S contract documented only and
                 DEFERRED / NOT_IMPLEMENTED
 ```
@@ -39,9 +40,10 @@ interface. Phase 0 blockers, in order:
    imported into D046. BEG has confirmed in writing that MoBY does not show the
    simultaneous continue-versus-reroute comparison, but that is not a scored
    live observation and does not change the `0/5` / `0/15` denominators. A new
-   v2 denominator is pre-registered in
+   v2 denominator is frozen and running in
    [`docs/benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md`](docs/benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md);
-   it starts at zero and imports nothing from v1.
+   its first fixed-order discovery sweep produced no included case, so it remains
+   at `0/5` and `0/15` and imports nothing from v1.
 2. `docs/provider-evaluation.md` — verdict `v4-partial / BLOCKED`; written RIS
    and DB GTFS replies close those individual zero-budget paths without granting
    storage or downstream-use rights. RiFahrt was not expressly answered and

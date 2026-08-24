@@ -26,7 +26,7 @@ specification only.
 | Product direction | Defined; current kill-check narrowed to `REROUTE_EARLY` |
 | Engineering rules | Defined (`AGENTS.md`) |
 | Phase 0 protocol manifest | `UNSET` / `BLOCKED` — freeze gates incomplete |
-| Competitive benchmark (Phase 0A / A5a) | **Initial run remains `inconclusive / BLOCKED` at 0/5 complete cases and 0/15 scored observations; a separate v2 denominator is pre-registered after all three anonymous app entries passed setup preflight, with no v2 candidate yet inspected** |
+| Competitive benchmark (Phase 0A / A5a) | **Initial run remains `inconclusive / BLOCKED` at 0/5 complete cases and 0/15 scored observations; v2 is running after a first fixed-order discovery sweep produced no included case, so its counts also remain 0/5 and 0/15** |
 | Decisive-signal access (A2c / A3c) | **External confirmation in progress — individual zero-budget RIS and DB GTFS paths closed; RiFahrt was not expressly answered and DELFI-Realtime remains pending; project-level access and rights remain `UNKNOWN`** |
 | Provider evaluation | **v4 partial / `BLOCKED` — two of three provider enquiries answered; no provider selected** |
 | Identity-resolution spike (A7) | **Not started — blocking** |
@@ -227,7 +227,7 @@ in two:
 `Fernverkehr → Nahverkehr` cases with actionable pre-transfer divergences,
 observed in DB Navigator, MoBY and Wohin·Du·Willst. The closed v1 result is in
 [`docs/benchmarks/phase0a-reroute-early-start-2026-08-12.md`](docs/benchmarks/phase0a-reroute-early-start-2026-08-12.md);
-the current pre-registered method and raw gates are in
+the current frozen v2 method, first discovery sweep and raw gates are in
 [`docs/benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md`](docs/benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md).
 It is capped at eight active hours. Any incomplete sample, surface, temporal
 anchor, connection-protection lane or acquisition-rights answer is

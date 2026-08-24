@@ -74,7 +74,7 @@ Current evidence state:
 | Engineering invariants | Defined |
 | Phase 0 measurement methodology | Defined, but freeze manifest incomplete |
 | Phase 0 protocol manifest | `BLOCKED` |
-| A5a competitive benchmark | Initial D046 run remains `inconclusive / BLOCKED` at `0/5` and `0/15`; v2 is pre-registered with no candidate inspected |
+| A5a competitive benchmark | Initial D046 run remains `inconclusive / BLOCKED` at `0/5` and `0/15`; v2 is running after its first fixed-order sweep produced no included case and remains `0/5`, `0/15` |
 | Provider capability mapping | `v4-partial`; two of three provider enquiries answered |
 | Provider rights / retention gate | `BLOCKED` |
 | A2c decisive-signal access | `UNKNOWN` |
@@ -125,7 +125,10 @@ the core opportunity or required data access does not exist.
       observations; a later run requires a new pre-registered denominator.
 - [x] Pre-register the separate Phase 0A v2 denominator after all three
       anonymous app entries passed physical-device setup preflight; v2 imports
-      no v1 evidence and has not inspected a candidate.
+      no v1 evidence.
+- [x] Complete the first v2 fixed-order station sweep; eight representative
+      discovery queries produced no included case, so no app observation window
+      opened and the v2 counts remain `0/5`, `0/15`.
 - [ ] Evaluate the fixed disruption archetypes against current live products.
 - [ ] Record screenshots, interaction count, elapsed time, product state and
       sample completeness.

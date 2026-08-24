@@ -20,8 +20,9 @@ asserted as fact unless it was verified against a primary source
 > `inconclusive` after one of thirty app observations. The initial D046 run is
 > also `inconclusive / BLOCKED`: no candidate reached the frozen three-app
 > denominator, so neither a continuation nor a stop/pivot result is supported.
-> A separate D046 v2 denominator is pre-registered after all three anonymous
-> app entries passed setup preflight; no v2 candidate has been inspected.
+> A separate D046 v2 denominator is running after all three anonymous app
+> entries passed setup preflight. Its first fixed-order discovery sweep produced
+> no included case, so it remains at `0/5` cases and `0/15` observations.
 > No synthetic-user evaluation has been implemented or run.
 
 ---
@@ -96,6 +97,11 @@ changed version, D046 v2 starts a new denominator rather than reopening v1. Its
 pre-registered method is in
 [`benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md`](benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md).
 Setup availability is not a scored observation, and v2 begins at zero.
+The first fixed-order sweep then inspected eight representative official-web
+discovery queries. None met all five inclusion conditions, so no three-app
+observation window opened and v2 remains `inconclusive / BLOCKED` at `0/5`
+cases and `0/15` observations. This is not evidence that no qualifying
+disruption existed outside those queries.
 
 The baseline ladder is:
 

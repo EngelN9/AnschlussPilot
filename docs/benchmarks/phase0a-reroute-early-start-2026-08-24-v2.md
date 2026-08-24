@@ -19,7 +19,7 @@ run_id                         phase0a-reroute-early-2026-08-24-v2
 pre_registration_parent       cd1796c
 method_frozen_at_utc           2026-08-24T02:36:35Z
 method_frozen_at_berlin        2026-08-24T04:36:35+02:00
-status                         PRE_REGISTERED — no candidate inspected
+status                         RUNNING — first fixed-order sweep complete; 0 included cases
 target_sample                  3 unique cases
 maximum_sample                 5 unique cases
 active_effort_cap              8 hours
@@ -65,6 +65,15 @@ and resolved. If a frozen app version changes after the first candidate is
 inspected, close v2 incomplete and require a new version rather than mixing app
 versions in one denominator.
 
+The post-freeze check ran from `2026-08-24T02:41:11Z` to
+`2026-08-24T02:42:36Z` (`04:41:11`–`04:42:36` Europe/Berlin). The device
+timezone, all three frozen package versions and all three anonymous search
+entries matched the freeze. Android package-state evidence reported notification,
+fine-location and coarse-location grants as false for every package; notification
+AppOps were also `ignore`. The installed Android build did not expose the
+attempted `cmd package check-permission` subcommand, so package-state output was
+used rather than treating that unsupported command as a pass.
+
 ## 2. Frozen Candidate Discovery
 
 Use official public web interfaces only to discover candidates. Web results are
@@ -95,9 +104,29 @@ Anschlussvormeldung unless the app or current official evidence establishes it.
 
 Record every inspected candidate, including exclusions:
 
+### Discovery deviations
+
+| ID | Observed UTC / Berlin | Deviation | Consequence |
+| --- | --- | --- | --- |
+| DV001 | 2026-08-24 02:43–02:45Z / 04:43–04:45+02:00 | The official München station departure board opened at `10:44`, reflecting the Asia/Taipei host clock rather than the required Berlin window. | Rejected the entire board output before candidate screening; no metric or candidate fact was taken from it. Continued only through official journey searches with an explicit `2026-08-24 04:50` Berlin departure anchor. |
+| DV002 | 2026-08-24 02:52–02:53Z / 04:52–04:53+02:00 | The first Rosenheim seed route, München Hbf → Bad Reichenhall, could route through Austria. | Rejected it before candidate scoring and replaced it with the German-only München Hbf → Bad Aibling search. |
+
 | Candidate ID | Discovered UTC / Berlin | Seed station and services | Journey | Live disruption | Pre-transfer reroute and deadline | Three anonymous surfaces | Include / exclude reason |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| — | — | — | — | — | — | — | No candidate inspected |
+| C001 | 2026-08-24 02:45–02:53Z / 04:45–04:53+02:00 | München seed; representative `ICE 699 → RB54` result | Stuttgart Hbf → Rosenheim | No live deviation shown in the returned result | Not evaluated; no qualifying live-disruption lead | Not attempted; excluded before app stage | Excluded: condition 2 not established |
+| C002 | 2026-08-24 02:45–02:53Z / 04:45–04:53+02:00 | Nürnberg seed; representative `IC 2063 → Bus RE30` result | Stuttgart Hbf → Bayreuth Hbf | No live deviation shown in the returned result | Not evaluated; no qualifying live-disruption lead | Not attempted; excluded before app stage | Excluded: condition 2 not established |
+| C003 | 2026-08-24 02:45–02:53Z / 04:45–04:53+02:00 | Würzburg seed; representative `ICE 827 → RB53` result | Frankfurt(Main)Hbf → Schweinfurt Hbf | A two-minute departure deviation was shown for `ICE 827` | No threatened transfer or actionable pre-transfer divergence established | Not attempted; excluded before app stage | Excluded: conditions 3 and 4 not established |
+| C004 | 2026-08-24 02:45–02:53Z / 04:45–04:53+02:00 | Augsburg seed; representative `ICE 699 → RB77` result | Stuttgart Hbf → Füssen | No live deviation shown in the returned result | Not evaluated; no qualifying live-disruption lead | Not attempted; excluded before app stage | Excluded: condition 2 not established |
+| C005 | 2026-08-24 02:45–02:53Z / 04:45–04:53+02:00 | Regensburg seed; representative `ICE 827 → RE22` result | Frankfurt(Main)Hbf → Landshut(Bay)Hbf | A two-minute departure deviation was shown for `ICE 827` | No threatened transfer or actionable pre-transfer divergence established | Not attempted; excluded before app stage | Excluded: conditions 3 and 4 not established |
+| C006 | 2026-08-24 02:45–02:53Z / 04:45–04:53+02:00 | Ingolstadt seed; representative `ICE 1501 → RE16` result | Berlin Hbf → Donauwörth | No live deviation shown in the returned result | Not evaluated; no qualifying live-disruption lead | Not attempted; excluded before app stage | Excluded: condition 2 not established |
+| C007 | 2026-08-24 02:45–02:53Z / 04:45–04:53+02:00 | Bamberg seed; representative `ICE 827 → RE19` result | Frankfurt(Main)Hbf → Coburg | A two-minute departure deviation was shown for `ICE 827` | No threatened transfer or actionable pre-transfer divergence established | Not attempted; excluded before app stage | Excluded: conditions 3 and 4 not established |
+| C008 | 2026-08-24 02:45–02:53Z / 04:45–04:53+02:00 | Rosenheim seed; representative `RJX 265 → RB58` result | München Hbf → Bad Aibling | No live deviation shown in the returned result | Not evaluated; no qualifying live-disruption lead | Not attempted; excluded before app stage | Excluded: condition 2 not established |
+
+The eight searches used the frozen seed order and an explicit
+`2026-08-24 04:50` Europe/Berlin departure anchor. They are representative
+discovery queries, not exhaustive evidence that no disruption existed at a seed
+station. No row satisfied all five inclusion conditions, so no app observation
+window opened.
 
 ### Active-effort ledger
 
@@ -107,7 +136,9 @@ ledger. Waiting time is excluded.
 
 | UTC interval | Active minutes | Work |
 | --- | ---: | --- |
-| — | 0 | No active run work yet |
+| 2026-08-24 02:41:11–02:42:36Z | 2 | Post-freeze device, package-version, permission and anonymous-entry verification |
+| 2026-08-24 02:42:36–02:53:52Z | 12 | First fixed-order official-web station sweep; eight German-scope discovery queries plus two rejected deviations |
+| **Total** | **14** | Waiting excluded; 466 active minutes remain under the frozen cap |
 
 ## 3. Observation Contract
 
@@ -241,15 +272,15 @@ lane or acquisition-rights answer leaves the overall verdict
 
 | Gate | Raw numerator / denominator | State | Reason |
 | --- | --- | --- | --- |
-| Competitor stop | DB Navigator 0/0; MoBY 0/0; Wohin·Du·Willst 0/0 complete cases | `NOT_EVALUATED` | No candidate inspected |
-| Early-reroute opportunity | `0/5` cases | `INCONCLUSIVE` | Sampling has not started |
-| Informational sufficiency | `0/5` cases; `0/15` observations | `INCONCLUSIVE` | Sampling has not started |
+| Competitor stop | DB Navigator 0/0; MoBY 0/0; Wohin·Du·Willst 0/0 complete cases | `NOT_EVALUATED` | First discovery sweep produced no included case |
+| Early-reroute opportunity | `0/5` cases | `INCONCLUSIVE` | Eight leads inspected; none met all five inclusion conditions |
+| Informational sufficiency | `0/5` cases; `0/15` observations | `INCONCLUSIVE` | No three-app observation window opened |
 | Acquisition rights | provider verdict `v4-partial / BLOCKED` | `BLOCKED` | A2c, A3c, A4 and downstream rights remain `UNKNOWN` |
 | Anschlussvormeldung live lane | `0` genuine in-route observations | `UNKNOWN` | No location simulation or request is permitted |
 
 ```text
-phase0a_v2_status  PRE_REGISTERED
-phase0a_v2_verdict NOT_EVALUATED / BLOCKED
+phase0a_v2_status  RUNNING — first fixed-order sweep complete
+phase0a_v2_verdict INCONCLUSIVE / BLOCKED
 provider_rights   BLOCKED
 engineering_allowed NO
 ```
