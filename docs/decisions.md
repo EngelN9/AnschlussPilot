@@ -1020,6 +1020,15 @@ schema-coupling rule are superseded by D042**.
   evidence recorded in
   [`benchmarks/phase0a-reroute-early-start-2026-08-12.md`](benchmarks/phase0a-reroute-early-start-2026-08-12.md)
   §2 and [`market-and-validation.md`](market-and-validation.md) §2.
+- **2026-08-24 — v2 pre-registered.** A physical-device setup preflight reached
+  the anonymous journey-search entry in DB Navigator, MoBY and
+  Wohin·Du·Willst. DB Navigator had changed from `26.14.0` to `26.15.0`, so the
+  closed v1 run is not reopened. The separate v2 artifact freezes the current
+  three app versions, the existing D046 sample and gate rules, the station
+  discovery order, and the app observation order before any candidate is
+  inspected. Setup availability is not scored; v2 starts at zero and imports
+  none of v1's `0/5` / `0/15` denominator. See
+  [`benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md`](benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md).
 
 ### D047 — Synthetic users are an optional Phase 0.5 preflight, never gate evidence
 

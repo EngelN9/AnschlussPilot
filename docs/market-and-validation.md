@@ -20,6 +20,8 @@ asserted as fact unless it was verified against a primary source
 > `inconclusive` after one of thirty app observations. The initial D046 run is
 > also `inconclusive / BLOCKED`: no candidate reached the frozen three-app
 > denominator, so neither a continuation nor a stop/pivot result is supported.
+> A separate D046 v2 denominator is pre-registered after all three anonymous
+> app entries passed setup preflight; no v2 candidate has been inspected.
 > No synthetic-user evaluation has been implemented or run.
 
 ---
@@ -87,6 +89,13 @@ therefore excluded under the frozen three-surface rule. The raw result is 0/5
 complete cases and 0/15 scored observations; this run-specific
 `surface_unavailable` result is not evidence that a product feature is absent.
 See the [run artifact](benchmarks/phase0a-reroute-early-start-2026-08-12.md).
+
+On 2026-08-24, a physical-device setup preflight reached the anonymous
+journey-search entry in all three frozen apps. Because DB Navigator had also
+changed version, D046 v2 starts a new denominator rather than reopening v1. Its
+pre-registered method is in
+[`benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md`](benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md).
+Setup availability is not a scored observation, and v2 begins at zero.
 
 The baseline ladder is:
 
@@ -202,7 +211,7 @@ four must hold:
                          from the disrupted journey
 ```
 
-For D045 and the current Phase 0A checkpoint, *reachable* means within at most
+For D045 and both D046 Phase 0A versions, *reachable* means within at most
 three purposeful navigation taps and two minutes from the disrupted journey
 detail. Scrolling is recorded but does not consume a navigation tap unless it
 opens or changes a view. D045's archived evidence and result remain in
