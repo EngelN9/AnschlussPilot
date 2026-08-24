@@ -14,7 +14,7 @@ specific document that covers the layer you are touching.
 goes stale the moment code lands; the date below tells you how far to trust it.
 
 ```text
-Last verified:  2026-08-13
+Last verified:  2026-08-20
 Observed state: documentation only — no application code, no provider
                 integration, no dataset, no tests; D045 archived inconclusive
                 at 1/30 observations; initial D046 Phase 0A run inconclusive /
@@ -34,11 +34,15 @@ interface. Phase 0 blockers, in order:
    `inconclusive / BLOCKED`: Wohin·Du·Willst could not load a place or regional
    version, so neither inspected candidate formed the mandatory three-app
    denominator. D045 remains archived `inconclusive` evidence and is not
-   imported into D046.
-2. `docs/provider-evaluation.md` — public matrix partially filled; rights gate
-   remains blocked and stops all data-dependent work, but not the live-surface
-   kill-check. A product enquiry about Anschlussvormeldung was sent on
-   2026-08-12 and is awaiting response; it does not open the rights gate.
+   imported into D046. BEG has confirmed in writing that MoBY does not show the
+   simultaneous continue-versus-reroute comparison, but that is not a scored
+   live observation and does not change the `0/5` / `0/15` denominators.
+2. `docs/provider-evaluation.md` — verdict `v4-partial / BLOCKED`; written RIS
+   and DB GTFS replies close those individual zero-budget paths without granting
+   storage or downstream-use rights. RiFahrt was not expressly answered and
+   DELFI-Realtime is the only provider enquiry still awaiting a reply. The
+   rights gate stops all data-dependent work, but not the live-surface
+   kill-check.
 3. Only if the competitor, early-reroute opportunity and minimum-data gates are
    complete and pass: A7 identity spike, carrier / A3 checks, corridor and
    observation-schema freeze; then the collector as soon as licensing permits.
@@ -309,6 +313,7 @@ small ambiguity.
 | [`docs/decisions.md`](docs/decisions.md) | Why things are the way they are, and what would reverse each choice |
 | [`docs/provider-evaluation.md`](docs/provider-evaluation.md) | Feed capabilities and data rights. Public matrix partially filled; rights gate still blocks Phase 0 data-dependent work |
 | [`README.md`](README.md) | Product definition, unvalidated assumptions, known constraints, success criteria |
+| [`ROADMAP.md`](ROADMAP.md) | Execution order, milestone gates, current phase state — extracted from `README.md` so the product/spec document carries no scheduling semantics |
 
 `docs/provider-evaluation.md` contains a partially filled public-source matrix,
 but no provider has sufficient verified rights. The closed rights gate blocks

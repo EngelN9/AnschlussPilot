@@ -13,9 +13,13 @@
 > [!IMPORTANT]
 > **Nothing is implemented yet.**
 >
-> This repository contains documentation only — this file, `AGENTS.md`, and the
-> detail documents in [`docs/`](docs/). There is no application, no provider
-> integration, no dataset, and no model.
+> This repository contains documentation only — this file, `AGENTS.md`,
+> [`ROADMAP.md`](ROADMAP.md), and the detail documents in [`docs/`](docs/).
+> There is no application, no provider integration, no dataset, and no model.
+
+Execution order, milestone gates, and current phase state live in
+[`ROADMAP.md`](ROADMAP.md), not here — this file is product thesis and
+specification only.
 
 | Claim | Status |
 | --- | --- |
@@ -23,8 +27,8 @@
 | Engineering rules | Defined (`AGENTS.md`) |
 | Phase 0 protocol manifest | `UNSET` / `BLOCKED` — freeze gates incomplete |
 | Competitive benchmark (Phase 0A / A5a) | **Initial Phase 0A run `inconclusive / BLOCKED`: 0/5 complete cases and 0/15 scored app observations; mandatory Wohin·Du·Willst journey-search surface unavailable in this run** |
-| Decisive-signal access (A2c / A3c) | **Public-source pass complete; eligibility and contractual rights remain `UNKNOWN`** |
-| Provider evaluation | **v1 partial / `BLOCKED` — four DB products checked; no provider selected** |
+| Decisive-signal access (A2c / A3c) | **External confirmation in progress — individual zero-budget RIS and DB GTFS paths closed; RiFahrt was not expressly answered and DELFI-Realtime remains pending; project-level access and rights remain `UNKNOWN`** |
+| Provider evaluation | **v4 partial / `BLOCKED` — two of three provider enquiries answered; no provider selected** |
 | Identity-resolution spike (A7) | **Not started — blocking** |
 | Observation collector | **Not started — blocking** |
 | Domain model / risk engine / decision engine | Not started |
@@ -148,13 +152,16 @@ This was one assumption. It is three, and they fail in different ways:
 | --- | --- | --- |
 | **A2a** | The signal exists in the world | **Verified true** |
 | **A2b** | The signal exists in some feed | **Verified true** — DB's `RIS::Connections` states whether connections *"warten"* or *"nicht warten"* |
-| **A2c** | **This project is permitted to use that feed** | **Unknown, and plausibly false** — access is restricted to DB sales partners |
+| **A2c** | **This project is permitted to use that feed** | **`UNKNOWN` project-wide** — RIS::Connections is restricted to DB sales partners, DB GTFS data is not currently available as Open Data, RiFahrt was not expressly answered, and DELFI-Realtime remains pending |
 
-Source for A2b/A2c:
+Sources for A2b/A2c:
 [DB API Marketplace — RIS::Connections](https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-connections-transporteure),
 consulted 2026-08-10: *"Zugang erfolgt nach positiver Prüfung ausschließlich für
 Vertriebspartner der Deutschen Bahn AG"*, priced on request, terms agreed
-contractually.
+contractually; and the redacted DB response mappings in
+[`docs/provider-evaluation.md`](docs/provider-evaluation.md) §6, received
+2026-08-11 and 2026-08-17. The replies narrow the zero-budget DB paths but do
+not grant downstream rights or settle the outstanding RiFahrt and DELFI paths.
 
 > **Consequence for how results may be worded.** A high `UNKNOWN` rate measured
 > on a weaker feed says *"unobservable at our access tier"*, **not**
@@ -182,7 +189,7 @@ The same three-layer split applies, with the same answer:
 | --- | --- | --- |
 | **A3a** | Platform-level transfer data exists | **Verified true** |
 | **A3b** | It exists in a feed | **Verified true** — the same product advertises *"gleisscharfe Umsteigezeiten"* and a per-traveller-type assessment |
-| **A3c** | **This project may use it** | **Unknown** — same access restriction as A2c |
+| **A3c** | **This project may use it** | **`UNKNOWN` project-wide** — the RIS restriction applies, RIS::Stations was offered only as a paid subscription, DB GTFS data is not currently Open Data, and RiFahrt / DELFI remain unresolved |
 
 - If `T_transfer` can only be bounded very loosely, the honest output is a wide
   interval, which pushes many cases into `ATTENTION`/`UNKNOWN` (**S5**).
@@ -399,24 +406,12 @@ looking"*. See [`docs/railway-domain.md`](docs/railway-domain.md) §9.
 
 ### Deliverables
 
-| Deliverable | For | Est. | Purpose |
-| --- | --- | --- | --- |
-| **Phase 0A `REROUTE_EARLY` kill-check** | `RP` | **≤ 8 active h** | Three, extending to at most five, fresh Bavarian `Fernverkehr → Nahverkehr` cases in DB Navigator, MoBY and Wohin·Du·Willst. Compare continue versus reroute before the action deadline; measure projected arrival gain, option decay and decision lead time against warnings, manual alternative search and Anschlussvormeldung. **Runs before collector, model or product work.** |
-| **Decisive-signal access investigation (A2c / A3c)** | `RP` | **½ d** | Runs *in parallel with A5a*. Eligibility for feeds carrying hold signals and platform-level transfer times; whether any lower access tier exposes either; terms, cost, revocability. **Can invalidate the B2C path before a line of collector code exists**, which is why it sits alongside A5a rather than inside the provider evaluation. |
-| `docs/provider-evaluation.md` | `RP` | 0.5 w | Which data feeds exist; what each exposes; storage / redistribution / training / commercial terms; attribution; station transfer and topology data. **Blocks all data-dependent work, but not A5a.** It does not establish carrier fare conditions. |
-| **Identity-resolution spike (A7)** | `RP` | **1 d** | Six hours of polling, then attempt to link runs across polls. Tests A7 before anything is built on it. **A failure here changes the collector's design, not just its schedule.** |
-| Transfer-data-source evaluation (A3) | `RP` | ½ w | Identify an actual source for `T_transfer`, or establish that only wide intervals are defensible. A3 currently has a test and no deliverable. |
-| Carrier-conditions check | `RP` | ½ w | Independently verify ticket-binding and relief conditions from issuer / operator sources. The data-provider matrix cannot answer this. Until complete, [`docs/binding-scenarios.md`](docs/binding-scenarios.md) stays `UNSET`. |
-| Corridor + observation schema freeze | `RP` | ½ w | Freeze corridor graph and observation field slots / statuses before collection. Only `received_at` is always required; provider, event and effective times may be explicitly absent. See [`docs/railway-domain.md`](docs/railway-domain.md) §10. |
-| Observation collector | `RP` | 1 w | Append-only, provenance-tagged, **corridor-wide** capture of scheduled + realtime state. Started as early as licensing permits — *neither elapsed time nor missing scope can be back-filled.* |
-| Collection integrity | `RP` | ½ w | Heartbeat, gap detection, explicit gap records. Same commit as the collector. |
-| Storage + replay harness | `RP` | 1–1.5 w | Reconstruct "what was known at time *t*" from stored observations. |
-| Deterministic baseline + policy | `RP` | 1 w | e.g. transfer-buffer rule, continue-unless-impossible. **Frozen and recorded in `decisions.md` before the measurement window opens** — see [`docs/modelling-and-evaluation.md`](docs/modelling-and-evaluation.md) §2. |
-| Binding-scenario filter | `RP` | ½ w | Candidate admissibility under each ticket-binding scenario. Not a passenger feature in Phase 0 — a filter that makes the sensitivity analysis in A6 computable without any passenger. Rules are versioned in [`docs/binding-scenarios.md`](docs/binding-scenarios.md); a result without a ruleset version is not a result. |
-| Full Phase 0 protocol freeze | `RP` | ½ d | Fill and version [`docs/phase0-protocol.md`](docs/phase0-protocol.md): enumeration, binding, episode windows, baseline, decision policy, measurement / holdout boundaries and Git commit. Any `UNSET` gate blocks measurement. |
-| Synthetic enumeration + measurement | `R` | 1 w | The A1 / A2 / A6 numbers, reported per binding scenario, coverage state and disruption episode, including conditional rates and population bounds. **Go / no-go.** |
-| Segment analysis | `R` | ½ w | Which journey shapes, stations / segments and times within the single measured corridor concentrate the opportunity. Analysis of data already collected — no new engineering. Feeds the ICP hypothesis in [`docs/market-and-validation.md`](docs/market-and-validation.md) §1. |
-| Phase 0 report | `R` | ½ w | See below. Research output and product gate in one document. |
+The task-by-task breakdown — what each deliverable produces, its `R`/`P`/`RP`
+tag, and the dependency order between them — lives in
+[`ROADMAP.md`](ROADMAP.md) §3 (Milestones P0-A through P0-G). This document
+states only the four decisions and the effort/sizing numbers below, since
+those set the terms deliverables are measured against rather than describing
+the deliverables themselves.
 
 The paper-prototype check moved to **Phase 0.5**, where the interface it informs
 actually exists. Phase 0 therefore contains **no `P`-tagged work at all**, and
@@ -710,32 +705,10 @@ this file first.
 
 ## 11. Engineering Order
 
-```text
-Evidence Sprint 0 — parallel, bounded kill-checks
-  Phase 0A REROUTE_EARLY live competitive benchmark (≤ 8 active h)
-  A2c / A3c decisive-signal access investigation
-  exploratory B4 conversations (evidence only; no route or schema decision)
-        ↓
-Provider matrix              ← blocks data-dependent work, not A5a
-        ↓
-A7 identity spike
-        ↓
-Carrier-conditions + A3 transfer-data checks
-        ↓
-Corridor graph + observation schema freeze
-        ↓
-Corridor-wide collector + collection integrity
-        ↓
-Canonical model + replay harness + deterministic baseline
-        ↓
-Full Phase 0 protocol freeze
-        ↓
-Synthetic enumeration + measurement + report    ← Phase 0 ends here
-        ↓
-Minimal decision UX, then only evidence-justified sophistication
-```
-
-Two deliberate choices:
+The full ordering pipeline, from the Evidence Sprint 0 kill-checks through
+Phase 0 measurement to post-Phase-0 UX work, is the dependency map in
+[`ROADMAP.md`](ROADMAP.md) §13. Two deliberate choices from that ordering are
+worth stating here because they are design rationale, not schedule:
 
 - **The collector follows the minimal corridor and schema freeze, then precedes
   the full domain model.** Schemas can be migrated; elapsed observation time
@@ -940,19 +913,12 @@ install or run. This section will document the verified stack, environment,
 commands, and tests once they exist — see the *Definition of Done* in
 `AGENTS.md`.
 
-The deferred release sequence is:
-
-```text
-GitHub version control + local verification
-  → Web / API backend and domain
-    → Android / Google Play
-      → iOS / Apple App Store
-```
-
-This is a gated order, not current implementation scope. Web/API work starts only
-after Phase 0 evidence permits it. Android and iOS proceed only if Phase 0.5
-supports a standalone B2C product; a B2B2C decision replaces those stages with an
-API / integration path.
+The deferred release sequence — GitHub verification → Web/API → Android → iOS
+for the B2C route, or the B2B2C integration path — is a gated order, not
+current implementation scope. It is defined in [`ROADMAP.md`](ROADMAP.md)
+§5.2/§5.3, gated the same way: Web/API work starts only after Phase 0 evidence
+permits it, and Android/iOS proceed only if Phase 0.5 supports a standalone
+B2C product.
 
 > **Note on formatting:** the display formulas in §6 are written on single lines
 > on purpose. Multi-line LaTeX in this file was previously corrupted by a

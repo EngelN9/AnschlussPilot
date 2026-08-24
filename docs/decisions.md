@@ -43,7 +43,7 @@ reversal conditions.
 
 | Area | Active decisions |
 | --- | --- |
-| Phase 0 scope, order and delivery | D001, D002, D007, D008, D009, D010, D011, D027, D033, D037, D039, D044 |
+| Phase 0 scope, order and delivery | D001, D002, D007, D008, D009, D010, D011, D027, D033, D037, D039, D044, D048 |
 | Population, episodes and evaluation | D003, D006, D013, D020, D021, D024, D027, D030, D031, D032 |
 | Binding and observation evidence | D004, D012, D015, D022 (retention principle only), D023, D029, D034, D043, D044 |
 | Competitive, market and validation | D005, D017, D018, D019, D025, D026, D028, D035 (risk classification only), D036 (exit definitions only), D038, D041, D042, D046, D047 |
@@ -887,6 +887,17 @@ schema-coupling rule are superseded by D042**.
 - **What would reverse this:** Written provider evidence establishing eligible
   access plus storage, retention, research, redistribution, commercial,
   attribution and termination terms adequate for the frozen Phase 0 use.
+- **2026-08-18 — external-response update.** Two of the three provider
+  enquiries now have written replies. The DB RIS response closes the individual
+  zero-budget RIS path: RIS::Connections is sales-partner-only and
+  RIS::Stations is paid. The DB data-stream response says DB GTFS data cannot
+  currently be supplied as Open Data and that paid access would require internal
+  review, but it does not expressly answer RiFahrt or any storage, retention,
+  research, redistribution, training, commercial, attribution or termination
+  field. DELFI-Realtime remains unanswered. The evidence therefore narrows two
+  zero-budget DB paths without opening the rights gate: A2c, A3c and A4 remain
+  `UNKNOWN`; no provider is selected; S1, S11 and S12 do not fire while the
+  remaining paths are unresolved. The decision stands.
 
 ### D044 — Phase 0 uses an individual, zero-spend provider path
 
@@ -993,6 +1004,22 @@ schema-coupling rule are superseded by D042**.
   After sampling starts, method changes require a new version and denominator.
   A verified competitor stop, a failed early-reroute opportunity gate, or
   insufficient rights stops or repivots the project under the frozen rules.
+- **2026-08-13 — BEG response received.** BEG (MoBY's operator) answered the
+  2026-08-12 product-support enquiry in writing: connection eligibility has no
+  public list and is derived from timetable data; only Nahverkehr and
+  Fernverkehr → Nahverkehr transfers within Bavaria qualify; pre-notification
+  triggers a server-side geoposition plausibility check; and **BEG confirmed
+  MoBY does not simultaneously show the continue-versus-early-reroute
+  destination comparison before the wait decision.** BEG could not answer for
+  Wohin·Du·Willst (operated by DB Regio Bus Bayern, not BEG) and granted
+  screenshot-publication permission with attribution "MoBY/BEG". This is an
+  operator-side negative for MoBY, not a completed case — D046's frozen
+  all-three-surfaces rule still requires a live observation of all three
+  surfaces, and Wohin·Du·Willst remains `surface_unavailable`. The `0/5` /
+  `0/15` denominators and `inconclusive / BLOCKED` verdict are unchanged. Full
+  evidence recorded in
+  [`benchmarks/phase0a-reroute-early-start-2026-08-12.md`](benchmarks/phase0a-reroute-early-start-2026-08-12.md)
+  §2 and [`market-and-validation.md`](market-and-validation.md) §2.
 
 ### D047 — Synthetic users are an optional Phase 0.5 preflight, never gate evidence
 
@@ -1026,3 +1053,30 @@ schema-coupling rule are superseded by D042**.
   protocols. Any proposal to give synthetic evidence stronger status requires a
   new explicit decision supported by independent human validation; no existing
   synthetic result may be reclassified retroactively.
+
+### D048 — Execution order is extracted from README into ROADMAP.md
+
+- **Date:** 2026-08-15
+- **Status:** active
+- **Evidence available at the time:** `README.md` had grown to mix product
+  thesis and specification with project-management content — a deliverables
+  table with effort estimates (§4), an engineering-order pipeline (§11), and a
+  deferred release sequence (§14). A drafted `ROADMAP.md`, already written in
+  this project's own vocabulary (A2c/A3c/A4/A7, S1–S12, B1–B4/SB1–SB4), was
+  available to hold that content instead.
+- **Decision:** Add `ROADMAP.md` at repo root as a fourth documentation layer,
+  extending D007's split (`AGENTS.md` = rules, `README.md` = product,
+  `docs/` = detail) with: `ROADMAP.md` = execution order, milestone gates, and
+  current phase state. README's deliverables table, engineering-order diagram
+  and release-sequence diagram are replaced with pointers into `ROADMAP.md`
+  §3/§13/§5.2–5.3. README keeps the Effort and Sizing-gate numbers, because
+  stop conditions **S7** and **S8** (`README.md` §12) are defined directly
+  against those estimates, and `ROADMAP.md` deliberately states no time
+  commitments by design.
+- **Alternatives rejected:** Leaving the scheduling content duplicated in both
+  files (guarantees drift); moving the Effort/Sizing-gate numbers into
+  `ROADMAP.md` too (would strand S7/S8's referent outside the document that
+  defines them).
+- **What would reverse this:** Evidence that `ROADMAP.md` and README's
+  remaining phase/gate definitions have drifted out of sync — the same
+  failure mode D007 already tracks for the three-way split.

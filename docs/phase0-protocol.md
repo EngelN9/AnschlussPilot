@@ -26,7 +26,7 @@ filename without a version is not a freeze.
 | Protocol version | `UNSET` | This file |
 | Git commit | `UNSET` | Commit containing the frozen implementation and rules |
 | Corridor scope version | `UNSET` | §2 |
-| Provider verdict and terms snapshot | `v2-partial / BLOCKED` — expanded public evidence; no provider selected and no retention policy frozen | [`provider-evaluation.md`](provider-evaluation.md) |
+| Provider verdict and terms snapshot | `v4-partial / BLOCKED` — two DB replies narrow zero-budget access, DELFI-Realtime remains pending, no provider selected and no retention policy frozen | [`provider-evaluation.md`](provider-evaluation.md) |
 | Observation schema version | `UNSET` | [`railway-domain.md`](railway-domain.md) §10 |
 | Synthetic enumeration version | `UNSET` | §3 |
 | Binding ruleset version | `UNSET` | [`binding-scenarios.md`](binding-scenarios.md) |

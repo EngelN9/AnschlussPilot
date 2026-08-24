@@ -10,13 +10,15 @@ ticket-issuer, fare-validity, binding-relief, or passenger-rights conditions.
 Those require the independent carrier-conditions evidence described in
 [`binding-scenarios.md`](binding-scenarios.md) §3.
 
-> **Status: PARTIAL EVIDENCE v2 — RIGHTS GATE BLOCKED.** Four DB products, two
+> **Status: PARTIAL EVIDENCE v4 — RIGHTS GATE BLOCKED.** Four DB products, two
 > DB data streams and relevant DELFI public leads have been checked against
-> current primary sources. Public pages establish capabilities, general access
-> conditions and some licences, but do not establish usable retention and
-> downstream-use rights for the decisive realtime data. `UNKNOWN` means *not
-> publicly answered*, never *probably fine*. No account, paid plan, API call,
-> provider contact or partner application was used in this review.
+> current primary sources. Written replies now close the individual zero-budget
+> path for RIS::Connections, RIS::Stations and DB GTFS data, but neither reply
+> grants usable retention or downstream-use rights. The DB data-stream reply
+> does not expressly answer RiFahrt, and the DELFI-Realtime enquiry remains
+> unanswered. `UNKNOWN` means *not answered for this project*, never *probably
+> fine*. No account, paid plan, API call, credential request or partner
+> application was used.
 
 > **Update trigger:** re-verify whenever a provider changes terms, when adding a
 > provider, and at minimum before any change to what the collector retains.
@@ -50,11 +52,12 @@ Those require the independent carrier-conditions evidence described in
 ## 2. Matrix
 
 ```text
-Provider snapshot ID          db-public-primary-sources-2026-08-11-v2
-Verdict version               v2-partial
+Provider snapshot ID          provider-primary-evidence-2026-08-17-v4
+Verdict version               v4-partial
 Marketplace general terms     Stand 05/2022
 Product-contract dates        UNKNOWN — the public product pages state no effective date
 Terms checked date            2026-08-11
+Provider response dates        2026-08-11 — DB RIS-API Team; 2026-08-17 — DB GTFS product function
 ```
 
 Once verified, these values and the chosen retention / payload policy are copied
@@ -63,14 +66,14 @@ closed.
 
 ### 2.1 Capability and access evidence
 
-| Product and version | Realtime | Platform | Hold signal | Service identity | Transfer / topology | Rate limits | Access and cost | Source, checked 2026-08-11 |
+| Product and version | Realtime | Platform | Hold signal | Service identity | Transfer / topology | Rate limits | Access and cost | Source, checked or received by 2026-08-17 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| **RIS::Connections** product `1.0.208`, API `1.18.0` | Current forecasts, disruption state and connection status are inputs; public page gives no latency guarantee | Yes — platform-precise connection assessment | **Yes** — waiting / not-waiting disposition status | Request uses `journeyID` + `arrivalID`; cross-observation stability remains unverified pending A7 | Platform-precise transfer times, indoor-routing inputs where available, fallback corporate transfer rules and station-area transfers | 100 req/s plus 5k–500k requests/day by plan | Positive review; **only DB sales partners**; paid, price on request | [Marketplace product](https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-connections-transporteure); [official API guide](https://developer-docs.deutschebahn.com/doku/apis/ris-connections-10686902) |
+| **RIS::Connections** product `1.0.208`, API `1.18.0` | Current forecasts, disruption state and connection status are inputs; public page gives no latency guarantee | Yes — platform-precise connection assessment | **Yes** — waiting / not-waiting disposition status | Request uses `journeyID` + `arrivalID`; cross-observation stability remains unverified pending A7 | Platform-precise transfer times, indoor-routing inputs where available, fallback corporate transfer rules and station-area transfers | 100 req/s plus 5k–500k requests/day by plan | **Only DB sales partners**; DB's written response says free access is not generally provided; paid, price on request | [Marketplace product](https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-connections-transporteure); [official API guide](https://developer-docs.deutschebahn.com/doku/apis/ris-connections-10686902); redacted response mapping in §6.1 |
 | **RIS::Journeys** product `1.0.273`, API `2.12.0` | Yes — scheduled and forecast arrivals/departures, cancellations and journey changes; no public latency guarantee | Yes — platforms / bus bays | Not documented | `journeyID` and match/find endpoints exist; stability remains unverified pending A7 | No transfer-time or station-topology claim | 100 req/s plus 5k–500k requests/day by plan | Positive eligibility review; paid, price on request | [Marketplace product](https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-journeys-transporteure); [official API guide](https://developer-docs.deutschebahn.com/doku/apis/ris-journeys-10582266) |
 | **Timetables** product/API `1.0.274` | Yes — planned timetable plus current changes at a station; no public latency guarantee | `UNKNOWN` from the consulted public product page | Not documented | Station-scoped plan/change records; stable cross-station journey identity not established | No transfer-time or topology claim | 60 requests/minute | Marketplace registration/subscription; free plan | [Marketplace product](https://developers.deutschebahn.com/db-api-marketplace/apis/product/timetables) |
-| **RIS::Stations** product `1.29.3448`, API `1.29.1.1` | Primarily versioned station master data, not journey realtime | Yes — platform structures and sectors | Not applicable / not documented | Station, stop-place and platform keys; not a journey-identity source | Transfer times by traveller type, transfer areas, platform structure; official guide permits initial storage and incremental refresh of station master data | Test: 10 req/s and 10k/month; paid plans: 100 req/s and 150k–15m/month | Positive eligibility review; free test up to two months; paid plans EUR 4,200–84,000/year | [Marketplace product](https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-stations); [official API guide](https://developer-docs.deutschebahn.com/doku/apis/ris-stations-10686906) |
-| **DB GTFS / GTFS-RT data streams**, public documentation has no product/API version | Yes — planned and realtime trips for DB Fernverkehr and DB Regio; GTFS-RT covers delays, stop cancellations, added trips, platform changes and disruptions; realtime horizon 24 hours | Yes — planned platforms and realtime platform changes | Not documented | **Documented stable trip IDs across GTFS and GTFS-RT** | GTFS includes transfer times and accessible-boarding information; no platform-pair topology claim | No quota published; DB recommends GTFS every 5 minutes and GTFS-RT every 20 seconds with `ETag` | Credentials required via `DB-Api-Key`; public page does not state eligibility, price or test access | [Official data-stream guide](https://developer-docs.deutschebahn.com/doku/datenstroeme/stroeme-gtfs-10582270) |
-| **RiFahrt data stream**, public documentation has no product/API version | Yes — planned and realtime journey events for DB Fernverkehr and DB Regio; subscriptions may cover up to 14 days ahead | Yes — actual and planned platforms, including changes | Not documented | **Documented stable journey IDs**, linkable to DB APIs and GTFS / GTFS-RT | No transfer-time or topology claim | Event stream; no public quota or throughput commitment | Registration, a provider-supplied protobuf and RabbitMQ credentials required; eligibility and cost not published | [Official data-stream guide](https://developer-docs.deutschebahn.com/doku/datenstroeme/RiFahrt-13745610) |
+| **RIS::Stations** product `1.29.3448`, API `1.29.1.1` | Primarily versioned station master data, not journey realtime | Yes — platform structures and sectors | Not applicable / not documented | Station, stop-place and platform keys; not a journey-identity source | Transfer times by traveller type, transfer areas, platform structure; official guide permits initial storage and incremental refresh of station master data | Test: 10 req/s and 10k/month; paid plans: 100 req/s and 150k–15m/month | DB's written response offers subscription only, with monthly cost based on use. The public page advertises a two-month free test; no eligible free offer was made to this enquiry, so the zero-budget path stays closed without registration | [Marketplace product](https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-stations); [official API guide](https://developer-docs.deutschebahn.com/doku/apis/ris-stations-10686906); redacted response mapping in §6.1 |
+| **DB GTFS / GTFS-RT data streams**, public documentation has no product/API version | Yes — planned and realtime trips for DB Fernverkehr and DB Regio; GTFS-RT covers delays, stop cancellations, added trips, platform changes and disruptions; realtime horizon 24 hours | Yes — planned platforms and realtime platform changes | Not documented | **Documented stable trip IDs across GTFS and GTFS-RT** | GTFS includes transfer times and accessible-boarding information; no platform-pair topology claim | No quota published; DB recommends GTFS every 5 minutes and GTFS-RT every 20 seconds with `ETag` | DB's written response says the data cannot currently be supplied as Open Data. Paid access may be considered only after internal review and support from DB Regio / DB Fernverkehr according to scope; price and terms remain `UNKNOWN` | [Official data-stream guide](https://developer-docs.deutschebahn.com/doku/datenstroeme/stroeme-gtfs-10582270); redacted response mapping in §6.2 |
+| **RiFahrt data stream**, public documentation has no product/API version | Yes — planned and realtime journey events for DB Fernverkehr and DB Regio; subscriptions may cover up to 14 days ahead | Yes — actual and planned platforms, including changes | Not documented | **Documented stable journey IDs**, linkable to DB APIs and GTFS / GTFS-RT | No transfer-time or topology claim | Event stream; no public quota or throughput commitment | Registration, a provider-supplied protobuf and RabbitMQ credentials required. The written response answered an enquiry that named RiFahrt but did not name or separately address RiFahrt; eligibility and cost remain `UNKNOWN` | [Official data-stream guide](https://developer-docs.deutschebahn.com/doku/datenstroeme/RiFahrt-13745610); redacted response mapping in §6.2 |
 
 `Not documented` means the consulted primary source makes no claim for that
 field. It is not evidence of absence. Version numbers are snapshots, not a
@@ -196,11 +199,14 @@ the facts.
 
 ## 4. Verdict
 
-> **Verdict v2-partial: BLOCKED.** Public primary sources establish useful
-> capabilities, including stable IDs in DB GTFS / GTFS-RT and RiFahrt, but they
-> do not establish that AnschlussPilot is eligible for the required feeds or may
-> retain decisive realtime data for longitudinal replay. No Phase 0 provider is
-> selected. A7, polling and collector work remain prohibited.
+> **Verdict v4-partial: BLOCKED.** Public primary sources establish useful
+> capabilities, including stable IDs in DB GTFS / GTFS-RT and RiFahrt. Written
+> DB replies close the current individual zero-budget paths for RIS products and
+> DB GTFS data: RIS::Connections is sales-partner-only, RIS::Stations is paid,
+> and DB GTFS data cannot currently be supplied as Open Data. The DB stream
+> reply leaves RiFahrt and every downstream-use right unanswered, while the
+> DELFI-Realtime enquiry remains pending. No Phase 0 provider is selected. A7,
+> polling and collector work remain prohibited.
 
 The project pursues a research result (**R**) and a product prototype (**P**) in
 sequence (`README.md` §4). **Their permission requirements differ, so the verdict
@@ -242,9 +248,10 @@ in [`decisions.md`](decisions.md), superseding **D005**.
    schedule metadata identifies a Creative Commons Attribution licence without
    stating its version. Both are useful planning sources, but neither documents
    the decisive hold signal. DB GTFS / GTFS-RT and RiFahrt document realtime
-   data and stable IDs, but their public pages do not grant the required rights.
-   RIS::Connections documents the hold and transfer signals but is restricted
-   to approved DB sales partners under individually agreed terms.
+   data and stable IDs, but the written DB response closes the GTFS Open Data
+   path without granting the required rights and does not expressly answer
+   RiFahrt. RIS::Connections documents the hold and transfer signals but is
+   restricted to DB sales partners under individually agreed terms.
 2. **Collector policy:** none can be frozen. No decisive-signal payload may be
    polled or retained until eligibility, storage and retention are expressly
    established.
@@ -254,16 +261,20 @@ in [`decisions.md`](decisions.md), superseding **D005**.
 4. **Research and product:** both R and P remain blocked for the designed
    longitudinal decision experiment. This result does not authorise an
    ephemeral redesign or a B2B2C implementation.
-5. **Stop conditions:** S1, S11 and S12 are not declared triggered because the
-   required contractual facts are absent, not negative. The rights gate is
-   nevertheless closed under I15. The next evidence action requires separate
-   authorisation to contact DB or DELFI, register or apply for access; this
-   public-source sprint does none of those things.
+5. **Stop conditions:** S1 is not triggered because storage was not answered.
+   S11 and S12 are not triggered because DELFI-Realtime and the RiFahrt-specific
+   access position remain unresolved; the DB replies narrow two zero-budget
+   paths but do not settle every possible decisive-signal source. The rights
+   gate remains closed under I15. Await the DELFI reply; do not register, apply,
+   request credentials, pay or call an API.
 
 ### 4.4 Evidence still required to change the verdict
 
-- Written eligibility for AnschlussPilot's intended research and possible
-  product use, including whether non-sales-partner access is possible.
+- Explicit RiFahrt eligibility and cost, because the DB data-stream response did
+  not separately address it.
+- Written eligibility for any remaining candidate source, including
+  DELFI-Realtime, for AnschlussPilot's intended research and possible product
+  use.
 - Contract terms covering payload storage, retention, research analysis,
   third-party display, commercial use, attribution and termination.
 - Confirmation that the licensed scope of RIS::Stations includes the specific
@@ -275,21 +286,26 @@ in [`decisions.md`](decisions.md), superseding **D005**.
 
 ---
 
-## 5. Zero-Budget External Confirmation Package — User Must Send
+## 5. Zero-Budget External Confirmation Package — Sent
 
-These drafts are evidence-gathering tools, not evidence. The author has chosen
+These messages are evidence-gathering tools, not evidence. The author has chosen
 to write as an individual independent researcher and to spend nothing before
 Phase 0 evidence justifies reconsideration (**D044**). No account is created, no
 terms are accepted, no API is called and no payment information is supplied
 before a written eligibility and rights response is reviewed.
 
-Send the three messages separately so that each recipient can answer for the
-products it owns. Public routing addresses checked 2026-08-11 are
+All three provider messages were sent separately on 2026-08-11 so that each
+recipient could answer for the products it owns. Public routing addresses
+checked 2026-08-11 are
 `ris-api@deutschebahn.com` with `api-marketplace@deutschebahn.com` copied for
 RIS / Marketplace questions, `ris-gtfs@deutschebahn.com` for DB data streams,
-and `info@delfi.de` for DELFI. The author must replace the identity placeholders,
-personally send each message and keep credentials, API keys and travel data out
-of the correspondence.
+and `info@delfi.de` for DELFI. The original drafts remain below as provenance.
+
+| Enquiry | Sent | Current state |
+| --- | --- | --- |
+| DB API Marketplace / RIS | 2026-08-11 | Responded 2026-08-11; redacted evidence in §6.1 |
+| DB GTFS / GTFS-RT / RiFahrt | 2026-08-11 | Responded 2026-08-17; RiFahrt and rights fields were not expressly answered; redacted evidence in §6.2 |
+| DELFI-Realtime / Mobilithek | 2026-08-11 | `follow-up sent 2026-08-22; awaiting response`; only unanswered provider enquiry |
 
 ### 5.1 DB API Marketplace and RIS
 
@@ -419,12 +435,12 @@ Privatperson / unabhängiges Forschungsprojekt
 [E-Mail]
 ```
 
-### 5.4 Sending, follow-up and evidence handling
+### 5.4 Follow-up and evidence handling
 
-Before sending, the author reviews the German text, replaces only `[Name]`,
-`[Land / Rechtsordnung]` and `[E-Mail]`, and sends from the matching personal
-address. Do not add a company name, invented affiliation, API credential,
-payment information or personal travel example.
+Before sending, the author reviewed the German text, replaced only the identity
+placeholders and sent from the matching personal address. No company name,
+invented affiliation, API credential, payment information or personal travel
+example was added.
 
 For each message:
 
@@ -446,3 +462,56 @@ payment method, must not auto-convert to a paid plan and must grant the retentio
 needed for the bounded research period. Otherwise it does not open the rights
 gate. Provider-response evidence gets its own
 `codex/provider-outreach-evidence-v1` branch and never enters the A5a PR.
+
+As of 2026-08-22 only DELFI-Realtime remains unanswered. The frozen same-thread
+reminder was sent that day. If no reply arrives through 2026-09-01 (seven
+further German business days), record `inconclusive / no response` on
+2026-09-02. Do not send another reminder. Silence is never a refusal.
+
+---
+
+## 6. Redacted Provider Response Evidence
+
+The raw messages, sender and recipient identities, and mailbox screenshots
+remain in the author's private mailbox outside Git. These mappings record only
+facts needed to update the gate.
+
+### 6.1 DB RIS / Marketplace response
+
+| Field | Redacted evidence |
+| --- | --- |
+| Organisation / department | Deutsche Bahn — RIS-API Team; API Marketplace copied on the response |
+| Response date | 2026-08-11 |
+| Products addressed | RIS::Connections; RIS::Stations |
+| Free access | **No** — the response states that free access is not generally provided |
+| Eligibility | RIS::Connections is available exclusively to DB sales partners |
+| Cost | RIS::Stations may be subscribed to; monthly cost depends on use |
+| Storage / retention | `UNKNOWN` — not answered |
+| Research / aggregated publication | `UNKNOWN` — not answered |
+| Redistribution / derived display | `UNKNOWN` — not answered |
+| Training | `UNKNOWN` — not answered |
+| Commercial use | `UNKNOWN` — not answered |
+| Attribution | `UNKNOWN` — not answered |
+| Termination / deletion / continuity | `UNKNOWN` — not answered |
+| Resulting gate effect | Individual zero-budget RIS path closed. Project-level A2c, A3c and A4 remain `UNKNOWN`; rights gate remains `BLOCKED`; no provider, registration, A7, polling or collector authorised |
+
+### 6.2 DB GTFS / GTFS-RT / RiFahrt enquiry response
+
+| Field | Redacted evidence |
+| --- | --- |
+| Organisation / department | Deutsche Bahn — GTFS product function |
+| Response date | 2026-08-17 |
+| Enquiry scope | DB GTFS; GTFS-RT; RiFahrt |
+| Open Data / zero-budget access | **No for the DB GTFS data addressed** — the response says the data cannot currently be supplied as Open Data |
+| Paid access | May be considered after review by the DB data-governance body and, depending on requested data, support from DB Regio and DB Fernverkehr; price and terms are `UNKNOWN` |
+| Recommended alternative | DELFI provides a GTFS dataset. This does not establish the scope or rights of DELFI-Realtime |
+| RiFahrt | `UNKNOWN` — the response did not name or separately answer RiFahrt |
+| Included operators / stable IDs | `UNKNOWN` — not answered in the response; public-source findings remain separate |
+| Storage / retention | `UNKNOWN` — not answered |
+| Research / aggregated publication | `UNKNOWN` — not answered |
+| Redistribution / derived display | `UNKNOWN` — not answered |
+| Training | `UNKNOWN` — not answered |
+| Commercial use | `UNKNOWN` — not answered |
+| Attribution / rate limits | `UNKNOWN` — not answered |
+| Termination / deletion / continuity | `UNKNOWN` — not answered |
+| Resulting gate effect | Current individual zero-budget DB GTFS path closed; RiFahrt and all downstream-use rights remain `UNKNOWN`. DELFI-Realtime is the only unanswered provider enquiry. A2c, A3c and A4 remain `UNKNOWN`; rights gate remains `BLOCKED`; no provider, registration, payment, A7, polling or collector authorised |

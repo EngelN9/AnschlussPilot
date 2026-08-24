@@ -57,13 +57,31 @@ any decision-grade comparison.
 
 | Sent date | Recipient unit | Question scope | State | Follow-up rule |
 | --- | --- | --- | --- | --- |
-| 2026-08-12 | Bavaria passenger-information product support for MoBY / Wohin·Du·Willst | Supported connection relationships or markings; viewability without submitting a request; whether continue and early-reroute destination ETAs are compared; current production demo or test case; permission to publish de-identified public-surface screenshots in a non-commercial report | `awaiting response` | One same-thread follow-up after seven working days without a response; after seven further working days record `inconclusive / no response`, never refusal |
+| 2026-08-12 | Bavaria passenger-information product support for MoBY / Wohin·Du·Willst | Supported connection relationships or markings; viewability without submitting a request; whether continue and early-reroute destination ETAs are compared; current production demo or test case; permission to publish de-identified public-surface screenshots in a non-commercial report | `responded 2026-08-13` — see redacted evidence below | Closed; no further follow-up needed |
 
 No private address, message body or Gmail screenshot is retained in Git. A
 response can refine future candidate screening or provide official current
 screens, but cannot retroactively change an already observed case. A statement
 that a decision-grade comparison exists is primary evidence, not a scored live
 observation, until a current surface or official current screen verifies it.
+
+### Redacted response evidence
+
+The raw message, sender and recipient addresses remain in the author's private
+mailbox outside Git. This mapping records only the facts needed to update the
+protocol.
+
+| Field | Redacted evidence |
+| --- | --- |
+| Organisation | Bayerische Eisenbahngesellschaft mbH (BEG) — operator of MoBY only; could not answer for Wohin·Du·Willst (operated by DB Regio Bus Bayern) |
+| Response date | 2026-08-13 |
+| Product addressed | MoBY (`Anschlussvormeldung` feature) |
+| Connection eligibility | No public list or marking; derived from timetable arrival/departure times and defined transfer walk times. Only Nahverkehr and Fernverkehr → Nahverkehr transfers within Bavaria qualify. S-Bahn excluded; Fernverkehr generally does not wait for a delayed Nahverkehr service |
+| Entry-point viewability | The pre-notification button is shown only when a transfer is eligible; tapping it triggers a server-side plausibility check, including a geoposition check confirming the device is along the requested route (the journey chain may start outside Bavaria, but only connections within Bavaria can be pre-notified). Implausible requests are auto-rejected |
+| Simultaneous continue-vs-reroute comparison | **No** — MoBY does not, before the wait decision, simultaneously show "continue current journey" and "reroute early" together with expected final-destination arrival for either. The wait decision is communicated separately, shortly before the transfer |
+| Test / demo access | Not offered to external users; no system screenshots shared. Conceptual explainer video at bahnland-bayern.de/de/anschluss |
+| Screenshot publication | Permitted for the public, no-login interface, with attribution "MoBY/BEG" |
+| Resulting effect on the frozen protocol | Primary evidence, not a scored live observation (per this section's rule above). Does not move the `0/5` complete-case or `0/15` observation denominators; does not by itself trigger S6. Strongly corroborates a `both_branches=no` / `outcome_stated=no` result for MoBY if/when live-observed. Wohin·Du·Willst remains `surface_unavailable` and unverified on this question |
 
 ## 3. Frozen Candidate Discovery
 
@@ -294,7 +312,9 @@ engineering_allowed NO
 
 Neither a continuation recommendation nor an S6 stop/pivot result is supported.
 The fixed competitor lane is incomplete, the live Anschlussvormeldung lane is
-unobserved, the product-support enquiry is awaiting response and acquisition
-rights remain blocked. A later run may begin only as a new pre-registered
-denominator after the frozen app surface is genuinely available; this run is
-not rewritten or backfilled.
+unobserved, and acquisition rights remain blocked. The product-support enquiry
+has been answered (§2) — BEG confirmed MoBY shows no simultaneous
+continue-versus-early-reroute comparison — but per §2's primary-evidence rule
+this does not complete a case or move a denominator above. A later run may
+begin only as a new pre-registered denominator after the frozen app surface is
+genuinely available; this run is not rewritten or backfilled.

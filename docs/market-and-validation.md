@@ -264,11 +264,34 @@ a feed that exposes hold signals becomes available at a self-service tier
 ```
 
 The Bavarian Anschlussvormeldung workflow is now verified from the official FAQ
-as an incumbent connection-protection baseline. Its exact supported connection
-relationships, remote viewability, current production screens and whether it
-ever shows a simultaneous continue-versus-early-reroute destination comparison
-remain open. A product-support enquiry was sent on 2026-08-12 and is `awaiting
-response`; silence is `inconclusive / no response`, never refusal.
+as an incumbent connection-protection baseline. BEG (MoBY's operator) answered
+the product-support enquiry in writing on 2026-08-13: eligible connections
+carry no public list or marking and are derived from timetable data
+(arrival/departure times, defined transfer walk times); only Nahverkehr and
+Fernverkehr → Nahverkehr transfers within Bavaria qualify (S-Bahn excluded;
+Fernverkehr generally does not wait for a delayed Nahverkehr service); the
+pre-notification button appears only when a transfer is eligible, and tapping
+it triggers a server-side plausibility check including the device's
+geoposition along the requested connection. **BEG confirmed that MoBY does
+not, before the wait decision, simultaneously show both "continue the current
+journey" and "reroute early" together with the expected final-destination
+arrival for either — the wait decision is communicated separately, shortly
+before the transfer.** BEG could not answer for Wohin·Du·Willst, which it does
+not operate (that app is run by DB Regio Bus Bayern). No test or demo access
+is offered externally; a conceptual explainer video is published at
+bahnland-bayern.de/de/anschluss. BEG granted permission to publish anonymised
+screenshots of the public, no-login passenger interface in a non-commercial
+report, with attribution "MoBY/BEG".
+
+Per the frozen protocol
+([`benchmarks/phase0a-reroute-early-start-2026-08-12.md`](benchmarks/phase0a-reroute-early-start-2026-08-12.md)
+§2), a provider's written statement is primary evidence, not a scored live
+observation, until a current surface or official current screen verifies it —
+so this answer does not move the `0/5` complete-case or `0/15` observation
+denominators, and does not by itself trigger S6. It strongly corroborates what
+a live MoBY observation would show and closes the question this section
+previously left open for MoBY specifically; Wohin·Du·Willst's equivalent
+behaviour remains unverified.
 
 Watching costs nothing until something fires. Not watching costs the difference
 between learning in week two and learning at the Phase 0 report.
