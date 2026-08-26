@@ -15,8 +15,9 @@ Those require the independent carrier-conditions evidence described in
 > current primary sources. Written replies now close the individual zero-budget
 > path for RIS::Connections, RIS::Stations and DB GTFS data, but neither reply
 > grants usable retention or downstream-use rights. The DB data-stream reply
-> does not expressly answer RiFahrt, and the DELFI-Realtime enquiry remains
-> unanswered. `UNKNOWN` means *not answered for this project*, never *probably
+> does not expressly answer RiFahrt. DELFI responded by requesting project
+> context, but answered none of the six original access, capability and rights
+> questions. `UNKNOWN` means *not answered for this project*, never *probably
 > fine*. No account, paid plan, API call, credential request or partner
 > application was used.
 
@@ -57,7 +58,7 @@ Verdict version               v4-partial
 Marketplace general terms     Stand 05/2022
 Product-contract dates        UNKNOWN — the public product pages state no effective date
 Terms checked date            2026-08-11
-Provider response dates        2026-08-11 — DB RIS-API Team; 2026-08-17 — DB GTFS product function
+Provider response dates        2026-08-11 — DB RIS-API Team; 2026-08-17 — DB GTFS product function; 2026-08-24 — DELFI clarification request
 ```
 
 Once verified, these values and the chosen retention / payload policy are copied
@@ -204,9 +205,10 @@ the facts.
 > DB replies close the current individual zero-budget paths for RIS products and
 > DB GTFS data: RIS::Connections is sales-partner-only, RIS::Stations is paid,
 > and DB GTFS data cannot currently be supplied as Open Data. The DB stream
-> reply leaves RiFahrt and every downstream-use right unanswered, while the
-> DELFI-Realtime enquiry remains pending. No Phase 0 provider is selected. A7,
-> polling and collector work remain prohibited.
+> reply leaves RiFahrt and every downstream-use right unanswered. DELFI's
+> clarification request answered 0/6 original questions and changes no matrix
+> field. No Phase 0 provider is selected. A7, polling and collector work remain
+> prohibited.
 
 The project pursues a research result (**R**) and a product prototype (**P**) in
 sequence (`README.md` §4). **Their permission requirements differ, so the verdict
@@ -265,8 +267,8 @@ in [`decisions.md`](decisions.md), superseding **D005**.
    S11 and S12 are not triggered because DELFI-Realtime and the RiFahrt-specific
    access position remain unresolved; the DB replies narrow two zero-budget
    paths but do not settle every possible decisive-signal source. The rights
-   gate remains closed under I15. Await the DELFI reply; do not register, apply,
-   request credentials, pay or call an API.
+   gate remains closed under I15. Await a substantive DELFI reply; do not
+   register, apply, request credentials, pay or call an API.
 
 ### 4.4 Evidence still required to change the verdict
 
@@ -305,7 +307,7 @@ and `info@delfi.de` for DELFI. The original drafts remain below as provenance.
 | --- | --- | --- |
 | DB API Marketplace / RIS | 2026-08-11 | Responded 2026-08-11; redacted evidence in §6.1 |
 | DB GTFS / GTFS-RT / RiFahrt | 2026-08-11 | Responded 2026-08-17; RiFahrt and rights fields were not expressly answered; redacted evidence in §6.2 |
-| DELFI-Realtime / Mobilithek | 2026-08-11 | `follow-up sent 2026-08-22; awaiting response`; only unanswered provider enquiry |
+| DELFI-Realtime / Mobilithek | 2026-08-11 | `responded 2026-08-24` — requested project context and offered a phone call; written-only project-context reply sent 2026-08-26; redacted evidence in §6.3; `0/6` original questions answered and substantive answer pending |
 
 ### 5.1 DB API Marketplace and RIS
 
@@ -435,6 +437,17 @@ Privatperson / unabhängiges Forschungsprojekt
 [E-Mail]
 ```
 
+DELFI responded 2026-08-24 requesting project context (concrete research
+subject, planned data use, intended results) before answering, and offered a
+phone call as an alternative. The author selected written-only clarification.
+The written project-context reply was sent in the same thread on 2026-08-26. It
+explains the bounded, unfinanced research question; the conditional use of
+scheduled and realtime observations for temporally correct offline replay; the
+absence of personal, ticket and location data; and the intended aggregated
+research report. It requests an itemised written answer to the original six
+questions and does not disclose a phone number. The complete sent message and
+identity data remain outside Git.
+
 ### 5.4 Follow-up and evidence handling
 
 Before sending, the author reviewed the German text, replaced only the identity
@@ -460,13 +473,16 @@ A free account, trial or subscription is considered only after the written
 response and applicable terms have both been reviewed. It must require no
 payment method, must not auto-convert to a paid plan and must grant the retention
 needed for the bounded research period. Otherwise it does not open the rights
-gate. Provider-response evidence gets its own
-`codex/provider-outreach-evidence-v1` branch and never enters the A5a PR.
+gate. Provider-response evidence gets its own dedicated branch and never enters
+the A5a PR; this DELFI clarification record is on
+`codex/delfi-clarification-response-v1`.
 
-As of 2026-08-22 only DELFI-Realtime remains unanswered. The frozen same-thread
-reminder was sent that day. If no reply arrives through 2026-09-01 (seven
-further German business days), record `inconclusive / no response` on
-2026-09-02. Do not send another reminder. Silence is never a refusal.
+DELFI responded 2026-08-24, before the 2026-09-01 silence deadline, so that
+deadline no longer applies — a request for project context is not silence. The
+§5.3 written reply was sent on 2026-08-26. If no substantive answer arrives
+through 2026-09-04, send one same-thread reminder on 2026-09-07. If there is
+still no answer through 2026-09-16, record `inconclusive / no response` on
+2026-09-17; silence is never a refusal.
 
 ---
 
@@ -514,4 +530,16 @@ facts needed to update the gate.
 | Commercial use | `UNKNOWN` — not answered |
 | Attribution / rate limits | `UNKNOWN` — not answered |
 | Termination / deletion / continuity | `UNKNOWN` — not answered |
-| Resulting gate effect | Current individual zero-budget DB GTFS path closed; RiFahrt and all downstream-use rights remain `UNKNOWN`. DELFI-Realtime is the only unanswered provider enquiry. A2c, A3c and A4 remain `UNKNOWN`; rights gate remains `BLOCKED`; no provider, registration, payment, A7, polling or collector authorised |
+| Resulting gate effect | Current individual zero-budget DB GTFS path closed; RiFahrt and all downstream-use rights remain `UNKNOWN`. The separate DELFI clarification request answered none of its original questions. A2c, A3c and A4 remain `UNKNOWN`; rights gate remains `BLOCKED`; no provider, registration, payment, A7, polling or collector authorised |
+
+### 6.3 DELFI-Realtime — request for clarification
+
+| Field | Redacted evidence |
+| --- | --- |
+| Organisation / department | DELFI e. V. — Geschäftsstelle Frankfurt am Main |
+| Response date | 2026-08-24 |
+| Content | Requested more project context before answering — concrete research subject, planned data use, intended results — and offered a phone callback with a colleague as an alternative to a written answer |
+| Answered original questions | **`0/6`** — this is a request for clarification, not a rights or eligibility answer |
+| Free access / eligibility / storage / retention / research / redistribution / training / commercial / attribution / continuity | `UNKNOWN` — none of the six original questions were answered |
+| Usable provider path established | **`0`** |
+| Resulting gate effect | None yet. A2c, A3c and A4 remain `UNKNOWN`; rights gate remains `BLOCKED`; verdict stays `v4-partial` since no matrix field changed. Written-only project context was sent 2026-08-26 and substantive evidence is pending (§5.3) |

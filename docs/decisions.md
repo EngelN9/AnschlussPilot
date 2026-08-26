@@ -898,6 +898,15 @@ schema-coupling rule are superseded by D042**.
   zero-budget DB paths without opening the rights gate: A2c, A3c and A4 remain
   `UNKNOWN`; no provider is selected; S1, S11 and S12 do not fire while the
   remaining paths are unresolved. The decision stands.
+- **2026-08-24 — DELFI requested project context.** DELFI responded before the
+  planned silence deadline, but with a request for more project context
+  (research subject, data use, intended results) rather than an answer to the
+  six original questions; a phone call was offered as an alternative to a
+  written answer. This is neither a rights answer nor silence — none of A2c,
+  A3c or A4 changes, the rights gate stays `BLOCKED`, and S1/S11/S12 still do
+  not fire. Written-only project context was sent in the same thread on
+  2026-08-26 and awaits a substantive answer (`provider-evaluation.md` §5.3);
+  the decision stands.
 
 ### D044 — Phase 0 uses an individual, zero-spend provider path
 

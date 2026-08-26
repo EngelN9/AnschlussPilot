@@ -285,6 +285,7 @@ provider_rights   BLOCKED
 engineering_allowed NO
 ```
 
-The DELFI follow-up remains `sent 2026-08-22; awaiting response`. Silence may be
-recorded as `inconclusive / no response` no earlier than 2026-09-02 and is never
-a refusal. No DELFI status changes this frozen competitive denominator.
+DELFI responded 2026-08-24, before the planned silence deadline, requesting
+project context rather than answering the six original questions (see
+`provider-evaluation.md` §5.3/§6.3). Written-only project context was sent on
+2026-08-26; no DELFI status changes this frozen competitive denominator.

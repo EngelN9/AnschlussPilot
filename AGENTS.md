@@ -14,7 +14,7 @@ specific document that covers the layer you are touching.
 goes stale the moment code lands; the date below tells you how far to trust it.
 
 ```text
-Last verified:  2026-08-24
+Last verified:  2026-08-26
 Observed state: documentation only — no application code, no provider
                 integration, no dataset, no tests; D045 archived inconclusive
                 at 1/30 observations; initial D046 Phase 0A run inconclusive /
@@ -44,12 +44,14 @@ interface. Phase 0 blockers, in order:
    [`docs/benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md`](docs/benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md);
    its first fixed-order discovery sweep produced no included case, so it remains
    at `0/5` and `0/15` and imports nothing from v1.
-2. `docs/provider-evaluation.md` — verdict `v4-partial / BLOCKED`; written RIS
+2. `docs/provider-evaluation.md` — verdict `v4-partial / BLOCKED`; all three
+   provider enquiries have received a response, but DELFI requested project
+   context rather than answering any of the six original questions. Written RIS
    and DB GTFS replies close those individual zero-budget paths without granting
-   storage or downstream-use rights. RiFahrt was not expressly answered and
-   DELFI-Realtime is the only provider enquiry still awaiting a reply. The
-   rights gate stops all data-dependent work, but not the live-surface
-   kill-check.
+   storage or downstream-use rights, and RiFahrt was not expressly answered.
+   The DELFI written project-context reply was sent 2026-08-26 and is awaiting
+   a substantive answer. The rights gate stops all data-dependent work, but not
+   the live-surface kill-check.
 3. Only if the competitor, early-reroute opportunity and minimum-data gates are
    complete and pass: A7 identity spike, carrier / A3 checks, corridor and
    observation-schema freeze; then the collector as soon as licensing permits.

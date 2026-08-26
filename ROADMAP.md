@@ -75,7 +75,7 @@ Current evidence state:
 | Phase 0 measurement methodology | Defined, but freeze manifest incomplete |
 | Phase 0 protocol manifest | `BLOCKED` |
 | A5a competitive benchmark | Initial D046 run remains `inconclusive / BLOCKED` at `0/5` and `0/15`; v2 is running after its first fixed-order sweep produced no included case and remains `0/5`, `0/15` |
-| Provider capability mapping | `v4-partial`; two of three provider enquiries answered |
+| Provider capability mapping | `v4-partial`; all three enquiries received a response, but DELFI answered 0/6 original questions and no usable provider path is established |
 | Provider rights / retention gate | `BLOCKED` |
 | A2c decisive-signal access | `UNKNOWN` |
 | A3c transfer-data access | `UNKNOWN` |
@@ -134,8 +134,10 @@ the core opportunity or required data access does not exist.
       sample completeness.
 - [ ] Determine whether an existing product already performs a
       decision-grade continue-vs-change comparison.
-- [ ] Complete the currently prepared **zero-budget provider enquiries** — RIS
-      and DB GTFS replies received; DELFI-Realtime remains pending.
+- [ ] Complete the currently prepared **zero-budget provider enquiries** — all
+      three received a response, but DELFI requested project context instead of
+      answering the original six questions; its written project-context reply
+      was sent 2026-08-26 and awaits a substantive answer.
 - [ ] Obtain written evidence on eligibility for relevant DB / public-data
       products and streams — the received DB replies close individual
       zero-budget paths but leave RiFahrt and downstream rights `UNKNOWN`.

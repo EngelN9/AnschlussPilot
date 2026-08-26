@@ -27,8 +27,8 @@ specification only.
 | Engineering rules | Defined (`AGENTS.md`) |
 | Phase 0 protocol manifest | `UNSET` / `BLOCKED` — freeze gates incomplete |
 | Competitive benchmark (Phase 0A / A5a) | **Initial run remains `inconclusive / BLOCKED` at 0/5 complete cases and 0/15 scored observations; v2 is running after a first fixed-order discovery sweep produced no included case, so its counts also remain 0/5 and 0/15** |
-| Decisive-signal access (A2c / A3c) | **External confirmation in progress — individual zero-budget RIS and DB GTFS paths closed; RiFahrt was not expressly answered and DELFI-Realtime remains pending; project-level access and rights remain `UNKNOWN`** |
-| Provider evaluation | **v4 partial / `BLOCKED` — two of three provider enquiries answered; no provider selected** |
+| Decisive-signal access (A2c / A3c) | **External confirmation in progress — individual zero-budget RIS and DB GTFS paths closed; RiFahrt was not expressly answered; DELFI requested project context but answered 0/6 original questions; project-level access and rights remain `UNKNOWN`** |
+| Provider evaluation | **v4 partial / `BLOCKED` — all three enquiries received a response, but no usable provider path or complete rights answer exists; no provider selected** |
 | Identity-resolution spike (A7) | **Not started — blocking** |
 | Observation collector | **Not started — blocking** |
 | Domain model / risk engine / decision engine | Not started |
@@ -152,7 +152,7 @@ This was one assumption. It is three, and they fail in different ways:
 | --- | --- | --- |
 | **A2a** | The signal exists in the world | **Verified true** |
 | **A2b** | The signal exists in some feed | **Verified true** — DB's `RIS::Connections` states whether connections *"warten"* or *"nicht warten"* |
-| **A2c** | **This project is permitted to use that feed** | **`UNKNOWN` project-wide** — RIS::Connections is restricted to DB sales partners, DB GTFS data is not currently available as Open Data, RiFahrt was not expressly answered, and DELFI-Realtime remains pending |
+| **A2c** | **This project is permitted to use that feed** | **`UNKNOWN` project-wide** — RIS::Connections is restricted to DB sales partners, DB GTFS data is not currently available as Open Data, RiFahrt was not expressly answered, and DELFI answered none of the six original access and rights questions |
 
 Sources for A2b/A2c:
 [DB API Marketplace — RIS::Connections](https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-connections-transporteure),
@@ -189,7 +189,7 @@ The same three-layer split applies, with the same answer:
 | --- | --- | --- |
 | **A3a** | Platform-level transfer data exists | **Verified true** |
 | **A3b** | It exists in a feed | **Verified true** — the same product advertises *"gleisscharfe Umsteigezeiten"* and a per-traveller-type assessment |
-| **A3c** | **This project may use it** | **`UNKNOWN` project-wide** — the RIS restriction applies, RIS::Stations was offered only as a paid subscription, DB GTFS data is not currently Open Data, and RiFahrt / DELFI remain unresolved |
+| **A3c** | **This project may use it** | **`UNKNOWN` project-wide** — the RIS restriction applies, RIS::Stations was offered only as a paid subscription, DB GTFS data is not currently Open Data, RiFahrt was not expressly answered, and DELFI's clarification request resolved no access or rights field |
 
 - If `T_transfer` can only be bounded very loosely, the honest output is a wide
   interval, which pushes many cases into `ATTENTION`/`UNKNOWN` (**S5**).
