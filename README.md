@@ -13,22 +13,27 @@
 > [!IMPORTANT]
 > **Nothing is implemented yet.**
 >
-> This repository contains documentation only — this file, `AGENTS.md`, and the
-> detail documents in [`docs/`](docs/). There is no application, no provider
-> integration, no dataset, and no model.
+> This repository contains documentation only — this file, `AGENTS.md`,
+> [`ROADMAP.md`](ROADMAP.md), and the detail documents in [`docs/`](docs/).
+> There is no application, no provider integration, no dataset, and no model.
+
+Execution order, milestone gates, and current phase state live in
+[`ROADMAP.md`](ROADMAP.md), not here — this file is product thesis and
+specification only.
 
 | Claim | Status |
 | --- | --- |
-| Product direction | Defined (this file) |
+| Product direction | Defined; current kill-check narrowed to `REROUTE_EARLY` |
 | Engineering rules | Defined (`AGENTS.md`) |
 | Phase 0 protocol manifest | `UNSET` / `BLOCKED` — freeze gates incomplete |
-| Competitive benchmark (A5a) | **Not started — cheapest existence check** |
-| Decisive-signal access (A2c / A3c) | **Public-source pass complete; eligibility and contractual rights remain `UNKNOWN`** |
-| Provider evaluation | **v1 partial / `BLOCKED` — four DB products checked; no provider selected** |
+| Competitive benchmark (Phase 0A / A5a) | **Initial run remains `inconclusive / BLOCKED` at 0/5 complete cases and 0/15 scored observations; v2 is running after a first fixed-order discovery sweep produced no included case, so its counts also remain 0/5 and 0/15** |
+| Decisive-signal access (A2c / A3c) | **External confirmation in progress — individual zero-budget RIS and DB GTFS paths closed; RiFahrt was not expressly answered; DELFI requested project context but answered 0/6 original questions; project-level access and rights remain `UNKNOWN`** |
+| Provider evaluation | **v4 partial / `BLOCKED` — all three enquiries received a response, but no usable provider path or complete rights answer exists; no provider selected** |
 | Identity-resolution spike (A7) | **Not started — blocking** |
 | Observation collector | **Not started — blocking** |
 | Domain model / risk engine / decision engine | Not started |
 | Historical dataset, backtesting, ML | Not started |
+| Synthetic UX preflight (Phase 0.5-S) | Contract documented; **`DEFERRED / NOT_IMPLEMENTED`** until Phase 0 passes and a separate human-approved implementation gate opens |
 | Deployment, monitoring, GDPR review | Not started |
 
 Capabilities are described as implemented only once they are verifiably present
@@ -147,13 +152,16 @@ This was one assumption. It is three, and they fail in different ways:
 | --- | --- | --- |
 | **A2a** | The signal exists in the world | **Verified true** |
 | **A2b** | The signal exists in some feed | **Verified true** — DB's `RIS::Connections` states whether connections *"warten"* or *"nicht warten"* |
-| **A2c** | **This project is permitted to use that feed** | **Unknown, and plausibly false** — access is restricted to DB sales partners |
+| **A2c** | **This project is permitted to use that feed** | **`UNKNOWN` project-wide** — RIS::Connections is restricted to DB sales partners, DB GTFS data is not currently available as Open Data, RiFahrt was not expressly answered, and DELFI answered none of the six original access and rights questions |
 
-Source for A2b/A2c:
+Sources for A2b/A2c:
 [DB API Marketplace — RIS::Connections](https://developers.deutschebahn.com/db-api-marketplace/apis/product/ris-connections-transporteure),
 consulted 2026-08-10: *"Zugang erfolgt nach positiver Prüfung ausschließlich für
 Vertriebspartner der Deutschen Bahn AG"*, priced on request, terms agreed
-contractually.
+contractually; and the redacted DB response mappings in
+[`docs/provider-evaluation.md`](docs/provider-evaluation.md) §6, received
+2026-08-11 and 2026-08-17. The replies narrow the zero-budget DB paths but do
+not grant downstream rights or settle the outstanding RiFahrt and DELFI paths.
 
 > **Consequence for how results may be worded.** A high `UNKNOWN` rate measured
 > on a weaker feed says *"unobservable at our access tier"*, **not**
@@ -181,7 +189,7 @@ The same three-layer split applies, with the same answer:
 | --- | --- | --- |
 | **A3a** | Platform-level transfer data exists | **Verified true** |
 | **A3b** | It exists in a feed | **Verified true** — the same product advertises *"gleisscharfe Umsteigezeiten"* and a per-traveller-type assessment |
-| **A3c** | **This project may use it** | **Unknown** — same access restriction as A2c |
+| **A3c** | **This project may use it** | **`UNKNOWN` project-wide** — the RIS restriction applies, RIS::Stations was offered only as a paid subscription, DB GTFS data is not currently Open Data, RiFahrt was not expressly answered, and DELFI's clarification request resolved no access or rights field |
 
 - If `T_transfer` can only be bounded very loosely, the honest output is a wide
   interval, which pushes many cases into `ATTENTION`/`UNKNOWN` (**S5**).
@@ -199,24 +207,31 @@ assumed** (`AGENTS.md` **I15**).
 
 ### A5 — The delta over existing tools is real, and lasts
 
-Existing tools already show delays, alternatives, and connection warnings. The
-differentiator claimed here is narrow: **counterfactual comparison of
-continue-vs-change at decision time, including changing before the threatened
-transfer station.**
+Existing tools already show delays, alternatives, connection warnings and
+connection-protection workflows. The differentiator under test is narrower:
+**before the action window closes, compare the destination outcome of continuing
+the current journey with rerouting before the threatened transfer station.**
 
 A one-off check is not enough, because the gap can close during the build. Split
 in two:
 
-- **A5a — the gap exists today.** No current tool compares the outcome of
-  continuing against the outcome of changing.
+- **Phase 0A — the narrow kill-check.** Determine whether incumbent surfaces
+  already make the `REROUTE_EARLY` comparison decision-grade, whether forecast
+  arrival gain and option decay are material, and whether the minimum operands
+  and rights are obtainable.
+- **A5a — the gap exists today.** If Phase 0A survives, re-run the broader
+  competitive checkpoint under a newly frozen denominator.
 - **A5b — the gap is defensible long enough** to justify a multi-month build.
 
-**Test:** fixed, versioned archetypes populated with fresh qualifying cases and
-run against the live products at Phase 0 start, Phase 0 report, and Phase 0.5
-exit — never from memory. Design in
-[`docs/market-and-validation.md`](docs/market-and-validation.md) §2. First run is
-capped at half a day; an incomplete sample is `inconclusive`, never evidence that
-a competitor lacks the capability.
+**Current test:** three, extending to at most five, fresh Bavarian
+`Fernverkehr → Nahverkehr` cases with actionable pre-transfer divergences,
+observed in DB Navigator, MoBY and Wohin·Du·Willst. The closed v1 result is in
+[`docs/benchmarks/phase0a-reroute-early-start-2026-08-12.md`](docs/benchmarks/phase0a-reroute-early-start-2026-08-12.md);
+the current frozen v2 method, first discovery sweep and raw gates are in
+[`docs/benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md`](docs/benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md).
+It is capped at eight active hours. Any incomplete sample, surface, temporal
+anchor, connection-protection lane or acquisition-rights answer is
+`inconclusive / BLOCKED`, never evidence that a competitor lacks the capability.
 
 ### A6 — The recommendation is one the passenger can actually take
 
@@ -306,8 +321,18 @@ returns both.
 | Phase | Question it answers | Gate to the next |
 | --- | --- | --- |
 | **0 — R** | **Can we make a useful decision?** A measurement report: does the policy beat the baseline, and by how much? | The report itself. Also the product go/no-go. |
+| **0.5-S — optional synthetic preflight** | **Can likely communication failures be found before recruiting real participants?** Human-authored frozen scenarios may be shown to isolated simulated users after Phase 0 passes. | Exploratory UX-risk findings only. It cannot satisfy or replace Phase 0.5. |
 | **0.5 — P-minimal** | **Will anyone act on it?** Paper-prototype check, then the author uses it on their own real journeys. Laptop-hosted, single user, no reliability guarantees. Tests **B1–B4**. | Comprehension, trust, and friction — see [`docs/market-and-validation.md`](docs/market-and-validation.md) §5 |
 | **1 — P** | **Can we distribute and sustain it?** A prototype a handful of people can use, on one of the two commercial tracks | Only if 0 and 0.5 both say yes |
+
+Phase 0.5-S is optional and currently only a documented contract. It may be
+implemented only after the Phase 0 report passes its technical gates and after
+the author approves the pinned MatrAIx version, licences and terms, model
+provider, cost ceiling and data handling. Synthetic results may narrow wording
+candidates or identify risks for human review; they do not establish A1–A7,
+S1–S12, B1–B4, SB1–SB4, real passenger behaviour or production safety. See
+[`docs/synthetic-ux-preflight.md`](docs/synthetic-ux-preflight.md) and
+[`docs/decisions.md`](docs/decisions.md) D047.
 
 An early B4 conversation round may collect at most half a day of exploratory
 evidence. It does not select B2C or B2B2C, alter the Phase 0 schema, or authorize
@@ -382,24 +407,12 @@ looking"*. See [`docs/railway-domain.md`](docs/railway-domain.md) §9.
 
 ### Deliverables
 
-| Deliverable | For | Est. | Purpose |
-| --- | --- | --- | --- |
-| **Competitive benchmark (A5a)** | `RP` | **½ d** | Fixed archetypes, two fresh cases per archetype, against the live tools. Does any already compare continue-vs-change counterfactually? **Runs first — the cheapest way to discover the project has no reason to exist.** Re-run at the report, at Phase 0.5 exit, and on any A5b trigger event. |
-| **Decisive-signal access investigation (A2c / A3c)** | `RP` | **½ d** | Runs *in parallel with A5a*. Eligibility for feeds carrying hold signals and platform-level transfer times; whether any lower access tier exposes either; terms, cost, revocability. **Can invalidate the B2C path before a line of collector code exists**, which is why it sits alongside A5a rather than inside the provider evaluation. |
-| `docs/provider-evaluation.md` | `RP` | 0.5 w | Which data feeds exist; what each exposes; storage / redistribution / training / commercial terms; attribution; station transfer and topology data. **Blocks all data-dependent work, but not A5a.** It does not establish carrier fare conditions. |
-| **Identity-resolution spike (A7)** | `RP` | **1 d** | Six hours of polling, then attempt to link runs across polls. Tests A7 before anything is built on it. **A failure here changes the collector's design, not just its schedule.** |
-| Transfer-data-source evaluation (A3) | `RP` | ½ w | Identify an actual source for `T_transfer`, or establish that only wide intervals are defensible. A3 currently has a test and no deliverable. |
-| Carrier-conditions check | `RP` | ½ w | Independently verify ticket-binding and relief conditions from issuer / operator sources. The data-provider matrix cannot answer this. Until complete, [`docs/binding-scenarios.md`](docs/binding-scenarios.md) stays `UNSET`. |
-| Corridor + observation schema freeze | `RP` | ½ w | Freeze corridor graph and observation field slots / statuses before collection. Only `received_at` is always required; provider, event and effective times may be explicitly absent. See [`docs/railway-domain.md`](docs/railway-domain.md) §10. |
-| Observation collector | `RP` | 1 w | Append-only, provenance-tagged, **corridor-wide** capture of scheduled + realtime state. Started as early as licensing permits — *neither elapsed time nor missing scope can be back-filled.* |
-| Collection integrity | `RP` | ½ w | Heartbeat, gap detection, explicit gap records. Same commit as the collector. |
-| Storage + replay harness | `RP` | 1–1.5 w | Reconstruct "what was known at time *t*" from stored observations. |
-| Deterministic baseline + policy | `RP` | 1 w | e.g. transfer-buffer rule, continue-unless-impossible. **Frozen and recorded in `decisions.md` before the measurement window opens** — see [`docs/modelling-and-evaluation.md`](docs/modelling-and-evaluation.md) §2. |
-| Binding-scenario filter | `RP` | ½ w | Candidate admissibility under each ticket-binding scenario. Not a passenger feature in Phase 0 — a filter that makes the sensitivity analysis in A6 computable without any passenger. Rules are versioned in [`docs/binding-scenarios.md`](docs/binding-scenarios.md); a result without a ruleset version is not a result. |
-| Full Phase 0 protocol freeze | `RP` | ½ d | Fill and version [`docs/phase0-protocol.md`](docs/phase0-protocol.md): enumeration, binding, episode windows, baseline, decision policy, measurement / holdout boundaries and Git commit. Any `UNSET` gate blocks measurement. |
-| Synthetic enumeration + measurement | `R` | 1 w | The A1 / A2 / A6 numbers, reported per binding scenario, coverage state and disruption episode, including conditional rates and population bounds. **Go / no-go.** |
-| Segment analysis | `R` | ½ w | Which journey shapes, stations / segments and times within the single measured corridor concentrate the opportunity. Analysis of data already collected — no new engineering. Feeds the ICP hypothesis in [`docs/market-and-validation.md`](docs/market-and-validation.md) §1. |
-| Phase 0 report | `R` | ½ w | See below. Research output and product gate in one document. |
+The task-by-task breakdown — what each deliverable produces, its `R`/`P`/`RP`
+tag, and the dependency order between them — lives in
+[`ROADMAP.md`](ROADMAP.md) §3 (Milestones P0-A through P0-G). This document
+states only the four decisions and the effort/sizing numbers below, since
+those set the terms deliverables are measured against rather than describing
+the deliverables themselves.
 
 The paper-prototype check moved to **Phase 0.5**, where the interface it informs
 actually exists. Phase 0 therefore contains **no `P`-tagged work at all**, and
@@ -693,32 +706,10 @@ this file first.
 
 ## 11. Engineering Order
 
-```text
-Evidence Sprint 0 — parallel, each capped at half a day
-  A5a live competitive benchmark
-  A2c / A3c decisive-signal access investigation
-  exploratory B4 conversations (evidence only; no route or schema decision)
-        ↓
-Provider matrix              ← blocks data-dependent work, not A5a
-        ↓
-A7 identity spike
-        ↓
-Carrier-conditions + A3 transfer-data checks
-        ↓
-Corridor graph + observation schema freeze
-        ↓
-Corridor-wide collector + collection integrity
-        ↓
-Canonical model + replay harness + deterministic baseline
-        ↓
-Full Phase 0 protocol freeze
-        ↓
-Synthetic enumeration + measurement + report    ← Phase 0 ends here
-        ↓
-Minimal decision UX, then only evidence-justified sophistication
-```
-
-Two deliberate choices:
+The full ordering pipeline, from the Evidence Sprint 0 kill-checks through
+Phase 0 measurement to post-Phase-0 UX work, is the dependency map in
+[`ROADMAP.md`](ROADMAP.md) §13. Two deliberate choices from that ordering are
+worth stating here because they are design rationale, not schedule:
 
 - **The collector follows the minimal corridor and schema freeze, then precedes
   the full domain model.** Schemas can be migrated; elapsed observation time
@@ -778,7 +769,7 @@ section exists to prevent.
 | **S3** | `BOUND` ÷ `UNBOUND` rate **< 1/3** (A6), both computed on the **same denominator over the same evaluable set** | **Drop P, continue R.** The research result stands; the product would serve too narrow a population to justify building. A ratio across different denominators is meaningless — the constraint is part of the condition. |
 | **S4** | `UNKNOWN` exceeds **50%** of disrupted transfers at decision time, **on the feeds this project can actually obtain** (A2c) | **Stop the decision product** — or pursue access. A system that declines to answer more often than it answers is not decision support. The figure is bounded by A2c, not by physics: it must never be reported as "unobservable on German rail". |
 | **S5** | Transfer requirement cannot be bounded within **±5 min** (A3) | **Narrow** to stations where it can be. If none qualify, S4 applies. |
-| **S6** | A competing tool meets all four decision-grade criteria on a majority of **all** cases and a majority of `REROUTE_EARLY` cases (A5a), or overall coverage rises by at least **20 percentage points** and `REROUTE_EARLY` coverage also rises (A5b) | **Repivot.** The reason to exist is going or gone. Find a narrower gap, move to B2B2C, or stop. Report raw numerators / denominators; criteria and thresholds are in [`docs/market-and-validation.md`](docs/market-and-validation.md) §2. |
+| **S6** | In Phase 0A, the same competing app meets all four decision-grade criteria in at least **2/3** complete cases, or (after extension) **3/5**; at later A5b checkpoints, overall coverage rises by at least **20 percentage points** and `REROUTE_EARLY` coverage also rises | **Repivot.** The reason to exist is going or gone. Find a narrower gap, move to B2B2C, or stop. Report raw numerators / denominators. Missing surfaces or the unobserved Anschlussvormeldung live lane leave the overall result `inconclusive`, not passed. Criteria and gates are in [`docs/market-and-validation.md`](docs/market-and-validation.md) §2. |
 | **S7** | Any deliverable exceeds **2×** its estimate (§4) | **Re-scope**, do not push through. |
 | **S8** | Phase 0 incomplete at **2×** its calendar estimate (§4) | **Stop and publish what exists.** A partial measurement honestly reported has value; an unfinished one has none. |
 | **S9** | Service-run linkage fails or is ambiguous for **> 5%** of runs, and cannot be reduced (A7) | **Redesign or stop.** Delay evolution and counterfactual labels are unreliable above this rate. Switch to a provider with stable journey identifiers, or stop — do not proceed and hope. |
@@ -923,19 +914,12 @@ install or run. This section will document the verified stack, environment,
 commands, and tests once they exist — see the *Definition of Done* in
 `AGENTS.md`.
 
-The deferred release sequence is:
-
-```text
-GitHub version control + local verification
-  → Web / API backend and domain
-    → Android / Google Play
-      → iOS / Apple App Store
-```
-
-This is a gated order, not current implementation scope. Web/API work starts only
-after Phase 0 evidence permits it. Android and iOS proceed only if Phase 0.5
-supports a standalone B2C product; a B2B2C decision replaces those stages with an
-API / integration path.
+The deferred release sequence — GitHub verification → Web/API → Android → iOS
+for the B2C route, or the B2B2C integration path — is a gated order, not
+current implementation scope. It is defined in [`ROADMAP.md`](ROADMAP.md)
+§5.2/§5.3, gated the same way: Web/API work starts only after Phase 0 evidence
+permits it, and Android/iOS proceed only if Phase 0.5 supports a standalone
+B2C product.
 
 > **Note on formatting:** the display formulas in §6 are written on single lines
 > on purpose. Multi-line LaTeX in this file was previously corrupted by a

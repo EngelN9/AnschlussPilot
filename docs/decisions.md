@@ -43,10 +43,10 @@ reversal conditions.
 
 | Area | Active decisions |
 | --- | --- |
-| Phase 0 scope, order and delivery | D001, D002, D007, D008, D009, D010, D011, D027, D033, D037, D039, D044 |
+| Phase 0 scope, order and delivery | D001, D002, D007, D008, D009, D010, D011, D027, D033, D037, D039, D044, D048 |
 | Population, episodes and evaluation | D003, D006, D013, D020, D021, D024, D027, D030, D031, D032 |
 | Binding and observation evidence | D004, D012, D015, D022 (retention principle only), D023, D029, D034, D043, D044 |
-| Competitive, market and validation | D005, D017, D018, D019, D025, D026, D028, D035 (risk classification only), D036 (exit definitions only), D038, D041, D042 |
+| Competitive, market and validation | D005, D017, D018, D019, D025, D026, D028, D035 (risk classification only), D036 (exit definitions only), D038, D041, D042, D046, D047 |
 | Open — awaiting a decision from the author | **D040** (licence values) |
 
 Superseded entries remain below for provenance: D014 is superseded by D021 and
@@ -887,6 +887,26 @@ schema-coupling rule are superseded by D042**.
 - **What would reverse this:** Written provider evidence establishing eligible
   access plus storage, retention, research, redistribution, commercial,
   attribution and termination terms adequate for the frozen Phase 0 use.
+- **2026-08-18 — external-response update.** Two of the three provider
+  enquiries now have written replies. The DB RIS response closes the individual
+  zero-budget RIS path: RIS::Connections is sales-partner-only and
+  RIS::Stations is paid. The DB data-stream response says DB GTFS data cannot
+  currently be supplied as Open Data and that paid access would require internal
+  review, but it does not expressly answer RiFahrt or any storage, retention,
+  research, redistribution, training, commercial, attribution or termination
+  field. DELFI-Realtime remains unanswered. The evidence therefore narrows two
+  zero-budget DB paths without opening the rights gate: A2c, A3c and A4 remain
+  `UNKNOWN`; no provider is selected; S1, S11 and S12 do not fire while the
+  remaining paths are unresolved. The decision stands.
+- **2026-08-24 — DELFI requested project context.** DELFI responded before the
+  planned silence deadline, but with a request for more project context
+  (research subject, data use, intended results) rather than an answer to the
+  six original questions; a phone call was offered as an alternative to a
+  written answer. This is neither a rights answer nor silence — none of A2c,
+  A3c or A4 changes, the rights gate stays `BLOCKED`, and S1/S11/S12 still do
+  not fire. Written-only project context was sent in the same thread on
+  2026-08-26 and awaits a substantive answer (`provider-evaluation.md` §5.3);
+  the decision stands.
 
 ### D044 — Phase 0 uses an individual, zero-spend provider path
 
@@ -916,3 +936,165 @@ schema-coupling rule are superseded by D042**.
   funding becomes available, or a provider supplies written no-cost eligibility
   and sufficient rights. Either event triggers a fresh provider and budget
   decision; neither automatically authorises collection.
+
+### D045 — The first A5a checkpoint pairs three mobile surfaces
+
+- **Date:** 2026-08-12
+- **Status:** superseded by **D046**
+- **Evidence available at the time:** The unmerged `codex/a5a-20260811` branch
+  contains two partial bahn.de cases and two failed Trainline web attempts. No
+  screenshot was retained, every evidence path is `NOT_CAPTURED`, DB Navigator
+  was not observed, and every complete denominator is `0/10`. That work is
+  useful provenance but cannot support a product-level or A5a verdict. Mixing a
+  native incumbent app with incomplete web surfaces would preserve the same
+  ambiguity.
+- **Decision:** The Phase 0-start checkpoint uses the same ten fresh cases on
+  DB Navigator, Trainline and Google Maps mobile apps. Each surface is anonymous,
+  guest or incognito; no account is created and no web substitute is allowed.
+  A case starts at the disrupted journey detail and allows at most three
+  purposeful navigation taps and two minutes. The effort cap is four active
+  hours; pauses awaiting a mobile observation do not consume it, but an expired
+  action window invalidates that case. Across later checkpoints the cases remain
+  fresh and therefore unpaired, as D025 requires.
+- **Alternatives rejected:** Importing the prior unauditable rows (would turn
+  missing evidence into a negative observation); mixed mobile/web surfaces
+  (surface differences could masquerade as product differences); unpaired tools
+  within one checkpoint (context differences would dominate ten cases); unlimited
+  exploration (makes friction and reachability runner-dependent).
+- **What would reverse this:** Before a future checkpoint begins, evidence that
+  one frozen app is unavailable to the target traveller or that another tool is
+  materially more relevant may change the surface set. The replacement and new
+  interaction budget must be frozen before sampling and cannot be applied
+  retrospectively to this checkpoint.
+
+### D046 — Phase 0A isolates the `REROUTE_EARLY` kill-check
+
+- **Date:** 2026-08-12
+- **Status:** active; supersedes **D045** for future sampling and refines
+  **D025**, **D028**, **D042**, and **D044**
+- **Evidence available at the time:** D045 inspected two candidates, included
+  one `REROUTE_EARLY` case and completed one of thirty planned app observations.
+  The case's action window expired before Trainline and Google Maps were
+  observed, so D045 closed `inconclusive`; its evidence cannot be rescued by a
+  later device-timezone change. The product thesis is narrower than five
+  disruption archetypes: it depends on useful action before a threatened
+  transfer, compared with existing warnings, manual alternative search and
+  connection protection. The official DB Regio Bayern FAQ documents
+  Anschlussvormeldung in MoBY and Wohin·Du·Willst, including route-position
+  validation and late processing, but does not by itself show a simultaneous
+  continue-versus-early-reroute destination comparison. A product-support
+  enquiry was sent on 2026-08-12 and is awaiting response.
+- **Decision:** Run a bounded Phase 0A on `REROUTE_EARLY` only, with DB Navigator,
+  MoBY and Wohin·Du·Willst in anonymous or guest mode. Target three unique
+  `Fernverkehr → Nahverkehr` Bavarian cases and extend to at most five within
+  eight active hours. Each case must have a live disruption, an actionable
+  pre-transfer divergence and all three anonymous surfaces. Score the existing
+  four decision-grade criteria within three taps and two minutes, and additionally
+  record projected arrival gain at `t_early`, option decay by `t_late` and
+  decision lead time versus the baseline ladder. Anschlussvormeldung is the
+  connection-protection baseline embedded in the latter two apps, not a fourth
+  surface. Do not simulate German location or submit a connection request; its
+  live lane remains `UNKNOWN` without a genuine in-route observer. The same app
+  reaching `2/3` complete cases triggers S6 immediately; if not, extend to five,
+  where `3/5` triggers S6. A continue recommendation requires five cases,
+  fifteen app observations, complete temporal operands, the frozen opportunity
+  thresholds and sufficient acquisition rights. Any incomplete denominator or
+  rights answer leaves the overall result `inconclusive / BLOCKED`.
+- **Alternatives rejected:** Completing D045 after its only case expired (would
+  violate decision-time validity); using Trainline or Google Maps in the new
+  denominator (tests broad journey planning rather than the strongest Bavarian
+  connection-protection baseline); treating Anschlussvormeldung as a fourth app
+  (it is an embedded workflow); simulating location or sending a request (would
+  falsify the observation context and create an operational side effect);
+  proceeding directly to a collector (rights remain blocked).
+- **What would reverse this:** Before the first Phase 0A candidate is inspected,
+  current primary evidence may show that one frozen surface cannot be viewed by
+  the target traveller or that the official workflow has materially changed.
+  After sampling starts, method changes require a new version and denominator.
+  A verified competitor stop, a failed early-reroute opportunity gate, or
+  insufficient rights stops or repivots the project under the frozen rules.
+- **2026-08-13 — BEG response received.** BEG (MoBY's operator) answered the
+  2026-08-12 product-support enquiry in writing: connection eligibility has no
+  public list and is derived from timetable data; only Nahverkehr and
+  Fernverkehr → Nahverkehr transfers within Bavaria qualify; pre-notification
+  triggers a server-side geoposition plausibility check; and **BEG confirmed
+  MoBY does not simultaneously show the continue-versus-early-reroute
+  destination comparison before the wait decision.** BEG could not answer for
+  Wohin·Du·Willst (operated by DB Regio Bus Bayern, not BEG) and granted
+  screenshot-publication permission with attribution "MoBY/BEG". This is an
+  operator-side negative for MoBY, not a completed case — D046's frozen
+  all-three-surfaces rule still requires a live observation of all three
+  surfaces, and Wohin·Du·Willst remains `surface_unavailable`. The `0/5` /
+  `0/15` denominators and `inconclusive / BLOCKED` verdict are unchanged. Full
+  evidence recorded in
+  [`benchmarks/phase0a-reroute-early-start-2026-08-12.md`](benchmarks/phase0a-reroute-early-start-2026-08-12.md)
+  §2 and [`market-and-validation.md`](market-and-validation.md) §2.
+- **2026-08-24 — v2 pre-registered.** A physical-device setup preflight reached
+  the anonymous journey-search entry in DB Navigator, MoBY and
+  Wohin·Du·Willst. DB Navigator had changed from `26.14.0` to `26.15.0`, so the
+  closed v1 run is not reopened. The separate v2 artifact freezes the current
+  three app versions, the existing D046 sample and gate rules, the station
+  discovery order, and the app observation order before any candidate is
+  inspected. Setup availability is not scored; v2 starts at zero and imports
+  none of v1's `0/5` / `0/15` denominator. See
+  [`benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md`](benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md).
+
+### D047 — Synthetic users are an optional Phase 0.5 preflight, never gate evidence
+
+- **Date:** 2026-08-13
+- **Status:** active
+- **Evidence available at the time:** The repository remains documentation-only;
+  Phase 0 has not passed, D046 is `inconclusive / BLOCKED`, provider rights are
+  incomplete, and no recommendation output or user interface exists. MatrAIx is
+  a newly public simulated-user evaluation framework whose own repository calls
+  it useful for exploration, stress testing and hypothesis generation rather
+  than a replacement for evidence from real people. Its runtime, persona source,
+  model-provider terms and cost have not been approved for this project.
+- **Decision:** Document, but do not implement, an optional **Phase 0.5-S**. It
+  becomes eligible only after a passing Phase 0 report and separate author
+  approval of the pinned MatrAIx commit, applicable licences and terms, provider,
+  budget and data handling. The future flow is one-way: a human-authored frozen
+  scenario enters an isolated MatrAIx task, a deterministic scorer produces
+  structured UX-risk findings, and a human reviews them. Synthetic outputs may
+  reject a wording candidate or generate hypotheses, but cannot satisfy A1–A7,
+  S1–S12, B1–B4 or SB1–SB4 and never enter a production decision or confidence
+  score. Start with a 48-cell calibration; only after human review may a
+  400-cell paired-variant pilot run. Real Phase 0.5 participants remain mandatory.
+- **Alternatives rejected:** Implementing the harness before Phase 0 (product
+  work without a validated decision); importing Persona 1M before a separate
+  rights and provenance review; treating `ATTENTION` or `UNKNOWN` as actions;
+  inventing low/medium/high recommendation confidence; using synthetic response
+  rates as passenger population estimates or promotion evidence.
+- **What would reverse this:** If human calibration finds no meaningful signal,
+  or licensing, model-provider terms, privacy, cost or maintenance are
+  unacceptable, remove Phase 0.5-S without changing the Phase 0 or real Phase 0.5
+  protocols. Any proposal to give synthetic evidence stronger status requires a
+  new explicit decision supported by independent human validation; no existing
+  synthetic result may be reclassified retroactively.
+
+### D048 — Execution order is extracted from README into ROADMAP.md
+
+- **Date:** 2026-08-15
+- **Status:** active
+- **Evidence available at the time:** `README.md` had grown to mix product
+  thesis and specification with project-management content — a deliverables
+  table with effort estimates (§4), an engineering-order pipeline (§11), and a
+  deferred release sequence (§14). A drafted `ROADMAP.md`, already written in
+  this project's own vocabulary (A2c/A3c/A4/A7, S1–S12, B1–B4/SB1–SB4), was
+  available to hold that content instead.
+- **Decision:** Add `ROADMAP.md` at repo root as a fourth documentation layer,
+  extending D007's split (`AGENTS.md` = rules, `README.md` = product,
+  `docs/` = detail) with: `ROADMAP.md` = execution order, milestone gates, and
+  current phase state. README's deliverables table, engineering-order diagram
+  and release-sequence diagram are replaced with pointers into `ROADMAP.md`
+  §3/§13/§5.2–5.3. README keeps the Effort and Sizing-gate numbers, because
+  stop conditions **S7** and **S8** (`README.md` §12) are defined directly
+  against those estimates, and `ROADMAP.md` deliberately states no time
+  commitments by design.
+- **Alternatives rejected:** Leaving the scheduling content duplicated in both
+  files (guarantees drift); moving the Effort/Sizing-gate numbers into
+  `ROADMAP.md` too (would strand S7/S8's referent outside the document that
+  defines them).
+- **What would reverse this:** Evidence that `ROADMAP.md` and README's
+  remaining phase/gate definitions have drifted out of sync — the same
+  failure mode D007 already tracks for the three-way split.

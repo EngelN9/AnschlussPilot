@@ -14,9 +14,16 @@ specific document that covers the layer you are touching.
 goes stale the moment code lands; the date below tells you how far to trust it.
 
 ```text
-Last verified:  2026-08-11
+Last verified:  2026-08-26
 Observed state: documentation only — no application code, no provider
-                integration, no dataset, no tests
+                integration, no dataset, no tests; D045 archived inconclusive
+                at 1/30 observations; initial D046 Phase 0A run inconclusive /
+                blocked at 0/5 complete cases and 0/15 scored observations;
+                v2 running after all three anonymous app entries passed
+                physical-device setup preflight and a first fixed-order sweep
+                produced no included case; v2 remains at 0/5 and 0/15;
+                optional MatrAIx Phase 0.5-S contract documented only and
+                DEFERRED / NOT_IMPLEMENTED
 ```
 
 If the date is old or the state does not match what you see, trust the
@@ -26,14 +33,31 @@ The project is in **Phase 0** (see [`README.md`](README.md) §4): determine
 whether the product thesis holds, using one corridor, offline replay, and no user
 interface. Phase 0 blockers, in order:
 
-1. A5a live competitive benchmark — can run without provider data and is the
-   cheapest product-thesis check.
-2. `docs/provider-evaluation.md` — public matrix partially filled; rights gate
-   remains blocked and stops all data-dependent work, but not A5a.
-3. A7 identity spike, carrier / A3 checks, corridor and observation-schema
-   freeze; then the collector as soon as licensing permits.
-4. Replay harness, deterministic baseline, full protocol freeze, opportunity
-   measurement.
+1. D046 Phase 0A `REROUTE_EARLY` live kill-check — the initial run is
+   `inconclusive / BLOCKED`: Wohin·Du·Willst could not load a place or regional
+   version, so neither inspected candidate formed the mandatory three-app
+   denominator. D045 remains archived `inconclusive` evidence and is not
+   imported into D046. BEG has confirmed in writing that MoBY does not show the
+   simultaneous continue-versus-reroute comparison, but that is not a scored
+   live observation and does not change the `0/5` / `0/15` denominators. A new
+   v2 denominator is frozen and running in
+   [`docs/benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md`](docs/benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md);
+   its first fixed-order discovery sweep produced no included case, so it remains
+   at `0/5` and `0/15` and imports nothing from v1.
+2. `docs/provider-evaluation.md` — verdict `v4-partial / BLOCKED`; all three
+   provider enquiries have received a response, but DELFI requested project
+   context rather than answering any of the six original questions. Written RIS
+   and DB GTFS replies close those individual zero-budget paths without granting
+   storage or downstream-use rights, and RiFahrt was not expressly answered.
+   The DELFI written project-context reply was sent 2026-08-26 and is awaiting
+   a substantive answer. The rights gate stops all data-dependent work, but not
+   the live-surface kill-check.
+3. Only if the competitor, early-reroute opportunity and minimum-data gates are
+   complete and pass: A7 identity spike, carrier / A3 checks, corridor and
+   observation-schema freeze; then the collector as soon as licensing permits.
+4. Replay harness, deterministic baseline, full protocol freeze and opportunity
+   measurement remain out of order while Phase 0A or provider rights are
+   incomplete.
 
 Work that does not serve Phase 0 requires an explicit reason. Building the UI,
 adding ML, or widening geographic scope now is out of order, not merely early.
@@ -46,7 +70,7 @@ Numbered so they can be cited in review. Violating one is a defect regardless of
 how well the code works. Numbers are stable — new rules get appended, never
 renumbered.
 
-Sixteen is more than anyone recalls under pressure, so they cluster into five
+Seventeen is more than anyone recalls under pressure, so they cluster into five
 ideas. None is optional; the grouping is a memory aid, not a ranking.
 
 | Cluster | Invariants | The idea |
@@ -55,7 +79,7 @@ ideas. None is optional; the grouping is a memory aid, not a ranking.
 | Uncertainty | I4, I5, I8, I9 | Unknown stays unknown, all the way to the screen |
 | Layering | I6, I7 | Provider data and time both flow one way |
 | Decision discipline | I3, I10, I11, I12 | Compare actions; never react to a risk label |
-| Boundaries | I13, I14, I15, I16 | Know what this system is not allowed to claim |
+| Boundaries | I13, I14, I15, I16, I17 | Know what this system is not allowed to claim |
 
 **I1 — The repository is the source of truth.**
 Never infer implementation status from this file, the README, plans, issues, or
@@ -131,6 +155,13 @@ commercial use. Verify current terms; document them next to the provider code.
 Collect the minimum personal data. Never commit secrets. Treat all provider
 responses as untrusted input and validate at the boundary. Enforce authorization
 server-side if authentication is ever introduced.
+
+**I17 — Synthetic-user evidence is preflight evidence only.**
+Synthetic-user evidence may identify communication and usability risks, but
+cannot satisfy technical, behavioral, commercial, safety, rights, legal, or
+promotion gates requiring railway evidence, real people, provider evidence, or
+human review. It never feeds a journey recommendation, route selection, ticket
+or entitlement decision, or production confidence score.
 
 ---
 
@@ -286,10 +317,12 @@ small ambiguity.
 | [`docs/phase0-protocol.md`](docs/phase0-protocol.md) | Single versioned freeze record for the Phase 0 corridor, data contracts, population, episode rules, policy and measurement window |
 | [`docs/testing-catalogue.md`](docs/testing-catalogue.md) | Railway edge cases, decision cases, provider contract tests |
 | [`docs/market-and-validation.md`](docs/market-and-validation.md) | Customer hypotheses, competitive benchmark, distribution risk, commercial tracks, Phase 0.5 experiments |
+| [`docs/synthetic-ux-preflight.md`](docs/synthetic-ux-preflight.md) | Deferred Phase 0.5-S synthetic-user UX preflight contract and evidence boundary |
 | [`docs/binding-scenarios.md`](docs/binding-scenarios.md) | Versioned ticket-binding ruleset behind the A6 scenario band. A sensitivity assumption, never a legal determination |
 | [`docs/decisions.md`](docs/decisions.md) | Why things are the way they are, and what would reverse each choice |
 | [`docs/provider-evaluation.md`](docs/provider-evaluation.md) | Feed capabilities and data rights. Public matrix partially filled; rights gate still blocks Phase 0 data-dependent work |
 | [`README.md`](README.md) | Product definition, unvalidated assumptions, known constraints, success criteria |
+| [`ROADMAP.md`](ROADMAP.md) | Execution order, milestone gates, current phase state — extracted from `README.md` so the product/spec document carries no scheduling semantics |
 
 `docs/provider-evaluation.md` contains a partially filled public-source matrix,
 but no provider has sufficient verified rights. The closed rights gate blocks

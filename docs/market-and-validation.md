@@ -15,8 +15,15 @@ asserted as fact unless it was verified against a primary source
 > any figure here is re-verified. Checked at deliverable completion
 > (`AGENTS.md` §4).
 
-> **Nothing here is validated.** No user has been interviewed, no benchmark has
-> been run, no segment has been measured.
+> **Nothing here establishes product viability.** No user has been interviewed
+> and no segment has been measured. The first D045 benchmark run closed
+> `inconclusive` after one of thirty app observations. The initial D046 run is
+> also `inconclusive / BLOCKED`: no candidate reached the frozen three-app
+> denominator, so neither a continuation nor a stop/pivot result is supported.
+> A separate D046 v2 denominator is running after all three anonymous app
+> entries passed setup preflight. Its first fixed-order discovery sweep produced
+> no included case, so it remains at `0/5` cases and `0/15` observations.
+> No synthetic-user evaluation has been implemented or run.
 
 ---
 
@@ -60,6 +67,78 @@ for recruitment in Phase 0.5, **not** an assertion that they are the market.
 A one-off existence check is not enough, because the gap can close while the
 project is being built.
 
+### Current Phase 0A — isolate `REROUTE_EARLY`
+
+The immediate question is narrower than a general feature inventory:
+
+> **Before the action window closes, does an existing surface compare the
+> destination outcome of continuing with that of rerouting before the threatened
+> transfer, and is the forecast advantage large enough to matter?**
+
+D045's five-archetype run is archived `inconclusive` at one of thirty planned
+app observations. D046 starts a fresh denominator: target three, extend to at
+most five, live-disrupted Bavarian `Fernverkehr → Nahverkehr` cases with an
+actionable pre-transfer divergence. The scored apps are DB Navigator, MoBY and
+Wohin·Du·Willst. This is a hypothesis-driven test set, not a market-share or
+feature-completeness claim.
+
+The initial D046 attempt inspected two candidates. One lacked a live timing or
+connection disruption. The other was visible anonymously in DB Navigator and
+MoBY while its action window remained open, but Wohin·Du·Willst repeatedly
+failed to load any place or regional version before journey search. It was
+therefore excluded under the frozen three-surface rule. The raw result is 0/5
+complete cases and 0/15 scored observations; this run-specific
+`surface_unavailable` result is not evidence that a product feature is absent.
+See the [run artifact](benchmarks/phase0a-reroute-early-start-2026-08-12.md).
+
+On 2026-08-24, a physical-device setup preflight reached the anonymous
+journey-search entry in all three frozen apps. Because DB Navigator had also
+changed version, D046 v2 starts a new denominator rather than reopening v1. Its
+pre-registered method is in
+[`benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md`](benchmarks/phase0a-reroute-early-start-2026-08-24-v2.md).
+Setup availability is not a scored observation, and v2 begins at zero.
+The first fixed-order sweep then inspected eight representative official-web
+discovery queries. None met all five inclusion conditions, so no three-app
+observation window opened and v2 remains `inconclusive / BLOCKED` at `0/5`
+cases and `0/15` observations. This is not evidence that no qualifying
+disruption existed outside those queries.
+
+The baseline ladder is:
+
+```text
+1. CONTINUE_CURRENT_PLAN
+2. connection warning
+3. manual alternatives search from disruption detail
+4. Anschlussvormeldung / connection protection
+```
+
+Anschlussvormeldung is embedded in MoBY and Wohin·Du·Willst, not counted as a
+fourth app. The
+[official DB Regio Bayern FAQ](https://regional.bahn.de/regionen/bayern/service/anschluss-voranmeldung/anschlussvormeldung-faq)
+documents the route-position check and late operational decision process. It
+does not replace a live observation. No location is simulated and no connection
+request is sent; without a genuine in-route observer, that live lane stays
+`UNKNOWN`.
+
+For every case, record `t_early`, `t_late` and the raw operands for:
+
+- `projected_arrival_gain_t0`: the continue destination ETA minus the best
+  reroute destination ETA at `t_early` — a forecast advantage, not actual time
+  saved;
+- `option_decay_count`: forecast-better alternatives open at `t_early` but no
+  longer actionable at `t_late`;
+- `decision_lead_time`: the best reroute deadline minus the first complete
+  comparison time, plus its lead over the first existing-baseline warning.
+
+Extra transfers, ticket binding, freshness, recommendation reversal and any
+observable false-intervention outcome remain separate guardrails. Ticket
+executability is `UNKNOWN` unless independent evidence establishes it.
+
+The run is frozen in
+[`benchmarks/phase0a-reroute-early-start-2026-08-12.md`](benchmarks/phase0a-reroute-early-start-2026-08-12.md).
+It uses the same three-tap, two-minute, four-criterion decision-grade contract
+below.
+
 ### A5a — the feature gap exists today
 
 The question is **not** *"does anyone else show alternatives?"* — several tools
@@ -72,9 +151,10 @@ do. It is:
 
 A gap that closes in six months does not justify a multi-month build.
 
-### Method — archetypes, not replayed cases
+### Archived D045 method — archetypes, not replayed cases
 
-**A live railway disruption cannot be replayed months later.** Fixing the
+The following block records D045 and is not the current denominator. **A live
+railway disruption cannot be replayed months later.** Fixing the
 individual cases would make the benchmark unrunnable after its first use. What is
 fixed is the *archetype* and the inclusion criteria; the cases are sampled fresh
 from live events at each checkpoint.
@@ -96,8 +176,9 @@ Sample           exactly 2 qualifying cases per archetype at the first run
                  toward 20–30 by the Phase 0 report;
                  stratified across archetypes, not drawn freely
 
-Tools            AnschlussPilot (once it exists), DB Navigator,
-                 significant third-party tools
+Tools            AnschlussPilot (once it exists); initial checkpoint:
+                 DB Navigator, Trainline and Google Maps mobile apps
+                 (a test set, not a market-share claim)
 
 Cadence          Phase 0 start, Phase 0 report, Phase 0.5 exit
                  — checkpoints, not continuous monitoring
@@ -108,9 +189,12 @@ Recorded         per run: product name and version, date and time, account
                  comparison, elapsed time
 ```
 
-**Comparisons are across samples, not paired.** Different cases each run is the
-price of running at all; report per archetype so a change in one is not hidden by
-the mix.
+**Across checkpoints, comparisons are across samples, not paired.** Different
+fresh cases each run are the price of running at all; report per archetype so a
+change in one is not hidden by the mix. **Within one checkpoint, the same case
+is observed on every frozen surface.** A missing surface leaves that case and
+the checkpoint denominator incomplete; it is not replaced by a web surface or a
+different disruption.
 
 Kept deliberately small at first: the first run stops after half a day. If ten
 qualifying cases cannot be found in that time, record the checkpoint as
@@ -133,6 +217,12 @@ four must hold:
                          from the disrupted journey
 ```
 
+For D045 and both D046 Phase 0A versions, *reachable* means within at most
+three purposeful navigation taps and two minutes from the disrupted journey
+detail. Scrolling is recorded but does not consume a navigation tap unless it
+opens or changes a view. D045's archived evidence and result remain in
+[`benchmarks/a5a-phase0-start-2026-08-12.md`](benchmarks/a5a-phase0-start-2026-08-12.md).
+
 Anything less — an alternatives list, a "connection at risk" badge, a
 push notification — is **not** a counterfactual comparison, however useful.
 
@@ -148,10 +238,17 @@ friction      interactions and elapsed time to reach it
 trajectory    change in coverage between checkpoints
 ```
 
-- **A5a fails** only when the same competing tool meets all four criteria on a
-  majority of the complete benchmark sample **and** on a majority of the
-  `REROUTE_EARLY` cases → **S6**; repivot or stop. Either denominator being
-  incomplete makes the checkpoint `inconclusive`.
+- **Phase 0A triggers S6 after three cases** when the same app reaches
+  `all_four=yes` in at least `2/3`; otherwise sampling may extend to five, where
+  at least `3/5` triggers S6.
+- **Continuing beyond Phase 0A requires five unique cases and fifteen complete
+  app observations**, plus at least `3/5` cases with forecast gain of 10 minutes
+  or more, mean forecast gain of at least 10 minutes, at least `3/5` cases with
+  option decay, and at least `3/5` with positive decision lead over an existing
+  baseline. Informational sufficiency and acquisition rights must also pass.
+- Any missing surface, temporal anchor, evidence manifest entry,
+  Anschlussvormeldung live lane or acquisition-rights answer makes the overall
+  Phase 0A verdict `inconclusive / BLOCKED`.
 - **A5b fails** when overall coverage rises by at least **20 percentage points**
   between checkpoints **and** `REROUTE_EARLY` coverage rises in the same
   direction. Report the raw numerator and denominator for both populations at
@@ -181,11 +278,35 @@ a feed that exposes hold signals becomes available at a self-service tier
     — this cuts both ways: it weakens A5b and strengthens A2c
 ```
 
-> **Requires verification.** A feature of this kind has been reported to exist
-> regionally (Bavaria, *Anschluss-Voranmeldung*), and would matter because it
-> means the incumbent is already collecting intended-connection data. Treated as
-> an unconfirmed prior for the first benchmark run, not as an established fact
-> (`AGENTS.md` **I2**).
+The Bavarian Anschlussvormeldung workflow is now verified from the official FAQ
+as an incumbent connection-protection baseline. BEG (MoBY's operator) answered
+the product-support enquiry in writing on 2026-08-13: eligible connections
+carry no public list or marking and are derived from timetable data
+(arrival/departure times, defined transfer walk times); only Nahverkehr and
+Fernverkehr → Nahverkehr transfers within Bavaria qualify (S-Bahn excluded;
+Fernverkehr generally does not wait for a delayed Nahverkehr service); the
+pre-notification button appears only when a transfer is eligible, and tapping
+it triggers a server-side plausibility check including the device's
+geoposition along the requested connection. **BEG confirmed that MoBY does
+not, before the wait decision, simultaneously show both "continue the current
+journey" and "reroute early" together with the expected final-destination
+arrival for either — the wait decision is communicated separately, shortly
+before the transfer.** BEG could not answer for Wohin·Du·Willst, which it does
+not operate (that app is run by DB Regio Bus Bayern). No test or demo access
+is offered externally; a conceptual explainer video is published at
+bahnland-bayern.de/de/anschluss. BEG granted permission to publish anonymised
+screenshots of the public, no-login passenger interface in a non-commercial
+report, with attribution "MoBY/BEG".
+
+Per the frozen protocol
+([`benchmarks/phase0a-reroute-early-start-2026-08-12.md`](benchmarks/phase0a-reroute-early-start-2026-08-12.md)
+§2), a provider's written statement is primary evidence, not a scored live
+observation, until a current surface or official current screen verifies it —
+so this answer does not move the `0/5` complete-case or `0/15` observation
+denominators, and does not by itself trigger S6. It strongly corroborates what
+a live MoBY observation would show and closes the question this section
+previously left open for MoBY specifically; Wohin·Du·Willst's equivalent
+behaviour remains unverified.
 
 Watching costs nothing until something fires. Not watching costs the difference
 between learning in week two and learning at the Phase 0 report.
@@ -276,6 +397,33 @@ Phase 0 reports.
 
 Phase 0 asks *can we make a useful decision?* These ask *will anyone act on it?*
 They are separate questions and are not merged into the technical assumptions.
+
+### Optional Phase 0.5-S — synthetic UX preflight
+
+Phase 0.5-S is a **deferred, optional preflight** between a passing Phase 0
+report and recruitment for the real Phase 0.5 pilot. Its contract is recorded in
+[`synthetic-ux-preflight.md`](synthetic-ux-preflight.md); no harness, cohort,
+dataset, model integration or result exists now.
+
+If its separate implementation gate later opens, simulated users may inspect
+human-authored frozen recommendation presentations to surface likely wording,
+hierarchy and uncertainty-communication failures. A human may use those findings
+to remove an obviously risky wording candidate or formulate questions for the
+real pilot. The output remains hypothesis-generating evidence even when the raw
+numerator and denominator are reproducible.
+
+It does **not**:
+
+- prove recommendation correctness, transfer feasibility, ticket permissibility,
+  connection-hold observability or any A1–A7 proposition;
+- measure real comprehension, trust, willingness to act, acquisition friction,
+  willingness to pay, market size or safety;
+- satisfy B1–B4, fire SB1–SB4, change S1–S12 or promote a product;
+- replace D026's 2–3-person exploratory pilot and 5–8-person confirmatory round.
+
+Abandoning the synthetic lane because its outputs are implausible, too costly or
+legally unusable is not evidence against AnschlussPilot. Conversely, a favourable
+synthetic run is not evidence that a passenger would understand or act.
 
 | | Hypothesis | Test | Reversal |
 | --- | --- | --- | --- |
