@@ -255,6 +255,37 @@ again requires a fresh window that the tuning never saw. This is inconvenient by
 design — it is what stops "one more small adjustment" from silently consuming the
 evidence.
 
+### 2.x Derived reporting quantity — avoidable delay-minutes per 1,000 transfers
+
+Added 2026-09-03. Definition:
+
+```text
+avoidable_delay_minutes_per_1000 = 1000 * opportunity_rate * mean_improvement
+```
+
+computed once per scenario (`BOUND` and `UNBOUND`) and once per bound of
+`opportunity_rate` (`o/n`, `o/N`, `(o+u)/N`), never as a single headline number.
+
+**It is derived, not measured.** It introduces no observation, no schema field
+and no freeze field, so it is outside the protocol manifest and adding it
+invalidates nothing. Its purpose is reporting: it expresses the result in a unit
+transport operators already use, where `o/n` does not.
+
+**Constraints, which are not optional.**
+
+- It carries its inputs' intervals. Multiplying two uncertain quantities widens
+  the interval; propagate it, do not report a point estimate. Under Phase 0-lite
+  (D052) it additionally carries the `DIRECTIONAL — NOT CONFIRMATORY` label.
+- It may not be reported when `S10` blocks single-number reporting of its
+  inputs — a derived figure does not escape a reporting gate its inputs are
+  under.
+- **It is per *enumerated* transfer, not per journey taken.** Converting it into
+  a passenger-facing or market-facing total requires demand weighting this
+  project does not have (§2). Presenting it as an aggregate benefit to German
+  rail passengers would be exactly the extrapolation this document forbids.
+- It sets no target and fires no stop condition. `S2` continues to test the
+  opportunity rate and mean improvement separately, on the upper bound.
+
 ---
 
 ## 3. Backtesting

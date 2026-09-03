@@ -14,16 +14,35 @@ specific document that covers the layer you are touching.
 goes stale the moment code lands; the date below tells you how far to trust it.
 
 ```text
-Last verified:  2026-08-26
+Last verified:  2026-09-03
 Observed state: documentation only — no application code, no provider
-                integration, no dataset, no tests; D045 archived inconclusive
+                integration, no dataset, no tests; DELFI awaits a substantive
+                answer since the 2026-08-26 project-context reply, and its
+                reminder date is 2026-09-07 — the older 2026-09-01 / 2026-09-02
+                silence dates are void because DELFI replied 2026-08-24;
+                D045 archived inconclusive
                 at 1/30 observations; initial D046 Phase 0A run inconclusive /
                 blocked at 0/5 complete cases and 0/15 scored observations;
                 v2 running after all three anonymous app entries passed
                 physical-device setup preflight and a first fixed-order sweep
                 produced no included case; v2 remains at 0/5 and 0/15;
                 optional MatrAIx Phase 0.5-S contract documented only and
-                DEFERRED / NOT_IMPLEMENTED
+                DEFERRED / NOT_IMPLEMENTED; sizing gate set 2026-09-02 at
+                3 h/week and a 12-month ceiling, exposing a 3.6x Phase 0
+                sizing conflict recorded as D050; documentation layer
+                licensed CC BY 4.0 (LICENSE-docs), code and data still open
+2026-09-03:     D049 activity (a) executed — docs/decisive-signal-analysis.md
+                reports a conditional pass, so the hold flag is NOT required for
+                the REROUTE_EARLY measurement and S12 does not fire; the
+                dependency moved to forecast quality, opened as A8 with stop
+                condition S13 and bound to the A7 spike; D051 reduced the A3 and
+                A6 Phase 0 prerequisites; D052 resolved D050's open item by
+                splitting Phase 0 into a DIRECTIONAL Phase 0-lite and a
+                conditional Phase 0-full; D053 publishes the rights matrix as a
+                standalone artefact; gtfs.de free feed inventory corrected —
+                regional-rail and combined schedule feeds also exist, realtime
+                per-mode coverage still requires verification.
+                A2c / A3c / A4 remain UNKNOWN. No feed fetched, nothing stored.
 ```
 
 If the date is old or the state does not match what you see, trust the
@@ -50,11 +69,20 @@ interface. Phase 0 blockers, in order:
    and DB GTFS replies close those individual zero-budget paths without granting
    storage or downstream-use rights, and RiFahrt was not expressly answered.
    The DELFI written project-context reply was sent 2026-08-26 and is awaiting
-   a substantive answer. The rights gate stops all data-dependent work, but not
-   the live-surface kill-check.
-3. Only if the competitor, early-reroute opportunity and minimum-data gates are
-   complete and pass: A7 identity spike, carrier / A3 checks, corridor and
-   observation-schema freeze; then the collector as soon as licensing permits.
+   a substantive answer; the single permitted reminder is due 2026-09-07 and
+   `inconclusive / no substantive answer` may not be recorded before 2026-09-17.
+   Because the thread already has a reply, `no response` is the wrong label for
+   it. The rights gate stops all data-dependent work, but not the live-surface
+   kill-check, and it does not block public-source or published-licence
+   evidence such as the `gtfs.de` candidate path recorded in
+   [`docs/provider-evaluation.md`](docs/provider-evaluation.md) §2.4.
+3. The **A7 + A8 spike** and the minimal collector now outrank every remaining
+   documentation item (D052): episodes accrue on wall-clock time, so collection
+   time is the only irreplaceable input and it is currently being spent at zero
+   yield. The spike is gated on reading the candidate feed's licence in full
+   (**I15**, D044, D049b) — not on the competitor or provider gates. Carrier /
+   A3 checks are reduced to an S5 desk check (D051); corridor and
+   observation-schema freeze follow under the Phase 0-lite scope.
 4. Replay harness, deterministic baseline, full protocol freeze and opportunity
    measurement remain out of order while Phase 0A or provider rights are
    incomplete.

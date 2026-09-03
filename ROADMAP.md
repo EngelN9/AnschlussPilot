@@ -49,9 +49,37 @@ answered would increase sunk cost without reducing the project's principal risks
 
 ## 2. Current State
 
-**Phase:** `0 — Research / Product-Thesis Validation`
+**Phase:** `0 — Research / Product-Thesis Validation`, executing as
+**Phase 0-lite** (D052).
 
 **Repository state:** documentation only.
+
+> [!IMPORTANT]
+> **Phase 0-lite — scope and claim (D052, 2026-09-03).**
+> Milestones P0-A through P0-G below are executed at reduced scope: **one
+> transfer station, one daily window of about four hours, 30–60 consecutive
+> operating days**, on a published-licence feed, using the forecast-only decisive
+> signal ([`docs/decisive-signal-analysis.md`](docs/decisive-signal-analysis.md))
+> and D051's reduced A3 / A6 prerequisites.
+>
+> **Every Phase 0-lite output carries the label `DIRECTIONAL — NOT
+> CONFIRMATORY`.** `S2` and `S10` are directional gates here: clearing S2 does
+> not establish the opportunity, it justifies funding **Phase 0-full**; firing S2
+> is not a stop on its own, because the interval will often be too wide to
+> exclude the threshold. The report must say which of those it is. **S8** still
+> governs stopping, on the original 24-month clock.
+
+> [!WARNING]
+> **Sequencing rule (D052).** Episodes accrue on wall-clock time
+> ([`docs/modelling-and-evaluation.md`](docs/modelling-and-evaluation.md) §2), so
+> **collection time is the only irreplaceable input in this project** — D037's
+> pre-report gate already names it as such. It has been spent at zero yield for
+> the whole of Phase 0 so far.
+>
+> Therefore: **the A7 + A8 spike and the minimal collector outrank every
+> remaining documentation item**, including protocol-manifest fields that do not
+> gate collection. Documentation work that can be done during a running
+> collection window must not be done instead of starting one.
 
 Not yet present:
 
@@ -80,7 +108,9 @@ Current evidence state:
 | A2c decisive-signal access | `UNKNOWN` |
 | A3c transfer-data access | `UNKNOWN` |
 | A4 storage rights | `UNKNOWN` |
-| A7 identity-resolution spike | Blocked by provider gate |
+| Decisive-signal definition (D049a) | **Closed 2026-09-03** — forecast-only estimator separates `CONTINUE` from `REROUTE_EARLY` outside a bounded hold band; D049's reversal condition did not trigger. See [`docs/decisive-signal-analysis.md`](docs/decisive-signal-analysis.md) |
+| A8 forecast informativeness | **Opened 2026-09-03**, untested. Load-bearing consequence of the line above; scored against **S13**; runs with the A7 spike |
+| A7 + A8 spike | Not started; **no longer blocked by the provider gate** — a published-licence route exists (D049, D050), pending a full licence read. **Highest-priority item in Phase 0** (D052) |
 | Corridor scope | `UNSET` |
 | Observation schema | `UNSET` |
 | Collector | Not started |
@@ -195,17 +225,41 @@ recovered retroactively.
 - [ ] Define any deletion requirement.
 - [ ] Record rate limits and intended polling cadence.
 
-#### Service identity — A7
+#### Service identity and forecast informativeness — A7 + A8
 
+> **Lawful route, recorded 2026-09-02 (D049, D050).** This spike is the highest-
+> value unblocked item in Phase 0, and it does **not** require a provider
+> relationship. It must not be run on "any available feed": **I15** and **D044**
+> forbid fetching or retaining before rights are established. The route is:
+> read the `gtfs.de` licence and terms in full — summary pages are not terms —
+> and only if fetch plus temporary retention are permitted, run the spike on
+> that feed. Score against **S9** (> 5 %); do not invent a new threshold.
+> See [`docs/provider-evaluation.md`](docs/provider-evaluation.md) §2.4.
+
+> **A8 rides on the same spike (added 2026-09-03).** The same poll that tests
+> identity linkage also captures forecast times and, later in the window, the
+> realised arrivals to compare them against. Running A8 separately would pay the
+> licence read, the polling setup and the observation window twice. A8 is scored
+> against **S13**; **do not invent a new threshold.** See
+> [`docs/decisive-signal-analysis.md`](docs/decisive-signal-analysis.md) §6.
+
+- [ ] Read the candidate feed's licence and terms in full; record the result.
 - [ ] Run the bounded identity-resolution spike.
 - [ ] Poll one corridor segment for the planned observation period.
 - [ ] Attempt to link service runs across consecutive observations.
 - [ ] Quantify failed and ambiguous linkage.
 - [ ] Investigate every systematic ambiguity class.
 - [ ] Redesign the identity strategy if necessary.
+- [ ] **A8:** retain forecast arrival times at the 20 / 30 / 40 min horizons and
+      the realised arrival for each observed run.
+- [ ] **A8:** report the forecast-minus-realised error *distribution* per horizon
+      — median bias and inter-quartile range, never a point estimate.
+- [ ] **A8:** score against `S13`; if it fires, narrow horizons or service classes
+      and re-run before concluding.
 
 **Gate:** do not build longitudinal analysis on an identity mechanism whose
-failure / ambiguity rate violates `S9`.
+failure / ambiguity rate violates `S9`, **or on a forecast whose error violates
+`S13` at the horizons where `REROUTE_EARLY` is actionable.**
 
 #### Transfer evidence — A3
 
@@ -416,6 +470,16 @@ Only then does Phase 0 measurement begin.
 
 Determine whether changing course early produces a materially better destination
 outcome often enough to justify a decision product.
+
+> **Under Phase 0-lite (D052), the answerable form of that question is
+> narrower:** does the measured corridor show a *directional* indication that the
+> opportunity clears `S2`, strong enough to justify the confirmatory
+> **Phase 0-full** study? Report `o/n`, `o/N`, `(o+u)/N` and `u/N` exactly as
+> specified, with the coverage nesting D030–D032 require, wide intervals, an
+> explicit non-extrapolation clause naming the single station and window, and the
+> `DIRECTIONAL — NOT CONFIRMATORY` label. **A directional result may not be
+> reported as a measured opportunity rate for German rail, or for the corridor,
+> or for anything but the station and window observed.**
 
 ### Work
 
@@ -802,7 +866,7 @@ Publishable outputs may include, in approximate order of readiness:
 1. provider capability / rights / access matrix;
 2. decisive-signal access findings;
 3. transfer-data findings;
-4. A7 service-identity result;
+4. A7 service-identity result and A8 forecast-error distribution;
 5. competitive-benchmark methodology and results;
 6. Phase 0 opportunity measurement;
 7. Phase 0 final report.
@@ -862,11 +926,11 @@ A stop is a successful result when the evidence supports it.
 | Milestone | Question | Primary evidence | Gate |
 | --- | --- | --- | --- |
 | **P0-A** | Does the gap exist and can required data be obtained? | A5a + provider rights | No existential blocker |
-| **P0-B** | Can we define a defensible experiment? | A7 + A3/A6 + frozen scope/schema | Collector gate |
+| **P0-B** | Can we define a defensible experiment? | A7 + A8 + A3/A6 + frozen scope/schema | Collector gate |
 | **P0-C** | Can we reconstruct decision-time reality? | Collector + integrity + replay | Temporal correctness |
 | **P0-D** | Can we compare actions deterministically? | Baseline + decision policy | Policy freeze |
 | **P0-E** | Is the experiment pre-registered? | Phase 0 manifest | No gating `UNSET` |
-| **P0-F** | Is intervention materially useful? | Measurement | S1–S12 applied |
+| **P0-F** | Is intervention materially useful? | Measurement | S1–S13 applied |
 | **P0-G** | What should the project become? | Phase 0 report | Advancement rule |
 | **P0.5** | Will anyone understand and act? | B1–B4 | SB1–SB4 applied |
 | **P1** | Can it be distributed and sustained? | B2C or B2B2C pilot | Product evidence |
@@ -882,7 +946,7 @@ flowchart TD
     B[Provider eligibility and rights] --> H{Usable data path?}
 
     G -->|No| STOP1[Repivot / Stop / Research]
-    G -->|Yes| C[A7 identity spike]
+    G -->|Yes| C[A7 identity + A8 forecast spike]
 
     H -->|No| STOP2[Redesign / Research / Stop]
     H -->|Yes| C
