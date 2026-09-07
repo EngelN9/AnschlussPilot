@@ -404,7 +404,7 @@ and `info@delfi.de` for DELFI. The original drafts remain below as provenance.
 | --- | --- | --- |
 | DB API Marketplace / RIS | 2026-08-11 | Responded 2026-08-11; redacted evidence in §6.1 |
 | DB GTFS / GTFS-RT / RiFahrt | 2026-08-11 | Responded 2026-08-17; RiFahrt and rights fields were not expressly answered; redacted evidence in §6.2 |
-| DELFI-Realtime / Mobilithek | 2026-08-11 | `responded 2026-08-24` — requested project context and offered a phone call; written-only project-context reply sent 2026-08-26; redacted evidence in §6.3; `0/6` original questions answered and substantive answer pending. Re-verified 2026-09-02: still pending, nothing due before the 2026-09-07 reminder |
+| DELFI-Realtime / Mobilithek | 2026-08-11 | `responded 2026-08-24` — requested project context and offered a phone call; written-only project-context reply sent 2026-08-26; redacted evidence in §6.3; `0/6` original questions answered and substantive answer pending. **The single permitted reminder was sent 2026-09-07**; `inconclusive / no substantive answer` may be recorded no earlier than 2026-09-17 |
 
 ### 5.1 DB API Marketplace and RIS
 
@@ -579,29 +579,39 @@ the A5a PR; this DELFI clarification record is on
 DELFI responded 2026-08-24, before the 2026-09-01 silence deadline, so that
 deadline no longer applies — a request for project context is not silence. The
 §5.3 written reply was sent on 2026-08-26. If no substantive answer arrives
-through 2026-09-04, send one same-thread reminder on 2026-09-07. If there is
+through 2026-09-04, send one same-thread reminder on 2026-09-07 (**sent — see
+below**). If there is
 still no answer through 2026-09-16, record
 `inconclusive / no substantive answer` on 2026-09-17; silence is never a
 refusal, and `no response` is the wrong label for a thread that has already
 been answered once.
 
-Re-verified 2026-09-02: the thread's last inbound message remains DELFI's
-2026-08-24 reply, and the last outbound remains the 2026-08-26 project-context
-answer. Five German working days have elapsed. **Nothing is due yet and no
-message may be sent before 2026-09-07.** DELFI asked for the research subject,
-the planned data use and the intended results; all three were answered on
-2026-08-26, so no further project or personal information is outstanding and
-none should be volunteered. Sending unrequested material — including market or
-demand figures — would spend the single permitted reminder early and reframe an
-unfinanced research enquiry as a commercial one.
+**Reminder sent 2026-09-07 — the escalation ladder for this thread is now
+spent.** DELFI's 2026-08-24 message asked for the research subject, the planned
+data use and the intended results; all three were answered on 2026-08-26, so no
+further project or personal information was outstanding and none was
+volunteered. Seven German working days (08-27, 08-28, 08-31, 09-01, 09-02,
+09-03, 09-04) then passed with no substantive answer, and the single permitted
+reminder was sent in the same thread on 2026-09-07 — no new subject, no
+attachment, no telephone number, no payment, account or API data. The thread
+state was re-verified immediately before sending: four messages, last inbound
+still 2026-08-24.
 
-The 2026-09-07 reminder should stay short and should lower the cost of
-answering rather than repeat the original six questions: name the §2.4 offer
-identifiers for confirmation or correction, and ask which of the six points are
-already settled by published *Nutzungsbedingungen* and where those are
-published. A pointer to published terms costs minutes; a bespoke rights opinion
-costs hours, and that asymmetry is the most likely reason the thread has
-stalled.
+The reminder deliberately narrowed the ask rather than repeating the original
+six questions. It asks DELFI to **confirm or correct** the two §2.4 Mobilithek
+offer identifiers — phrased as a confirmation because those identifiers remain
+`requires verification` and asserting them would breach **I2** — then asks which
+of the six points are already covered by published *Nutzungsbedingungen* or
+licence statements and where those are public, accepting a pointer as a complete
+answer for those points, and finally whether access requires registration,
+activation or personal data. A pointer to published terms costs minutes; a
+bespoke rights opinion costs hours, and that asymmetry is the most likely reason
+the thread stalled.
+
+**No second reminder is permitted.** If nothing substantive arrives through
+2026-09-16, record `inconclusive / no substantive answer` no earlier than
+2026-09-17 — never a refusal. If DELFI answers substantively before then, reply
+to that answer and the 09-17 milestone lapses.
 
 If 2026-09-17 is reached without a substantive answer, escalation stays
 written-first and cheapest-first: the named DELFI-Geschäftsstelle sender, then
@@ -672,5 +682,6 @@ facts needed to update the gate.
 | Free access / eligibility / storage / retention / research / redistribution / training / commercial / attribution / continuity | `UNKNOWN` — none of the six original questions were answered |
 | Usable provider path established | **`0`** |
 | Resulting gate effect | None yet. A2c, A3c and A4 remain `UNKNOWN`; rights gate remains `BLOCKED`; verdict stays `v4-partial` since no matrix field changed. Written-only project context was sent 2026-08-26 and substantive evidence is pending (§5.3) |
-| Follow-up state (2026-09-02) | Pending, not silent. All three items DELFI requested were answered on 2026-08-26; no further project or personal information is outstanding. Reminder due 2026-09-07; `inconclusive / no substantive answer` not before 2026-09-17. The superseded 2026-09-01 / 2026-09-02 dates must not be used |
+| Follow-up state (2026-09-07) | Pending, not silent. All three items DELFI requested were answered on 2026-08-26. Seven German working days (08-27, 08-28, 08-31, 09-01, 09-02, 09-03, 09-04) passed with no substantive answer, so **the single permitted reminder was sent 2026-09-07** in the same thread — no new subject, no attachment, no telephone number. **No second reminder is permitted.** Next milestone: if nothing substantive arrives through 2026-09-16, record `inconclusive / no substantive answer` no earlier than 2026-09-17; never a refusal. The superseded 2026-09-01 / 2026-09-02 dates must not be used |
+| Reminder content (2026-09-07) | Three narrowing questions, none of which asserts an unverified fact: (1) confirm **or correct** the two §2.4 Mobilithek offer identifiers, which remain `requires verification`; (2) which of the original six points are already covered by published *Nutzungsbedingungen* or licence statements, and where those are public — a pointer is accepted as a complete answer for those points; (3) whether access requires registration, activation or personal data. The Herr Toffel telephone option offered on 2026-08-24 was deliberately **not** taken up, and no telephone number was disclosed; it is held in reserve as the 2026-09-17 escalation lever |
 | Structural limitation to test before relying on a reply | DELFI-Realtime is documented as GTFS-RT Trip Updates and SIRI-ET, which carry delay and prognosis. **A2b is grounded in a connection-hold flag** (`RIS::Connections`, *warten* / *nicht warten*). A complete DELFI answer may therefore still leave A2b unsourced — see `decisions.md` **D049** |

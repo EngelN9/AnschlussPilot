@@ -18,7 +18,8 @@ Last verified:  2026-09-03
 Observed state: documentation only — no application code, no provider
                 integration, no dataset, no tests; DELFI awaits a substantive
                 answer since the 2026-08-26 project-context reply, and its
-                reminder date is 2026-09-07 — the older 2026-09-01 / 2026-09-02
+                single permitted reminder was sent 2026-09-07 and the next
+                milestone is 2026-09-17 — the older 2026-09-01 / 2026-09-02
                 silence dates are void because DELFI replied 2026-08-24;
                 D045 archived inconclusive
                 at 1/30 observations; initial D046 Phase 0A run inconclusive /
@@ -69,7 +70,8 @@ interface. Phase 0 blockers, in order:
    and DB GTFS replies close those individual zero-budget paths without granting
    storage or downstream-use rights, and RiFahrt was not expressly answered.
    The DELFI written project-context reply was sent 2026-08-26 and is awaiting
-   a substantive answer; the single permitted reminder is due 2026-09-07 and
+   a substantive answer; the single permitted reminder was **sent 2026-09-07**
+   (no second reminder is permitted) and
    `inconclusive / no substantive answer` may not be recorded before 2026-09-17.
    Because the thread already has a reply, `no response` is the wrong label for
    it. The rights gate stops all data-dependent work, but not the live-surface

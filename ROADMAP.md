@@ -133,12 +133,16 @@ it does not assert an external action that has not been independently checked.
 - **Current branch:** `codex/decisive-signal-phase0-lite-2026-09-03` at
   `90f2256` before this checkpoint commit. The working tree was clean when
   reviewed.
-- **DELFI:** one written, same-thread reminder is due today. It must be sent by
-  the author only if the mailbox still contains no substantive reply; this
-  checkpoint does **not** assert that the reminder was sent. Do not provide
-  further project or personal material. If no substantive reply is received by
-  2026-09-16, record `inconclusive / no substantive answer` on 2026-09-17 — not
-  `no response`.
+- **DELFI:** the single permitted written, same-thread reminder **was sent
+  2026-09-07**, after the mailbox was re-checked and still showed no substantive
+  reply (four messages, last inbound 2026-08-24). No new subject, no attachment,
+  no telephone number. **No second reminder is permitted**, and no further
+  project or personal material is to be provided. If no substantive reply is
+  received by 2026-09-16, record `inconclusive / no substantive answer` on
+  2026-09-17 — not `no response`, because the thread has already been answered
+  once. The Herr Toffel telephone offer of 2026-08-24 remains deliberately
+  untaken and is the 2026-09-17 escalation lever, conditional on a written
+  confirmation afterwards.
 - **Highest-value unblocked technical action:** read the candidate `gtfs.de`
   licence and terms in full. Only a positive, recorded finding that permits
   fetch and temporary retention can open the bounded A7 + A8 spike. No feed has
