@@ -124,6 +124,34 @@ The immediate objective is therefore **not to begin product development**.
 
 The immediate objective is to remove the cheapest existential uncertainties.
 
+### Session checkpoint — 2026-09-07
+
+This checkpoint preserves the state needed to resume work after the current
+working session is closed. It records repository facts and scheduled actions;
+it does not assert an external action that has not been independently checked.
+
+- **Current branch:** `codex/decisive-signal-phase0-lite-2026-09-03` at
+  `90f2256` before this checkpoint commit. The working tree was clean when
+  reviewed.
+- **DELFI:** one written, same-thread reminder is due today. It must be sent by
+  the author only if the mailbox still contains no substantive reply; this
+  checkpoint does **not** assert that the reminder was sent. Do not provide
+  further project or personal material. If no substantive reply is received by
+  2026-09-16, record `inconclusive / no substantive answer` on 2026-09-17 — not
+  `no response`.
+- **Highest-value unblocked technical action:** read the candidate `gtfs.de`
+  licence and terms in full. Only a positive, recorded finding that permits
+  fetch and temporary retention can open the bounded A7 + A8 spike. No feed has
+  been fetched or stored, and no polling, collector, account registration,
+  terms acceptance, credential request or payment is authorised before then.
+- **Independent live-surface action:** continue the frozen Phase 0A v2
+  `REROUTE_EARLY` benchmark only with fresh qualifying disruptions. It remains
+  `0/5` complete cases and `0/15` scored observations; no absence conclusion is
+  permitted.
+
+Resume from the documents linked above, especially the provider record, the v2
+benchmark protocol and D049–D053. Do not use deleted chat history as evidence.
+
 ---
 
 # 3. Phase 0 — Can We Make a Useful Decision?
