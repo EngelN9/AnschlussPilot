@@ -56,7 +56,7 @@ SYNTHETIC PERSONA EVIDENCE — NOT REAL PASSENGER BEHAVIOR
 
 Synthetic output cannot establish:
 
-- A1–A7, S1–S12, B1–B4 or SB1–SB4;
+- A1–A8, S1–S13, B1–B4 or SB1–SB4;
 - recommendation correctness, transfer feasibility or connection protection;
 - ticket validity, binding, entitlement or legal executability;
 - real comprehension, trust, willingness to act, friction or willingness to pay;

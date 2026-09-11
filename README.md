@@ -29,7 +29,7 @@ specification only.
 | Competitive benchmark (Phase 0A / A5a) | **Initial run remains `inconclusive / BLOCKED` at 0/5 complete cases and 0/15 scored observations; v2 is running after a first fixed-order discovery sweep produced no included case, so its counts also remain 0/5 and 0/15** |
 | Decisive-signal access (A2c / A3c) | **External confirmation in progress — individual zero-budget RIS and DB GTFS paths closed; RiFahrt was not expressly answered; DELFI requested project context but answered 0/6 original questions; project-level access and rights remain `UNKNOWN`** |
 | Provider evaluation | **v4 partial / `BLOCKED` — all three enquiries received a response, but no usable provider path or complete rights answer exists; no provider selected** |
-| Identity-resolution spike (A7) | **Not started — blocking** |
+| Identity-resolution spike (A7) | **Not started — blocking, but no longer gated on a provider reply.** A published-licence candidate feed exists ([`docs/provider-evaluation.md`](docs/provider-evaluation.md) §2.4); the spike may run once its licence and terms have been read in full (D049, D050) |
 | Observation collector | **Not started — blocking** |
 | Domain model / risk engine / decision engine | Not started |
 | Historical dataset, backtesting, ML | Not started |
@@ -266,7 +266,7 @@ from memory (`AGENTS.md` I2). Design position: §7.1.
 
 ### The other half of the bet
 
-A1–A7 answer *can a useful decision be made?* They cannot answer *will anyone
+A1–A8 answer *can a useful decision be made?* They cannot answer *will anyone
 act on it, and could it ever reach them?* Those are separate hypotheses with
 their own tests, kept in
 [`docs/market-and-validation.md`](docs/market-and-validation.md) rather than
@@ -311,6 +311,40 @@ collector is built, not after — see §4.
 
 ---
 
+### A8 — The delay forecast is informative enough to distinguish actions
+
+**Opened 2026-09-03 by [`docs/decisive-signal-analysis.md`](docs/decisive-signal-analysis.md).**
+
+That analysis concluded that `CONTINUE_CURRENT_PLAN` and `REROUTE_EARLY` can be
+separated without the *Anschlusssicherung* hold flag, because the flag only
+changes the decision inside a bounded band of `B_eff`. **That conclusion moves the
+dependency rather than removing it.** It replaces a dependency on the hold flag
+with a dependency on the accuracy of the arrival-delay forecast at the horizons
+where `REROUTE_EARLY` is still actionable.
+
+**The assumption.** At a decision time 20–40 minutes before arrival at the
+transfer station, the forecast error `σ(t)` on `arr(Cur, T)` is small enough that
+the comparison in §6 selects the better action more often than a
+no-recommendation baseline would.
+
+**Why it is load-bearing now.** If forecasts at those horizons are systematically
+optimistic — a known operational tendency in delay prognosis generally, and
+`requires verification` for this carrier — then the estimator understates
+`REROUTE_EARLY`'s value exactly when the passenger most needs it, and does so
+invisibly. A5's competitive delta, A1's opportunity rate and every downstream
+statistic inherit the error.
+
+**Test.** Compare historical GTFS-RT forecast times against realised arrivals at
+20, 30 and 40 minute horizons; report the error distribution, not a point
+estimate. **This runs on the same feed and in the same sitting as the A7 spike**
+(`ROADMAP.md` P0-B), and is scored against **S13** in §12.
+
+**Relationship to A2.** A8 does not replace A2. A2 asks whether the hold signal is
+obtainable; A8 asks whether the project can decide usefully in the region where
+the hold signal is irrelevant. Both may fail independently.
+
+---
+
 ## 4. Phases
 
 The project targets two outcomes — a measured research result and a working
@@ -329,8 +363,8 @@ Phase 0.5-S is optional and currently only a documented contract. It may be
 implemented only after the Phase 0 report passes its technical gates and after
 the author approves the pinned MatrAIx version, licences and terms, model
 provider, cost ceiling and data handling. Synthetic results may narrow wording
-candidates or identify risks for human review; they do not establish A1–A7,
-S1–S12, B1–B4, SB1–SB4, real passenger behaviour or production safety. See
+candidates or identify risks for human review; they do not establish A1–A8,
+S1–S13, B1–B4, SB1–SB4, real passenger behaviour or production safety. See
 [`docs/synthetic-ux-preflight.md`](docs/synthetic-ux-preflight.md) and
 [`docs/decisions.md`](docs/decisions.md) D047.
 
@@ -460,9 +494,18 @@ Before corridor scope `v1` is frozen
 ([`docs/phase0-protocol.md`](docs/phase0-protocol.md) §2), record:
 
 ```text
-hours actually available per week        UNSET
-acceptable calendar ceiling              UNSET
+hours actually available per week        3 h/week   (set 2026-09-02, measured basis)
+acceptable calendar ceiling              12 months  (set 2026-09-02, to 2027-09-02)
 ```
+
+**Basis for 3 h/week — measured, not assumed.** The only instrumented effort in
+the repository is the Phase 0A active-effort ledgers: **34 min** on 2026-08-12
+and **14 min** on 2026-08-24, i.e. **48 min across 3.4 weeks ≈ 14 min/week** of
+scored measurement work. Activity ran on 8 days out of 24 in two bursts with a
+9-day gap between them. Documentation and provider correspondence are real but
+uninstrumented. 3 h/week sits an order of magnitude above the instrumented rate
+and at the low end of the plausible all-in rate. The 12-month ceiling is a
+**stated preference, not a measurement**; S8 therefore fires at 24 months.
 
 Then **shrink the corridor — stations, time-of-day window, service classes —
 until the estimate fits inside half that ceiling.** Half, not all: the remaining
@@ -472,6 +515,38 @@ If no corridor small enough still yields the episode counts in
 [`docs/modelling-and-evaluation.md`](docs/modelling-and-evaluation.md) §2, that
 conflict is itself a Phase 0 finding and must be recorded rather than resolved by
 optimism about the schedule.
+
+### The sizing conflict has fired — recorded 2026-09-02
+
+Applying the rule above to the values above does not produce a smaller corridor.
+It produces a finding.
+
+```text
+Phase 0 work estimate           ~277 h   (~8 months at 8 h/week, per the table above)
+Available rate                  3 h/week (measured basis)
+Phase 0 calendar at that rate   ~21 months
+Ceiling                         12 months  →  must fit inside 6 months
+Hours inside half the ceiling   26 weeks x 3 h = 78 h
+Gap                             277 h needed vs 78 h available = 3.6x
+```
+
+**A corridor shrink cannot close 3.6×.** A large share of the 277 h is fixed
+cost that does not scale with corridor size: the A3 transfer-source evaluation,
+the A6 binding rules, the protocol freeze, the replay harness, the deterministic
+baseline and the report itself. Removing stations does not remove those.
+
+**And effort is only one of two constraints.** The analysis unit is the
+disruption *episode*, not the transfer
+([`docs/modelling-and-evaluation.md`](docs/modelling-and-evaluation.md) §2), and
+episodes accrue on **wall-clock time** — a single storm day contributes one
+episode, not four hundred observations. Phase 0 therefore has an irreducible
+measurement-window floor that **neither more hours per week nor a smaller
+corridor can shorten.** Any plan that treats the schedule purely as an effort
+budget is solving half the problem.
+
+This is a genuine Phase 0 finding, available before provider access and before
+any code, and it is recorded as **D050** in
+[`docs/decisions.md`](docs/decisions.md) with the choice it forces left open.
 
 ### The Phase 0 report
 
@@ -486,7 +561,7 @@ a verdict:
 | **Data** | Which provider signals set the ceiling — and how low is it? |
 | **Strategy** | `Proceed B2C` / `Proceed B2B2C` / `Narrow scope` / `Research only` / `Stop` |
 
-It states whether A1–A7 hold, and if they do not, the product definition changes
+It states whether A1–A8 hold, and if they do not, the product definition changes
 before any further engineering.
 
 **Written the same way whether the result is positive or negative.** A negative
@@ -750,6 +825,21 @@ target honest when it arrives.
 | `UNKNOWN` share of assessments | TBD | Bounded by what A2/A3 make observable; a low target may be unachievable and that is a finding, not a failure |
 | Paper-prototype comprehension — participants who correctly state the recommended action | TBD | Exploratory round of 2–3 people sets the threshold; confirmatory scoring uses 5–8 new participants |
 | Paper-prototype willingness — participants who say they would act on it | TBD | Same two-stage protocol; interpret jointly with A6 |
+| **Avoidable arrival-delay minutes per 1,000 enumerated transfers** | TBD | **Derived, not measured** — opportunity rate × mean improvement, computed from quantities already in this table. Reported with the same interval and the same coverage nesting as its inputs |
+
+**Why the derived row exists.** `o/n` and `(o+u)/N` are the right quantities for
+the research question and the wrong ones for the report's *Strategy* section.
+They do not tell a carrier, a *Verkehrsverbund* or any other counterparty what
+the finding is worth. Avoidable delay-minutes per 1,000 transfers is the same
+result in a unit that a transport operator already uses.
+
+It is a **pure transformation of frozen quantities**: it adds no observation, no
+schema field and no freeze field, and it cannot be reported when its inputs
+cannot. It does **not** select a commercial route — D042 governs that — it only
+keeps the B2B2C option cheap to exercise later. And it inherits every caveat of
+its inputs: a rate over *enumerated* itineraries is not a rate over journeys
+passengers take, and no demand weighting exists to convert it
+([`docs/modelling-and-evaluation.md`](docs/modelling-and-evaluation.md) §2).
 
 ### Stop conditions
 
@@ -776,6 +866,7 @@ section exists to prevent.
 | **S10** | Coverage gap **`u/N` > 20%** | **Re-scope — this is not a stop.** Widen the corridor graph, extend the window, or narrow the enumerated population. Until it is fixed, A1 may be reported only as bounds and **may not feed any go/no-go decision**. |
 | **S11** | Access to the decisive signal is revocable at the provider's discretion, and no alternative feed carries it (A2c) | **Moat argument fails; B2C becomes conditional.** A defensibility claim resting on access the incumbent can withdraw is not defensibility. Continue R and B2B2C; record the downgrade as a decision. *A4 asks "may I retain this?"; S11 asks "can this permission be taken away?" — different failures.* |
 | **S12** | The decisive signal is obtainable only from the incumbent, and not on terms this project can accept (A2c) | **Mark B2C as non-viable under current access and stop B2C implementation.** Continue only research that remains valid. Do not select or build B2B2C yet; the formal route decision waits for Phase 0 decision-quality evidence and Phase 0.5 friction evidence (D042). |
+| **S13** | Arrival-delay forecast error at the 20–40 min horizons where `REROUTE_EARLY` is actionable exceeds the transfer-buffer scale — concretely, the **inter-quartile range of forecast-minus-realised arrival at the 30 min horizon exceeds ±10 min**, or the median error is biased optimistic by **> 5 min** (A8) | **Narrow to the horizons and service classes where it does not, and re-run.** If none qualify, the forecast-only decisive signal fails, the hold flag becomes genuinely mandatory, and **S12** governs. Report the error distribution, never a point estimate. |
 
 Reasoning behind the two most contestable numbers, so they can be argued with:
 
@@ -803,6 +894,19 @@ Reasoning behind the two most contestable numbers, so they can be argued with:
   all. Above **5%**, A1 must not be presented as a single number; above **20%**,
   it must not be used as a gate. **S10 fires on the corridor graph, not on the
   railway** — which is why its remedy is re-scoping and not stopping.
+- **S13 — ±10 min IQR and 5 min optimistic bias.** Both are anchored to the
+  transfer-buffer scale rather than chosen in the abstract: `T_transfer +
+  T_safety` is on the order of 5–15 minutes, so a forecast whose interquartile
+  spread exceeds that scale cannot locate `B_eff` relative to the hold band at
+  all ([`docs/decisive-signal-analysis.md`](docs/decisive-signal-analysis.md)
+  §4), and the comparison the product exists to make is not being made — it is
+  being guessed. The **bias** limit is stricter than the spread limit on purpose:
+  symmetric error widens intervals and is visible in them, whereas a systematic
+  optimistic bias produces confident wrong `CONTINUE` recommendations, which is
+  the **I11** failure — a false intervention, or in this case a false
+  non-intervention, is a real failure. **Argue with these two numbers now.**
+  They are the first thresholds in this table set before the quantity they
+  govern has ever been observed by anyone on this project.
 
 **S4 and S10 are different failures.** `UNKNOWN` is the decision layer declining
 to assess, and can occur with perfect coverage when A2/A3 signals are absent —
@@ -810,13 +914,13 @@ a ceiling that re-scoping cannot lift. `u/N` is a property of what was collected
 and widening the graph fixes it. Merging them would let a too-small corridor
 masquerade as a dead product.
 
-**A stop is not a failure.** S3, S5, S6 and S8 all leave a publishable research
+**A stop is not a failure.** S3, S5, S6, S8 and S13 all leave a publishable research
 result intact. Only S1 forecloses everything, and it is knowable before a single
 line of collector code is written.
 
 ### Market-side exits
 
-S1–S12 are technical. The market track has its own exits — **SB1** comprehension,
+S1–S13 are technical. The market track has its own exits — **SB1** comprehension,
 **SB2** willingness to act, **SB3** acquisition friction, **SB4** buyer interest —
 defined in [`docs/market-and-validation.md`](docs/market-and-validation.md) §5 and
 reported here alongside the S-conditions.
@@ -878,12 +982,15 @@ affiliation.
 
 ### Licensing is three decisions, not one
 
-**This repository currently has no `LICENSE` file, and that is not a neutral
-state.** Absent a licence, all rights are reserved by default — which means the
-omission is itself a decision, made silently, in favour of the product track and
-against the research track. Academic and media reuse of an all-rights-reserved
-document is impractical, so the project's **strongest** layer (§3, the research
-output) is currently constrained by a choice nobody recorded.
+**Until 2026-09-02 this repository had no licence file at all, and that was not
+a neutral state.** Absent a licence, all rights are reserved by default — which
+meant the omission was itself a decision, made silently, in favour of the
+product track and against the research track. Academic and media reuse of an
+all-rights-reserved document is impractical, so the project's **strongest**
+layer (§3, the research output) was constrained by a choice nobody recorded.
+
+**The documentation layer is now licensed.** See
+[`LICENSE-docs`](LICENSE-docs). The other two layers remain as described below.
 
 The three layers have different owners and must be decided separately:
 
@@ -896,10 +1003,28 @@ The three layers have different owners and must be decided separately:
 Bundling all three into one deferred decision hides that asymmetry: two are free
 choices, one is not available at all.
 
-**Status: undecided.** The licence values are the author's to pick; what is fixed
-here is that the decision is three-part, that the current state has a cost, and
-that it is recorded in [`docs/decisions.md`](docs/decisions.md) with a reversal
-condition rather than left implicit.
+**Status by layer, as of 2026-09-02:**
+
+```text
+Documentation    CC BY 4.0 — chosen 2026-09-02, see LICENSE-docs
+Code             undecided; all rights reserved until chosen
+Collected data   not the author's to license; provider terms govern (I15)
+```
+
+The documentation choice is **CC BY 4.0** rather than CC BY-SA because the point
+of this layer is citability: share-alike would deter exactly the academic and
+media reuse the research output exists to attract
+([`docs/market-and-validation.md`](docs/market-and-validation.md) §7). The
+remaining two values are still the author's to pick; what is fixed here is that
+the decision is three-part, that the earlier silence had a cost, and that all of
+it is recorded in [`docs/decisions.md`](docs/decisions.md) **D040** with a
+reversal condition rather than left implicit.
+
+> **Watch item.** Some candidate data sources are CC BY-**SA** 4.0
+> ([`docs/provider-evaluation.md`](docs/provider-evaluation.md) §2.4). That does
+> not affect this CC BY documentation licence, but any future output embedding
+> such data may inherit share-alike. Decide that when a source is actually
+> selected, not now.
 
 Provider data terms are documented in
 [`docs/provider-evaluation.md`](docs/provider-evaluation.md) and alongside the

@@ -60,6 +60,57 @@ for recruitment in Phase 0.5, **not** an assertion that they are the market.
 - **Reversal:** if opportunities are spread evenly across all journey types, the
   ICP framing is wrong and targeting has no leverage.
 
+### Premise check — do disrupted passengers even want to continue?
+
+The ICP above assumes the traveller wants to reach the destination rather than
+abandon the trip. That assumption is cheap to state and worth checking, because
+if most disrupted passengers simply take a refund and stop, the product has no
+occasion to exist.
+
+> **Recorded 2026-09-02, partially verified.** The European Commission's report
+> on the implementation of Regulation (EU) 2021/782 — **`COM(2026) 228 final`,
+> 13 May 2026**, with companion staff working document `SWD(2026) 233 final` —
+> is reported to contain a Germany-specific estimate that, among passengers
+> affected by cancellations, missed connections or sufficiently serious delays,
+> roughly **60–70 % opt for re-routing** and **10–15 % opt for reimbursement**,
+> with roughly 20–30 % requesting compensation and around 5 % requesting
+> assistance.
+
+**Verification status, stated exactly (`AGENTS.md` I2):**
+
+- The **document exists and was verified** to exist on 2026-09-02, including a
+  publicly reachable mirror of the PDF.
+- The **specific Germany sentence has not been read in the primary text.** It
+  was returned by secondary search; the EUR-Lex HTML and TXT endpoints returned
+  empty bodies, and the mirrored PDF could not be text-extracted in that pass.
+  The figure therefore carries **`requires verification`** until one
+  confirmation read of the primary document, and **no conclusion in this
+  repository rests on it.**
+
+**What it would support, and what it must never be used for.** The Commission's
+split describes the Article 18 choice: *abandon the journey and be reimbursed*
+versus *continue to the final destination*. AnschlussPilot's decision is a
+different one — a choice between **two ways of continuing**, staying on the
+existing journey or rerouting early. So even when fully verified this figure
+supports only the narrow premise that **abandonment is the minority response**.
+
+It is **not** demand evidence for a reroute recommendation, and the derived
+`1 : 5` headline must not be quoted as product validation. Under §6's rule it
+**cannot justify continuing — only stopping**: a figure showing that most
+disrupted passengers abandon their journey would have been informative, and this
+one merely fails to kill the premise.
+
+Note also the distinction the Regulation draws and the figure blurs: a passenger
+who accepts re-routing may still qualify for delay compensation afterwards, so
+the four categories above overlap and do not sum to a partition of passengers.
+
+- **Test:** none required — this is a premise check, not a measured quantity.
+  Phase 0.5 (B2, B3) remains the only route to whether passengers would act on a
+  recommendation.
+- **Reversal:** a primary-source read contradicting the reported split, which
+  would remove the premise check and require re-examining the ICP's first
+  clause.
+
 ---
 
 ## 2. Competitive Benchmark (A5a / A5b)
@@ -150,6 +201,20 @@ do. It is:
 ### A5b — the gap is defensible long enough to matter
 
 A gap that closes in six months does not justify a multi-month build.
+
+#### Candidate surfaces for the next checkpoint — `requires verification`
+
+The D046 v2 denominator is frozen on DB Navigator, MoBY and Wohin·Du·Willst.
+Surfaces discovered mid-run **must not** be added to it; doing so would rewrite
+a running denominator, which D046 forbids. They are queued here instead.
+
+| Surface | Origin of the lead | Status |
+| --- | --- | --- |
+| **Bahnvorhersage** | Named as an incumbent in an external expert assessment, 2026-09-02 | `requires verification` — not independently checked; no capability, coverage or decision-grade claim established. Candidate for the next A5b checkpoint only |
+
+Adding a surface to a future checkpoint requires a fresh pre-registration and a
+new denominator, exactly as D046 v2 required. A lead named in a review is not
+evidence about a product.
 
 ### Archived D045 method — archetypes, not replayed cases
 
@@ -415,10 +480,10 @@ numerator and denominator are reproducible.
 It does **not**:
 
 - prove recommendation correctness, transfer feasibility, ticket permissibility,
-  connection-hold observability or any A1–A7 proposition;
+  connection-hold observability or any A1–A8 proposition;
 - measure real comprehension, trust, willingness to act, acquisition friction,
   willingness to pay, market size or safety;
-- satisfy B1–B4, fire SB1–SB4, change S1–S12 or promote a product;
+- satisfy B1–B4, fire SB1–SB4, change S1–S13 or promote a product;
 - replace D026's 2–3-person exploratory pilot and 5–8-person confirmatory round.
 
 Abandoning the synthetic lane because its outputs are implausible, too costly or

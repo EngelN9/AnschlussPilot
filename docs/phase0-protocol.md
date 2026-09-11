@@ -5,6 +5,23 @@
 **Status: `BLOCKED` — this manifest is incomplete and no Phase 0 measurement may
 start from it.**
 
+> [!IMPORTANT]
+> **Phase 0 executes as Phase 0-lite (D052, 2026-09-03).** Every scope field
+> below, when it is filled, is filled at the reduced scope: one transfer station,
+> one daily window of about four hours, 30–60 consecutive operating days. Two
+> fields change meaning as a result and must be recorded accordingly:
+>
+> - **Binding ruleset version** may be frozen as `deferred — Phase 0.5 (D051)`
+>   provided the report states both `BOUND` and `UNBOUND` scenarios and `S3` is
+>   computed from them. `UNSET` and `deferred` are different values; record the
+>   latter, not the former.
+> - **Corridor scope version** is unblocked — D050's open item that held it is
+>   resolved by D052 — and is frozen at the Phase 0-lite scope.
+>
+> Results produced under this manifest carry the label
+> `DIRECTIONAL — NOT CONFIRMATORY`. A Phase 0-full run is a **new protocol
+> version**, not an amendment of this one.
+
 This is the single freeze record for Phase 0. Detailed rules remain in their
 own documents; this manifest records the exact version of each rule set used by
 a collector or measurement. It is an index, not a second copy of the rules.

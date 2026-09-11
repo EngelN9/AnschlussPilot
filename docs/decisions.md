@@ -43,11 +43,11 @@ reversal conditions.
 
 | Area | Active decisions |
 | --- | --- |
-| Phase 0 scope, order and delivery | D001, D002, D007, D008, D009, D010, D011, D027, D033, D037, D039, D044, D048 |
+| Phase 0 scope, order and delivery | D001, D002, D007, D008, D009, D010, D011, D027, D033, D037, D039, D044, D048, D050, **D051**, **D052** |
 | Population, episodes and evaluation | D003, D006, D013, D020, D021, D024, D027, D030, D031, D032 |
-| Binding and observation evidence | D004, D012, D015, D022 (retention principle only), D023, D029, D034, D043, D044 |
-| Competitive, market and validation | D005, D017, D018, D019, D025, D026, D028, D035 (risk classification only), D036 (exit definitions only), D038, D041, D042, D046, D047 |
-| Open — awaiting a decision from the author | **D040** (licence values) |
+| Binding and observation evidence | D004, D012, D015, D022 (retention principle only), D023, D029, D034, D043, D044, D049, **D051** (A3/A6 scope) |
+| Competitive, market and validation | D005, D017, D018, D019, D025, D026, D028, D035 (risk classification only), D036 (exit definitions only), D038, D041, D042, D046, D047, **D053** |
+| Open — awaiting a decision from the author | **D040** (code and collected-data layers only; documentation closed 2026-09-02) |
 
 Superseded entries remain below for provenance: D014 is superseded by D021 and
 D027; D016 is superseded by D027; D022's combined status vocabulary is
@@ -55,7 +55,8 @@ superseded by D029 while its missing-data and retain-when-permitted principles
 remain active; **D005's tag-based pre-report rule is superseded by D037**, while
 its two-track sequencing remains active; **the single-proposition forms of A2 and
 A3 are superseded by D034**; **D035's immediate route selection and D036's B4
-schema-coupling rule are superseded by D042**.
+schema-coupling rule are superseded by D042**; **D050's open item is resolved by
+D052**, while the rest of D050 remains active.
 
 > **This index is load-bearing.** It is the retrieval path into a document too
 > long to read linearly; once it drifts, the log stops being consulted and
@@ -801,7 +802,8 @@ schema-coupling rule are superseded by D042**.
 ### D040 — Licensing is three decisions; the current silence has a cost
 
 - **Date:** 2026-08-10
-- **Status:** active; **open — values not yet chosen**
+- **Status:** active; **documentation layer chosen 2026-09-02 (CC BY 4.0,
+  [`LICENSE-docs`](../LICENSE-docs)); code and collected data still open**
 - **Evidence available at the time:** With no `LICENSE`, all rights are reserved
   by default. The omission is therefore a silent decision favouring the product
   track over the research track, because all-rights-reserved documentation is
@@ -816,6 +818,16 @@ schema-coupling rule are superseded by D042**.
   and one is not); selecting licences here (the values are the author's).
 - **What would reverse this:** The author choosing values, which closes this entry
   rather than reversing it.
+- **Update 2026-09-02 — documentation layer closed.** The author chose
+  **CC BY 4.0** for `README.md`, `AGENTS.md`, `ROADMAP.md`, `docs/` and the
+  Phase 0 report; `LICENSE-docs` records the scope and the exclusions. CC BY was
+  chosen over CC BY-SA because this layer's purpose is citability, and
+  share-alike deters the academic and media reuse D041 depends on. The code
+  layer remains undecided and all-rights-reserved; the collected-data layer
+  remains unavailable to license under **I15**. **Watch item:** candidate
+  sources exist under CC BY-**SA** 4.0 (`provider-evaluation.md` §2.4); that
+  does not affect this licence, but a future output embedding such data may
+  inherit share-alike. Decide that when a source is selected, not before.
 
 ### D041 — Publish the rights matrix early; one crude ceiling check
 
@@ -1056,8 +1068,8 @@ schema-coupling rule are superseded by D042**.
   budget and data handling. The future flow is one-way: a human-authored frozen
   scenario enters an isolated MatrAIx task, a deterministic scorer produces
   structured UX-risk findings, and a human reviews them. Synthetic outputs may
-  reject a wording candidate or generate hypotheses, but cannot satisfy A1–A7,
-  S1–S12, B1–B4 or SB1–SB4 and never enter a production decision or confidence
+  reject a wording candidate or generate hypotheses, but cannot satisfy A1–A8,
+  S1–S13, B1–B4 or SB1–SB4 and never enter a production decision or confidence
   score. Start with a 48-cell calibration; only after human review may a
   400-cell paired-variant pilot run. Real Phase 0.5 participants remain mandatory.
 - **Alternatives rejected:** Implementing the harness before Phase 0 (product
@@ -1098,3 +1110,274 @@ schema-coupling rule are superseded by D042**.
 - **What would reverse this:** Evidence that `ROADMAP.md` and README's
   remaining phase/gate definitions have drifted out of sync — the same
   failure mode D007 already tracks for the three-way split.
+### D049 — DELFI-Realtime is tested against A2b before it is waited on further
+
+- **Date:** 2026-09-02
+- **Status:** active; narrows the scope of the pending DELFI enquiry recorded in
+  **D043** and `provider-evaluation.md` §5.4
+- **Evidence available at the time:** `README.md` §3 grounds **A2b** in a
+  connection-hold flag — `RIS::Connections` states whether connections *warten*
+  or *nicht warten* — and that product is restricted to DB sales partners.
+  Public sources describe DELFI-Realtime as GTFS Realtime Trip Updates and
+  SIRI Estimated Timetable. Both formats carry scheduled times, forecast times,
+  delays and cancellations; neither is documented as carrying a
+  connection-hold flag. The DELFI thread has therefore been blocking every
+  data-dependent Phase 0 task on a source that may be structurally unable to
+  supply the assumption it is being waited on for. Separately, `gtfs.de`
+  publishes a free long-distance schedule feed and an aggregated GTFS-RT stream
+  under published Creative Commons licences, with no counterparty and no
+  registration (`provider-evaluation.md` §2.4).
+- **Decision:** Stop treating a substantive DELFI answer as the single gate for
+  all data-dependent work. Two things proceed in parallel with the pending
+  reply, and neither requires provider permission: (a) determine, on paper,
+  whether the Phase 0 decisive signal can be defined on **expected arrival at
+  the final destination at the decision time** — which the product thesis
+  already states — using forecast and cancellation data, with the hold flag as
+  one input that degrades to `UNKNOWN` when absent rather than as a
+  precondition; and (b) read the `gtfs.de` licence texts and coverage in full
+  to establish whether a published-licence path can support a bounded **A7**
+  identity spike. Neither activity fetches, polls or stores provider data, and
+  neither changes A2c, A3c or A4. The DELFI thread continues on its existing
+  schedule, unchanged and unhurried.
+- **Alternatives rejected:** Continuing to wait on DELFI as the sole gate
+  (single-threads the project on one volunteer association's mailbox and may be
+  waiting for something the source cannot supply); declaring A2b dead on the
+  basis of format documentation alone (public format descriptions are not a
+  provider statement — the question is asked, not assumed); treating `gtfs.de`
+  as a decisive-signal provider (it carries no hold flag and is an aggregator,
+  which raises **S11** rather than resolving it); starting collection under a
+  Creative Commons licence before the licence text has actually been read
+  (**I15**).
+- **What would reverse this:** DELFI confirming in writing that DELFI-Realtime
+  does expose a connection-hold or equivalent wait decision, which would restore
+  it as a direct A2b candidate; or the paper analysis showing that a
+  forecast-only decisive signal cannot separate `CONTINUE` from `REROUTE_EARLY`
+  at a useful lead time, which would make the hold flag genuinely mandatory and
+  push the project toward **S12**.
+- **2026-09-03 — activity (a) executed.**
+  [`decisive-signal-analysis.md`](decisive-signal-analysis.md) reports a
+  conditional pass: a forecast-only estimator separates `CONTINUE` from
+  `REROUTE_EARLY` outside a bounded hold band, so **the reversal condition above
+  did not trigger and S12 does not fire.** The dependency moved rather than
+  disappearing — it now rests on forecast informativeness, opened as **A8** with
+  stop condition **S13**. Activity (b), the `gtfs.de` licence read, remains
+  outstanding and still gates the A7 + A8 spike.
+### D050 — The sizing gate is set from measured effort, and the conflict it exposes is a Phase 0 finding
+
+- **Date:** 2026-09-02
+- **Status:** active; fills the sizing gate in `README.md` §4 and triages the
+  2026-09-02 external expert assessment. **Contains one open item for the
+  author.**
+- **Evidence available at the time:** `README.md` §4's sizing gate required
+  `hours actually available per week` and `acceptable calendar ceiling`, both
+  `UNSET`, before corridor scope `v1` could be frozen. An external assessment
+  assumed 8 h/week without evidence. The repository's only instrumented effort
+  is the Phase 0A active-effort ledgers — 34 min on 2026-08-12 and 14 min on
+  2026-08-24, i.e. 48 min across 3.4 weeks (~14 min/week of scored work), with
+  activity on 8 of 24 days in two bursts separated by a 9-day gap. Documentation
+  and provider correspondence are real but uninstrumented.
+- **Decision:** Set `hours actually available per week = 3` on that measured
+  basis and `acceptable calendar ceiling = 12 months` as a stated preference;
+  S8 therefore fires at 24 months. Record the resulting arithmetic as a Phase 0
+  finding rather than resolving it with optimism: ~277 h of work at 3 h/week is
+  ~21 months, the ceiling rule allows 78 h inside half of 12 months, and the gap
+  is **3.6×**. A corridor shrink cannot close it, because much of the 277 h —
+  the A3 evaluation, A6 binding rules, protocol freeze, replay harness,
+  deterministic baseline and report — is fixed cost independent of corridor
+  size. Separately record that Phase 0 has a **second, independent** constraint:
+  episodes accrue on wall-clock time (`modelling-and-evaluation.md` §2), so the
+  measurement window has a floor that neither more hours nor a smaller corridor
+  can shorten.
+- **Open item for the author — RESOLVED 2026-09-03 by D052.** As recorded when
+  this entry was written, the choice was between raising the
+  available hours; accepting a substantially longer ceiling; formally reducing
+  Phase 0's statistical ambition (fewer episodes, wider intervals, weaker
+  claims, stated as such in the report); or converting Phase 0 into the
+  rights-and-method study it already substantially is. Until this is chosen,
+  corridor scope `v1` stays unfrozen.
+  **D052 chose a hybrid of the last two** — a directional Phase 0-lite with a
+  conditional Phase 0-full, plus standalone publication of the rights study
+  (D053) — after **D051** removed two of the fixed costs the 277 h rested on and
+  [`decisive-signal-analysis.md`](decisive-signal-analysis.md) removed the
+  hold-flag dependency. Corridor scope `v1` may now be frozen under the Phase
+  0-lite scope.
+- **Assessment triage — adopted:** run **A7 first** (matches `ROADMAP.md` P0-B;
+  its failure mode is invisible and poisons every downstream statistic); write
+  the Phase 0 report template before data exists (cheap, and it makes the stop
+  conditions real rather than post-hoc, consistent with **D041**); choose the
+  documentation licence now (**D040**).
+- **Assessment triage — adapted:** the assessment's A7 method — *"use any
+  available feed (even a degraded one) to poll one corridor for 6 hours"* —
+  violates **I15** and **D044** as written. The conclusion survives via the
+  lawful route already opened by **D049**: read the `gtfs.de` licence and terms
+  in full (summary pages are not terms), and only if fetch and temporary
+  retention are permitted, run the bounded spike and score it against the
+  existing **S9** threshold of 5 %. Do not invent a new threshold. The
+  assessment's four-week deadline on A2c is adopted in spirit but must not
+  override the recorded DELFI schedule (reminder 2026-09-07; inconclusive no
+  earlier than 2026-09-17).
+- **Assessment triage — rejected, with reasons:** *"treat B2B2C as the default
+  path"* — **D042** already rejects this exact reasoning by name, and an
+  argument is not the binding commercial commitment that would reverse it;
+  *"Phase 0 becomes a synthetic-data demonstration"* — **D047** forbids
+  synthetic evidence from gating anything, and this would make it the basis of
+  the result; the parallel **G1–G5** gate framework — a lossy restatement of
+  S1–S12 (G1≈S9, G3≈S6 dropping "same app", the four criteria and the 3/5
+  extension, G4≈S8, G5≈S2 dropping that S2 is tested against the *upper* bound
+  under `UNBOUND`), and two competing gate vocabularies are worse than one;
+  *"verified empty space"* in the competitive gap — A5a/D046 stands at **0/5**
+  complete cases and **0/15** scored observations, so calling it verified would
+  breach **I2**. The defensible statement is that no competitor has yet been
+  observed closing the gap, on zero completed cases.
+- **Alternatives rejected:** Adopting 8 h/week because an external reviewer
+  assumed it (no evidence supports it; it is ~34× the instrumented rate);
+  leaving the gate `UNSET` to avoid recording an uncomfortable number (the gate
+  exists precisely to force this); resolving the 3.6× gap by shrinking the
+  corridor (arithmetically cannot work, and would disguise a finding as a scope
+  tweak); treating the conflict as a stop (it is a finding that forces a choice,
+  and **S8** governs stopping).
+- **What would reverse this:** A sustained measured rate materially above
+  3 h/week, recorded the same way, which would revise the gate and may close the
+  gap; or a Phase 0 redesign under the open item above, which would change the
+  277 h estimate the arithmetic rests on. Either is a new entry, not a silent
+  edit of this one.
+
+### D051 — Phase 0's A3 and A6 prerequisites are reduced to what the measurement actually needs
+
+- **Date:** 2026-09-03
+- **Status:** active; reduces the effort estimate D050's arithmetic rests on
+- **Evidence available at the time:** D050 recorded a **3.6×** sizing gap and
+  listed the A3 transfer-source evaluation and the A6 binding ruleset among the
+  fixed costs a corridor shrink cannot remove. Both are fixed costs. Neither is
+  a Phase 0 requirement. **A3:** the Phase 0 question is whether `B_eff` is
+  positive by a *material* margin — a threshold question, not a precision
+  question — and **S5** already exists to catch the case where `T_transfer`
+  cannot be bounded within ±5 min. Free GTFS `transfers.txt` minimum transfer
+  times and the published *Mindestumsteigezeit* are candidate sources for that
+  bound. **A6:** D004 and D012 already established that binding is a user input
+  reported as a two-scenario `BOUND` / `UNBOUND` sensitivity band; if both
+  scenarios are reported, the carrier-conditions ruleset is not needed to produce
+  the Phase 0 result. The effort estimate was never revised to reflect either.
+- **Decision:** In Phase 0, A3 is answered by running **S5 as a desk check**
+  against free GTFS transfer data plus published minimum transfer times, not by a
+  provider evaluation. Platform-pair topology (`RIS::Stations`) becomes a Phase 1
+  product requirement, not a Phase 0 blocker. A6's binding ruleset moves to
+  **Phase 0.5**, where the recommendation is actually shown to someone;
+  [`binding-scenarios.md`](binding-scenarios.md) remaining `UNSET` is acceptable
+  for Phase 0 provided the report states both scenarios and **S3** is computed
+  from them. The general principle: the project's `R`/`P` discipline was applied
+  to deliverables but never to the effort estimate, and the 277 h contains
+  product-grade work classified as research prerequisites.
+- **Alternatives rejected:** Keeping A3 as a provider evaluation (it makes a
+  threshold question depend on a negotiation that has already failed three
+  times); dropping `T_transfer` uncertainty entirely (S5 exists precisely because
+  the bound can fail, and an unbounded transfer time invalidates `B_eff`);
+  writing the A6 ruleset now (it cannot be validated until a recommendation is
+  shown to a person, and an unvalidated ruleset would silently shape S3);
+  reporting only the `UNBOUND` scenario (S3 becomes uncomputable and the headline
+  becomes an upper bound with no floor).
+- **What would reverse this:** S5 firing — free transfer data failing to bound
+  `T_transfer` within ±5 min at the candidate stations — which restores A3 as a
+  genuine Phase 0 prerequisite and forces the narrowing S5 already prescribes; or
+  a Phase 0 result whose `BOUND` / `UNBOUND` spread is so wide that the band is
+  uninformative, which would make the A6 ruleset load-bearing earlier than
+  Phase 0.5.
+
+### D052 — Phase 0 splits into a directional Phase 0-lite and a conditional Phase 0-full
+
+- **Date:** 2026-09-03
+- **Status:** active; **resolves the open item in D050**
+- **Evidence available at the time:** D050 set the sizing gate at 3 h/week
+  measured and a 12-month stated ceiling, computed a **3.6×** gap between ~277 h
+  of work and the 78 h available inside half the ceiling, established that a
+  corridor shrink cannot close it, and left four options open: raise the hours,
+  accept a longer ceiling, reduce Phase 0's statistical ambition, or convert
+  Phase 0 into the rights-and-method study it already substantially is. Since
+  then, D051 removed two fixed costs, and
+  [`decisive-signal-analysis.md`](decisive-signal-analysis.md) established that
+  the measurement does not require the partner-gated hold flag. Separately,
+  `ROADMAP.md` §2 records that episodes accrue on wall-clock time, so **collection
+  time is the only irreplaceable input in the project — and it has been spent at
+  zero yield for the whole of Phase 0 so far.**
+- **Decision:** Split Phase 0 rather than choosing one of D050's four options
+  alone. **Phase 0-lite** is the confirmatory design reduced to one transfer
+  station, one daily time-of-day window of about four hours, and 30–60
+  consecutive operating days, on a published-licence feed, using the
+  forecast-only decisive signal and D051's reduced prerequisites. Its results are
+  **directional and explicitly not confirmatory**: `(o+u)/N` is reported with
+  wide intervals, a stated non-extrapolation clause, and the coverage nesting
+  D030–D032 already require. **Phase 0-full** is the currently specified
+  confirmatory study, and it becomes conditional on the lite result justifying
+  more hours or an institutional partner. The **rights-and-access matrix
+  publishes as a standalone artefact independently of both** (D053). The 3.6×
+  gap is therefore closed by **shrinking the claim, not the corridor** — which is
+  the one move D050's arithmetic does not forbid.
+- **Consequences that must be stated, not buried:** **S2** and **S10** become
+  *directional* gates for the lite study. A lite result that clears S2 does not
+  establish the opportunity; it justifies funding the confirmatory study. A lite
+  result that fires S2 is **not** a stop on its own — the interval will be wide
+  enough that it may not exclude the threshold — and the report must say so
+  rather than reporting a failed checkbox. Every Phase 0-lite output carries the
+  label `DIRECTIONAL — NOT CONFIRMATORY`, in the same spirit as D047's synthetic
+  banner. **S8** continues to govern stopping, on the original 24-month clock.
+- **Alternatives rejected:** Raising the available hours (not supported by any
+  evidence; D050 already rejected assuming 8 h/week, and assuming it of oneself
+  is the same error); accepting a longer ceiling alone (does not address the
+  wall-clock episode floor, and extends the abandonment risk ROADMAP §12 names as
+  dominant); converting Phase 0 entirely into a rights-and-method study
+  (abandons the only work that can answer A1, which is the question the project
+  exists to answer); reducing statistical ambition *without* splitting (loses the
+  confirmatory design permanently rather than deferring it); shrinking the
+  corridor further (D050 already showed this cannot work).
+- **What would reverse this:** A Phase 0-lite result whose intervals are so wide
+  that it distinguishes nothing — in which case the split bought nothing and
+  D050's remaining options return; a sustained measured effort rate materially
+  above 3 h/week, recorded the same way, which would make Phase 0-full directly
+  affordable; or an institutional partner, which would change both the hours and
+  the provider access at once.
+
+### D053 — The rights-and-access matrix publishes as a standalone artefact and becomes the provider follow-up mechanism
+
+- **Date:** 2026-09-03
+- **Status:** active; executes the publication already scheduled in
+  [`market-and-validation.md`](market-and-validation.md) §7
+- **Evidence available at the time:** Three zero-budget enquiries were sent
+  2026-08-11. All three received a reply; none opened the rights gate; DELFI
+  answered 0 of 6 questions and offered a phone call.
+  `provider-evaluation.md` §5.4 already diagnosed why: *"a pointer to published
+  terms costs minutes; a bespoke rights opinion costs hours, and that asymmetry
+  is the most likely reason the thread has stalled."* The diagnosis is right and
+  the remedy has not followed from it. Every enquiry so far has requested
+  permission while offering nothing, from an individual with no institution.
+  Separately, `market-and-validation.md` §7 already schedules matrix publication
+  for *"around month two"* — reached 2026-09-11 — on the grounds that *"the
+  Phase 0 report is this project's only distribution asset, and it does not exist
+  until the end, which is exactly when it is least useful."*
+- **Decision:** Publish the rights-and-access matrix as a standalone artefact
+  under the CC BY 4.0 documentation licence (D040), and make it the mechanism for
+  the outstanding provider threads. Follow-ups become *"this is published, here is
+  your organisation's entry, is it accurate?"* rather than *"please answer my six
+  questions."* Correcting a public error about one's own organisation is a
+  minutes-long task with a reputational incentive; producing a bespoke rights
+  opinion is an hours-long task with none. This changes the response function the
+  §5.4 diagnosis identified, rather than restating it. The matrix publishes with
+  every `UNKNOWN` intact and every organisation's reply represented as recorded —
+  redacted per §6.1–6.3, no raw correspondence, no identities.
+- **Constraints:** This does **not** alter the recorded DELFI schedule (reminder
+  2026-09-07; `inconclusive` no earlier than 2026-09-17) and does not substitute
+  for it. It asserts nothing an organisation has not stated: an unanswered field
+  publishes as `UNKNOWN`, never as a characterisation of the organisation
+  (**I2**, **I4**). It creates no obligation on any provider and claims no
+  endorsement.
+- **Alternatives rejected:** Waiting for the Phase 0 report (§7's stated failure
+  mode — the only distribution asset arrives when it is least useful, and D052
+  has just made the report later still); continuing to send permission requests
+  unchanged (three replies, zero gate movement — the evidence is in); accepting
+  the offered phone call (the written-only choice stands: a spoken rights answer
+  is not a citable one); publishing the raw correspondence (violates §6.1–6.3 and
+  would end the threads).
+- **What would reverse this:** A provider stating that publication of its
+  recorded position is unwelcome or inaccurate — in which case the entry is
+  corrected or withdrawn on request, which is the mechanism working rather than
+  failing; or evidence that publication measurably hardened a thread rather than
+  opening it.

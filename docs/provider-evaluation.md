@@ -137,6 +137,100 @@ an unresolved lead, not a provider capability or rights finding. Sources checked
 2026-08-11: [DELFI overview](https://www.delfi.de/) and
 [DELFI current information](https://www.delfi.de/de/aktuelles/).
 
+#### Mobilithek offer identifiers — `requires verification` (2026-09-02)
+
+A later pass surfaced three Mobilithek offer identifiers that appear to name the
+streams in question:
+
+| Offer as titled in search results | Offer ID |
+| --- | --- |
+| DELFI-Realtime GTFS-RT Trip Updates | `858688352316981248` |
+| DELFI-Realtime SIRI ET | `754669461266382848` |
+| DELFI-Datensatz SIRI SX | `836244707009785856` |
+
+**These are search-result provenance, not read metadata records.** The offer
+pages at `https://mobilithek.info/offers/<id>` redirect to the platform home
+page without a login, and the `fid-move.de` mirror is behind a bot check that
+was deliberately not circumvented. No licence, endpoint, coverage, retention or
+downstream-use field is established by this finding, and **no matrix field
+changes**. The identifiers are recorded only so that the outstanding DELFI
+question 1 can be asked as a confirmation (`is this the right offer?`) rather
+than as an open request. Each carries `requires verification` until a metadata
+record is actually read (**I2**).
+
+#### `gtfs.de` — a published-licence candidate that does not depend on DELFI
+
+Checked 2026-09-02: [gtfs.de realtime](https://gtfs.de/en/realtime/) and
+[gtfs.de long-distance feed](https://gtfs.de/en/feeds/de_fv/).
+Feed inventory corrected 2026-09-03 from the
+[gtfs.de feeds index](https://gtfs.de/en/feeds/) — see the correction note below.
+
+| Field | What the public pages state |
+| --- | --- |
+| Long-distance schedule feed | `de_fv`, IC/ICE scope, ~1.2K stops and ~5.3K trips, derived from the DELFI NeTEx dataset |
+| Other free schedule feeds | **regional rail, local transit and a combined "Germany full" feed also exist** — see the 2026-09-03 correction below |
+| Realtime feed | a single GTFS-RT stream at `realtime.gtfs.de/realtime-free.pb`, trip updates and service alerts, ~10 s cadence |
+| Cost / registration | free; no registration or API key indicated |
+| Licence | Creative Commons 4.0 — CC BY for `de_fv`, CC BY-SA 4.0 for the aggregated realtime stream, with individual agencies under CC BY-SA 4.0, DL-DE→BY-2.0 or a special agreement |
+| Availability | published *"without any guarantee regarding the completeness, availability and/or correctness of the data"* |
+| Hold signal | **absent** — GTFS-RT trip updates carry delay and prognosis, not whether a connection *wartet* |
+| Long-distance realtime coverage | selective, not comprehensive |
+
+**Why this matters procedurally.** Every other candidate so far requires a
+negotiated contract, which is why storage, retention and downstream-use rights
+sit at `UNKNOWN`. A published Creative Commons licence answers storage, private
+research analysis and aggregated publication **from the licence text itself**,
+with no counterparty required. That makes this the first candidate whose rights
+question can be closed without waiting on anyone's mailbox.
+
+**What it does not do.** It does not supply the A2b hold signal, so it is not a
+substitute for `RIS::Connections` and does not open the decisive-signal gate. It
+is a third-party aggregator rather than the originating authority, which raises
+rather than lowers the **S11** continuity risk. `CC BY-SA` share-alike attaches
+conditions to publication that `CC BY` does not, and those must be read before
+any output is planned around them. Long-distance realtime coverage is described
+as partial, which directly bounds any corridor chosen on this basis.
+
+**Status:** candidate path, recorded for evaluation. No feed has been fetched,
+no data stored, and no licence text has yet been read in full — only the
+summary pages above. This entry changes no matrix field and does not authorise
+collection.
+
+##### Correction — the free feed inventory is wider than recorded (2026-09-03)
+
+`verified` — [gtfs.de feeds index](https://gtfs.de/en/feeds/), read 2026-09-03.
+
+The entry above recorded only `de_fv`. The feeds index lists **four** free
+schedule feeds, all under Creative Commons 4.0:
+
+| Feed | Coverage as the page states it |
+| --- | --- |
+| Long Distance Rail Germany (`de_fv`) | ICE, IC, ECE, EC, EN, railJet, night trains |
+| **Regional Rail Germany** | **RB, RE, IRE, S-Bahnen, non-federal railways** |
+| Local Transit Germany | subways, light rail, trams, ferries, funicular railways, buses |
+| Germany Full | all of the above combined |
+
+All four cover the *"next 30 days"* and are published *"without any guarantee
+regarding the completeness and/or correctness of the data."*
+
+**What this changes.** The `de_fv`-only entry implied that the Phase 0A
+`Fernverkehr → Nahverkehr` transfer scope was unreachable on this path. On the
+**schedule** side it is not: a free, CC-licensed regional-rail feed exists, so
+both legs of a Fernverkehr→Nahverkehr transfer can be enumerated without a
+provider relationship.
+
+**What this does not change.** The binding constraint is the **realtime** side,
+not the schedule side. The free realtime offering remains the single aggregated
+`realtime-free.pb` stream whose long-distance coverage the page describes as
+selective rather than comprehensive. Per-mode realtime coverage — specifically
+whether regional services are carried at usable density — was **not** established
+this session and remains `requires verification` until the realtime page and the
+licence texts are read in full.
+
+**Matrix effect: none.** A2c, A3c and A4 are unchanged. This correction records a
+wider free schedule inventory and a narrower, better-located open question. It
+does not authorise collection (**I15**, **D044**).
+
 ---
 
 ### Verified finding — the decisive signals exist, behind a partner gate
@@ -283,8 +377,11 @@ in [`decisions.md`](decisions.md), superseding **D005**.
   transfer/topology fields Phase 0 would retain.
 - Exact DELFI-Realtime metadata covering endpoint, current access procedure,
   licence, long-distance coverage, stable identity and downstream-use rights.
-- Only after those rights pass: a bounded A7 identity spike and cadence/coverage
-  feasibility check using the authorised products.
+- Only after those rights pass: a bounded **A7 + A8** spike (identity linkage and
+  forecast-error distribution, run as one poll) and a cadence/coverage
+  feasibility check using the authorised products. **This route is no longer the
+  only one** — the published-licence path in §2.4 can carry the same spike without
+  a contract, subject to reading its licence in full (D049b, D052).
 
 ---
 
@@ -307,7 +404,7 @@ and `info@delfi.de` for DELFI. The original drafts remain below as provenance.
 | --- | --- | --- |
 | DB API Marketplace / RIS | 2026-08-11 | Responded 2026-08-11; redacted evidence in §6.1 |
 | DB GTFS / GTFS-RT / RiFahrt | 2026-08-11 | Responded 2026-08-17; RiFahrt and rights fields were not expressly answered; redacted evidence in §6.2 |
-| DELFI-Realtime / Mobilithek | 2026-08-11 | `responded 2026-08-24` — requested project context and offered a phone call; written-only project-context reply sent 2026-08-26; redacted evidence in §6.3; `0/6` original questions answered and substantive answer pending |
+| DELFI-Realtime / Mobilithek | 2026-08-11 | `responded 2026-08-24` — requested project context and offered a phone call; written-only project-context reply sent 2026-08-26; redacted evidence in §6.3; `0/6` original questions answered and substantive answer pending. **The single permitted reminder was sent 2026-09-07**; `inconclusive / no substantive answer` may be recorded no earlier than 2026-09-17 |
 
 ### 5.1 DB API Marketplace and RIS
 
@@ -463,7 +560,9 @@ For each message:
    erinnern. Können Sie mir bitte mitteilen, ob und an welche zuständige Stelle
    ich sie gegebenenfalls weiterleiten soll? Vielen Dank.`;
 3. after another seven business days without a response, record
-   `inconclusive / no response`; never convert silence into refusal;
+   `inconclusive / no response`; never convert silence into refusal. Where a
+   thread has already produced a reply, the correct label is
+   `inconclusive / no substantive answer` — `no response` would be false;
 4. keep the raw email and identity data in the private mailbox, outside Git;
 5. commit only a redacted evidence mapping: organisation / department, response
    date, products addressed, each rights field answered or `UNKNOWN`, and the
@@ -480,9 +579,49 @@ the A5a PR; this DELFI clarification record is on
 DELFI responded 2026-08-24, before the 2026-09-01 silence deadline, so that
 deadline no longer applies — a request for project context is not silence. The
 §5.3 written reply was sent on 2026-08-26. If no substantive answer arrives
-through 2026-09-04, send one same-thread reminder on 2026-09-07. If there is
-still no answer through 2026-09-16, record `inconclusive / no response` on
-2026-09-17; silence is never a refusal.
+through 2026-09-04, send one same-thread reminder on 2026-09-07 (**sent — see
+below**). If there is
+still no answer through 2026-09-16, record
+`inconclusive / no substantive answer` on 2026-09-17; silence is never a
+refusal, and `no response` is the wrong label for a thread that has already
+been answered once.
+
+**Reminder sent 2026-09-07 — the escalation ladder for this thread is now
+spent.** DELFI's 2026-08-24 message asked for the research subject, the planned
+data use and the intended results; all three were answered on 2026-08-26, so no
+further project or personal information was outstanding and none was
+volunteered. Seven German working days (08-27, 08-28, 08-31, 09-01, 09-02,
+09-03, 09-04) then passed with no substantive answer, and the single permitted
+reminder was sent in the same thread on 2026-09-07 — no new subject, no
+attachment, no telephone number, no payment, account or API data. The thread
+state was re-verified immediately before sending: four messages, last inbound
+still 2026-08-24.
+
+The reminder deliberately narrowed the ask rather than repeating the original
+six questions. It asks DELFI to **confirm or correct** the two §2.4 Mobilithek
+offer identifiers — phrased as a confirmation because those identifiers remain
+`requires verification` and asserting them would breach **I2** — then asks which
+of the six points are already covered by published *Nutzungsbedingungen* or
+licence statements and where those are public, accepting a pointer as a complete
+answer for those points, and finally whether access requires registration,
+activation or personal data. A pointer to published terms costs minutes; a
+bespoke rights opinion costs hours, and that asymmetry is the most likely reason
+the thread stalled.
+
+**No second reminder is permitted.** If nothing substantive arrives through
+2026-09-16, record `inconclusive / no substantive answer` no earlier than
+2026-09-17 — never a refusal. If DELFI answers substantively before then, reply
+to that answer and the 09-17 milestone lapses.
+
+If 2026-09-17 is reached without a substantive answer, escalation stays
+written-first and cheapest-first: the named DELFI-Geschäftsstelle sender, then
+the Mobilithek platform operator — a separate body that can answer
+platform-level registration and published-terms questions without DELFI — then
+`opendata-oepnv.de` support for the DELFI dataset terms. The phone call DELFI
+offered on 2026-08-24 remains declined under the written-only choice recorded
+above; reversing that requires a new decision entry and the author's consent to
+disclose a telephone number, and any call would still need a written
+confirmation afterwards to count as evidence.
 
 ---
 
@@ -543,3 +682,6 @@ facts needed to update the gate.
 | Free access / eligibility / storage / retention / research / redistribution / training / commercial / attribution / continuity | `UNKNOWN` — none of the six original questions were answered |
 | Usable provider path established | **`0`** |
 | Resulting gate effect | None yet. A2c, A3c and A4 remain `UNKNOWN`; rights gate remains `BLOCKED`; verdict stays `v4-partial` since no matrix field changed. Written-only project context was sent 2026-08-26 and substantive evidence is pending (§5.3) |
+| Follow-up state (2026-09-07) | Pending, not silent. All three items DELFI requested were answered on 2026-08-26. Seven German working days (08-27, 08-28, 08-31, 09-01, 09-02, 09-03, 09-04) passed with no substantive answer, so **the single permitted reminder was sent 2026-09-07** in the same thread — no new subject, no attachment, no telephone number. **No second reminder is permitted.** Next milestone: if nothing substantive arrives through 2026-09-16, record `inconclusive / no substantive answer` no earlier than 2026-09-17; never a refusal. The superseded 2026-09-01 / 2026-09-02 dates must not be used |
+| Reminder content (2026-09-07) | Three narrowing questions, none of which asserts an unverified fact: (1) confirm **or correct** the two §2.4 Mobilithek offer identifiers, which remain `requires verification`; (2) which of the original six points are already covered by published *Nutzungsbedingungen* or licence statements, and where those are public — a pointer is accepted as a complete answer for those points; (3) whether access requires registration, activation or personal data. The Herr Toffel telephone option offered on 2026-08-24 was deliberately **not** taken up, and no telephone number was disclosed; it is held in reserve as the 2026-09-17 escalation lever |
+| Structural limitation to test before relying on a reply | DELFI-Realtime is documented as GTFS-RT Trip Updates and SIRI-ET, which carry delay and prognosis. **A2b is grounded in a connection-hold flag** (`RIS::Connections`, *warten* / *nicht warten*). A complete DELFI answer may therefore still leave A2b unsourced — see `decisions.md` **D049** |
