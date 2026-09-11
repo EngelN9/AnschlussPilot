@@ -14,7 +14,8 @@ specific document that covers the layer you are touching.
 goes stale the moment code lands; the date below tells you how far to trust it.
 
 ```text
-Last verified:  2026-09-03
+Last verified:  2026-09-11 (repository state; provider mailbox last verified
+                2026-09-07)
 Observed state: documentation only — no application code, no provider
                 integration, no dataset, no tests; DELFI awaits a substantive
                 answer since the 2026-08-26 project-context reply, and its
