@@ -43,9 +43,9 @@ reversal conditions.
 
 | Area | Active decisions |
 | --- | --- |
-| Phase 0 scope, order and delivery | D001, D002, D007, D008, D009, D010, D011, D027, D033, D037, D039, D044, D048, D050, **D051**, **D052** |
+| Phase 0 scope, order and delivery | D001, D002, D007, D008, D009, D010, D011, D027, D033, D037, D039, D044, D048, D050, **D051**, **D052**, **D054** |
 | Population, episodes and evaluation | D003, D006, D013, D020, D021, D024, D027, D030, D031, D032 |
-| Binding and observation evidence | D004, D012, D015, D022 (retention principle only), D023, D029, D034, D043, D044, D049, **D051** (A3/A6 scope) |
+| Binding and observation evidence | D004, D012, D015, D022 (retention principle only), D023, D029, D034, D043, D044, D049, **D051** (A3/A6 scope), **D054** (`gtfs.de` spike retention) |
 | Competitive, market and validation | D005, D017, D018, D019, D025, D026, D028, D035 (risk classification only), D036 (exit definitions only), D038, D041, D042, D046, D047, **D053** |
 | Open — awaiting a decision from the author | **D040** (code and collected-data layers only; documentation closed 2026-09-02) |
 
@@ -1381,3 +1381,56 @@ D052**, while the rest of D050 remains active.
   corrected or withdrawn on request, which is the mechanism working rather than
   failing; or evidence that publication measurably hardened a thread rather than
   opening it.
+
+### D054 — Run the bounded A7 + A8 spike on the `gtfs.de` published-licence feeds
+
+- **Date:** 2026-09-13
+- **Status:** active — proposed and **accepted by the author on 2026-09-13**,
+  with one sequencing amendment (see *Decision*): a single one-time coverage
+  snapshot comes before any recurring poll.
+- **Evidence available at the time:** D049 activity (b) was executed on
+  2026-09-13 and is recorded in
+  [`provider-evaluation.md`](provider-evaluation.md) §2.4 under *Licence read*.
+  The free schedule feeds are published under CC BY 4.0 and the free realtime
+  stream under CC BY-SA 4.0. Both licences grant reproduction and, for
+  databases, the extraction and reuse of all or a substantial portion of the
+  contents. Their attribution and share-alike conditions attach when material
+  is *shared*. `gtfs.de` publishes no separate terms of use, requires no
+  registration, and states no rate limit. Four points remain open:
+  - The realtime stream aggregates sources that `gtfs.de` itself lists under
+    "special agreement" or "Unbekannt", and its authority to relicense those
+    is unverified.
+  - No DB Fernverkehr or DB Regio realtime source is named.
+  - Availability is expressly not guaranteed, and the operator reserves the
+    right to stop publication without notice.
+  - CC licences state that exercising the licensed rights is acceptance of the
+    licence. D044 forbids accepting terms *before* the rights are reviewed, and
+    that review is what §2.4 now records.
+- **Decision:** Start with a single one-time coverage snapshot, with no polling.
+  Only if it shows usable density, run A7 and A8 as one bounded poll with these
+  limits:
+  - private research retention only, with nothing raw or adapted published;
+  - one station, chosen by the D051 S5 desk check;
+  - conditional requests with an identifying User-Agent, at a cadence of no
+    more than one request per 60 s;
+  - retained payloads deleted at the end of the spike unless a later decision
+    extends retention;
+  - scoring against **S9** and **S13** without new thresholds.
+
+  The first coverage observation is itself an output. If the chosen station's
+  services are not carried at usable density, record that and stop rather than
+  widening scope. Publishing any result first requires closing the §2.4
+  publication items.
+- **Alternatives rejected:**
+  - Waiting for DELFI: this path's rights question closes from published text
+    without a counterparty, and waiting spends collection time at zero yield
+    (D052).
+  - Fetching without a recorded decision (**I15**, D044).
+  - Treating the stream's CC BY-SA label as settling sub-source authority: a CC
+    licensor grants only what it is itself entitled to grant.
+- **What would reverse this:** Any one of the following:
+  - `gtfs.de` publishes terms restricting fetch or retention;
+  - a listed sub-source licensor states that its data may not be used this way;
+  - the first bounded fetch shows no usable realtime coverage for any candidate
+    station, so S9 and S13 cannot be scored on this path;
+  - a substantive DELFI answer opens a path with better rights.

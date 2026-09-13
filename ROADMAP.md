@@ -110,7 +110,7 @@ Current evidence state:
 | A4 storage rights | `UNKNOWN` |
 | Decisive-signal definition (D049a) | **Closed 2026-09-03** — forecast-only estimator separates `CONTINUE` from `REROUTE_EARLY` outside a bounded hold band; D049's reversal condition did not trigger. See [`docs/decisive-signal-analysis.md`](docs/decisive-signal-analysis.md) |
 | A8 forecast informativeness | **Opened 2026-09-03**, untested. Load-bearing consequence of the line above; scored against **S13**; runs with the A7 spike |
-| A7 + A8 spike | Not started; **no longer blocked by the provider gate** — a published-licence route exists (D049, D050), pending a full licence read. **Highest-priority item in Phase 0** (D052) |
+| A7 + A8 spike | Not started; **no longer blocked by the provider gate** — the `gtfs.de` licence read was recorded 2026-09-13 and permits a bounded fetch with temporary retention on published terms, with open caveats ([`docs/provider-evaluation.md`](docs/provider-evaluation.md) §2.4). **D054** accepted 2026-09-13; its first step is a one-time coverage snapshot, before any recurring poll. **Highest-priority item in Phase 0** (D052) |
 | Corridor scope | `UNSET` |
 | Observation schema | `UNSET` |
 | Collector | Not started |
@@ -155,6 +155,19 @@ it does not assert an external action that has not been independently checked.
 
 Resume from the documents linked above, especially the provider record, the v2
 benchmark protocol and D049–D053. Do not use deleted chat history as evidence.
+
+### Session checkpoint — 2026-09-13
+
+- **DELFI:** the mailbox was re-checked and still shows no substantive reply
+  (last inbound 2026-08-24). The 2026-09-17 rule above is unchanged.
+- **`gtfs.de` licence read:** done and recorded in
+  [`docs/provider-evaluation.md`](docs/provider-evaluation.md) §2.4. This
+  replaces the 2026-09-07 "highest-value unblocked action". **D054** was
+  accepted the same day.
+- **D054 step 1:** the one-time coverage snapshot ran 2026-09-13. The stop rule
+  did not fire, and long-distance feeder coverage is the binding constraint.
+- **Next action:** the D051 S5 station desk check. No recurring poll or
+  collector has run.
 
 ---
 
@@ -275,7 +288,11 @@ recovered retroactively.
 > against **S13**; **do not invent a new threshold.** See
 > [`docs/decisive-signal-analysis.md`](docs/decisive-signal-analysis.md) §6.
 
-- [ ] Read the candidate feed's licence and terms in full; record the result.
+- [x] Read the candidate feed's licence and terms in full; record the result —
+      recorded 2026-09-13 in
+      [`docs/provider-evaluation.md`](docs/provider-evaluation.md) §2.4; the
+      spike was accepted as **D054** the same day, and its one-time coverage
+      snapshot (step 1) has run.
 - [ ] Run the bounded identity-resolution spike.
 - [ ] Poll one corridor segment for the planned observation period.
 - [ ] Attempt to link service runs across consecutive observations.

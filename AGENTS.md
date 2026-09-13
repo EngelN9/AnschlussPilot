@@ -14,8 +14,7 @@ specific document that covers the layer you are touching.
 goes stale the moment code lands; the date below tells you how far to trust it.
 
 ```text
-Last verified:  2026-09-11 (repository state; provider mailbox last verified
-                2026-09-07)
+Last verified:  2026-09-13 (repository state and provider mailbox)
 Observed state: documentation only — no application code, no provider
                 integration, no dataset, no tests; DELFI awaits a substantive
                 answer since the 2026-08-26 project-context reply, and its
@@ -45,6 +44,20 @@ Observed state: documentation only — no application code, no provider
                 regional-rail and combined schedule feeds also exist, realtime
                 per-mode coverage still requires verification.
                 A2c / A3c / A4 remain UNKNOWN. No feed fetched, nothing stored.
+2026-09-13:     D049 activity (b) executed — the gtfs.de licence pages and the
+                licence texts they cite were read in full
+                (docs/provider-evaluation.md §2.4). Bounded fetch and temporary
+                private-research retention are permitted on the face of CC BY 4.0
+                (schedule) and CC BY-SA 4.0 (realtime); sub-source relicensing
+                authority, per-mode realtime coverage and publication conditions
+                remain requires verification. D054 (bounded A7 + A8 spike) was
+                ACCEPTED by the author the same day. Its step 1, a one-time
+                coverage snapshot with no polling, ran 2026-09-13 and is retained
+                privately under .private/ (gitignored). The outcome is in
+                provider-evaluation.md §2.4: regional-rail realtime dense,
+                long-distance partial, stop rule not fired. No recurring poll,
+                no collector, no station chosen. DELFI mailbox re-checked: still
+                no substantive reply.
 ```
 
 If the date is old or the state does not match what you see, trust the
@@ -82,8 +95,10 @@ interface. Phase 0 blockers, in order:
 3. The **A7 + A8 spike** and the minimal collector now outrank every remaining
    documentation item (D052): episodes accrue on wall-clock time, so collection
    time is the only irreplaceable input and it is currently being spent at zero
-   yield. The spike is gated on reading the candidate feed's licence in full
-   (**I15**, D044, D049b) — not on the competitor or provider gates. Carrier /
+   yield. The candidate feed's licence read (**I15**, D044, D049b) was recorded
+   2026-09-13, and the spike was accepted as **D054**. Its one-time coverage
+   snapshot has run, and the next step is the D051 S5 station desk check — not
+   the competitor or provider gates. Carrier /
    A3 checks are reduced to an S5 desk check (D051); corridor and
    observation-schema freeze follow under the Phase 0-lite scope.
 4. Replay harness, deterministic baseline, full protocol freeze and opportunity
