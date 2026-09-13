@@ -166,8 +166,18 @@ benchmark protocol and D049–D053. Do not use deleted chat history as evidence.
   accepted the same day.
 - **D054 step 1:** the one-time coverage snapshot ran 2026-09-13. The stop rule
   did not fire, and long-distance feeder coverage is the binding constraint.
-- **Next action:** the D051 S5 station desk check. No recurring poll or
-  collector has run.
+- **D051 S5 desk check:** executed 2026-09-13
+  ([`docs/decision-model.md`](docs/decision-model.md) §3). S5 has neither
+  fired nor passed. The shortlist is Augsburg Hbf or Würzburg Hbf, and **D055**
+  is proposed.
+- **Next actions:**
+  1. The author decides on D055.
+  2. Read Mobilithek's terms of use.
+  3. Extract OpenStation platform lengths.
+  4. Bound the inter-platform distance.
+  5. Run the §4 sizing gate.
+
+  No recurring poll or collector has run.
 
 ---
 

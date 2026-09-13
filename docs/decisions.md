@@ -47,7 +47,7 @@ reversal conditions.
 | Population, episodes and evaluation | D003, D006, D013, D020, D021, D024, D027, D030, D031, D032 |
 | Binding and observation evidence | D004, D012, D015, D022 (retention principle only), D023, D029, D034, D043, D044, D049, **D051** (A3/A6 scope), **D054** (`gtfs.de` spike retention) |
 | Competitive, market and validation | D005, D017, D018, D019, D025, D026, D028, D035 (risk classification only), D036 (exit definitions only), D038, D041, D042, D046, D047, **D053** |
-| Open — awaiting a decision from the author | **D040** (code and collected-data layers only; documentation closed 2026-09-02) |
+| Open — awaiting a decision from the author | **D040** (code and collected-data layers only; documentation closed 2026-09-02); **D055** (`T_transfer` from Ril 402.0203A01; Augsburg Hbf / Würzburg Hbf shortlist — proposed 2026-09-13) |
 
 Superseded entries remain below for provenance: D014 is superseded by D021 and
 D027; D016 is superseded by D027; D022's combined status vocabulary is
@@ -1434,3 +1434,48 @@ D052**, while the rest of D050 remains active.
   - the first bounded fetch shows no usable realtime coverage for any candidate
     station, so S9 and S13 cannot be scored on this path;
   - a substantive DELFI answer opens a path with better rights.
+
+### D055 — Bound `T_transfer` from the published DB InfraGO rule and choose a compact class 2 station
+
+- **Date:** 2026-09-13
+- **Status:** **proposed — awaiting the author.** Not active.
+- **Evidence available at the time:** The D051 S5 desk check, recorded in
+  [`decision-model.md`](decision-model.md) §3, found:
+  - no per-station minimum transfer times published on the zero-budget path;
+  - no `transfers.txt` in the free gtfs.de feeds;
+  - a published computation rule, DB InfraGO Ril 402.0203A01 (valid from
+    14.12.2025), built from platform lengths, the inter-platform distance and
+    fixed quality minutes;
+  - platform lengths in DB InfraGO OpenStation under CC0, downloadable from
+    Mobilithek without credentials. Mobilithek's own terms page did not render,
+    so they are unread.
+
+  No source read gives the inter-platform distance. Illustrative arithmetic
+  keeps a compact class 2 station within ±5 min and puts a large node outside
+  it. Among the frozen Phase 0A v2 seed stations, Augsburg Hbf and Würzburg Hbf
+  are class 2 with usable weekday long-distance → regional transfer volume.
+- **Decision (proposed):**
+  - Bound `T_transfer` at the Phase 0-lite station with the Ril 402.0203A01
+    rule. Platform lengths come from OpenStation, once Mobilithek's terms are
+    read.
+  - The inter-platform distance enters as an explicit interval end, never a
+    point value, with its source recorded.
+  - Choose the Phase 0-lite station from **Augsburg Hbf** and **Würzburg Hbf**,
+    after their bounds are computed and the `README.md` §4 sizing gate is run.
+  - If the computed interval is wider than 10 min, **S5 fires** and its
+    narrowing remedy applies.
+- **Alternatives rejected:**
+  - München Hbf or Nürnberg Hbf, despite higher volume: their layouts make the
+    ±5 min upper end unlikely without platform-pair data, which is `UNKNOWN`
+    under A3c.
+  - Registering on DB API Marketplace for OpenStation (D044).
+  - Treating gtfs.de `stops.txt` geometry as a distance source: absent at most
+    major stations.
+  - Using forum or secondary minute rules instead of the published Ril.
+- **What would reverse this:** Any one of the following:
+  - a published per-station transfer-time source appears;
+  - OpenStation lengths, or a sourced inter-platform distance, put both
+    candidates outside ±5 min;
+  - `Quay/Length` proves not to be the Ril's *Nutzlänge*;
+  - Mobilithek's terms forbid the download;
+  - the sizing gate shows too few episodes at both candidates.

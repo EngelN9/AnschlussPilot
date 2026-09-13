@@ -57,7 +57,14 @@ Observed state: documentation only — no application code, no provider
                 provider-evaluation.md §2.4: regional-rail realtime dense,
                 long-distance partial, stop rule not fired. No recurring poll,
                 no collector, no station chosen. DELFI mailbox re-checked: still
-                no substantive reply.
+                no substantive reply. D051 S5 desk check executed
+                (decision-model.md §3): no published per-station transfer
+                times; DB InfraGO Ril 402.0203A01 publishes the rule, and CC0
+                OpenStation carries platform lengths, but no source gives the
+                inter-platform distance. S5 neither fired nor passed.
+                Shortlist Augsburg Hbf / Würzburg Hbf; D055 PROPOSED. The
+                Mobilithek terms are unread (the page did not render), so no
+                OpenStation download has been made.
 ```
 
 If the date is old or the state does not match what you see, trust the
@@ -97,8 +104,9 @@ interface. Phase 0 blockers, in order:
    time is the only irreplaceable input and it is currently being spent at zero
    yield. The candidate feed's licence read (**I15**, D044, D049b) was recorded
    2026-09-13, and the spike was accepted as **D054**. Its one-time coverage
-   snapshot has run, and the next step is the D051 S5 station desk check — not
-   the competitor or provider gates. Carrier /
+   snapshot has run, and the D051 S5 desk check is recorded. The next step is
+   the author's decision on the proposed **D055**, then the station-level
+   transfer bound and sizing gate — not the competitor or provider gates. Carrier /
    A3 checks are reduced to an S5 desk check (D051); corridor and
    observation-schema freeze follow under the Phase 0-lite scope.
 4. Replay harness, deterministic baseline, full protocol freeze and opportunity
