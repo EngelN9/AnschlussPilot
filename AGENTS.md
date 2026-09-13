@@ -62,9 +62,14 @@ Observed state: documentation only — no application code, no provider
                 times; DB InfraGO Ril 402.0203A01 publishes the rule, and CC0
                 OpenStation carries platform lengths, but no source gives the
                 inter-platform distance. S5 neither fired nor passed.
-                Shortlist Augsburg Hbf / Würzburg Hbf; D055 PROPOSED. The
-                Mobilithek terms are unread (the page did not render), so no
-                OpenStation download has been made.
+                Shortlist Augsburg Hbf / Würzburg Hbf. D055 ACCEPTED the same
+                day. OpenStation (CC0) downloaded once; the Mobilithek platform
+                terms are still unread because the page does not render. OSM
+                distances measured after an ODbL read. S5 does not fire at
+                either station: Würzburg [1, 8.1] min; Augsburg [1, 10.9] min in
+                its conservative case, 0.1 min inside the limit. The sizing gate
+                is blocked on the unset minimum episode count and episode
+                windows; no station chosen.
 ```
 
 If the date is old or the state does not match what you see, trust the

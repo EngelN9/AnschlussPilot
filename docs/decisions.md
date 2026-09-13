@@ -1438,7 +1438,19 @@ D052**, while the rest of D050 remains active.
 ### D055 — Bound `T_transfer` from the published DB InfraGO rule and choose a compact class 2 station
 
 - **Date:** 2026-09-13
-- **Status:** **proposed — awaiting the author.** Not active.
+- **Status:** active — proposed and **accepted by the author on 2026-09-13**
+  with two amendments:
+  - **Reading of the threshold:** S5's *"bounded within ±5 min"* means the
+    `T_transfer` interval is **no wider than 10 min**.
+  - **Choosing between the two candidates:** both are bounded and sized before
+    either is chosen.
+    - If both pass, choose the one with more usable episodes.
+    - If only one passes, choose it.
+    - If neither passes, S5 fires.
+  - **Inter-platform distance:** measured from OpenStreetMap geometry after
+    the ODbL is read in full, not an unsourced maximum. It is taken as the
+    farthest platform pair used by long-distance and regional services, plus
+    the fixed 1 min stairs component.
 - **Evidence available at the time:** The D051 S5 desk check, recorded in
   [`decision-model.md`](decision-model.md) §3, found:
   - no per-station minimum transfer times published on the zero-budget path;
@@ -1479,3 +1491,15 @@ D052**, while the rest of D050 remains active.
   - `Quay/Length` proves not to be the Ril's *Nutzlänge*;
   - Mobilithek's terms forbid the download;
   - the sizing gate shows too few episodes at both candidates.
+- **Result recorded 2026-09-13:** the bounds were computed
+  ([`decision-model.md`](decision-model.md) §3, *Bounds computed*). S5 does not
+  fire at either station:
+  - **Würzburg Hbf:** `[1, 8.1]` min.
+  - **Augsburg Hbf:** `[1, 7.9]` min on its main platforms, or `[1, 10.9]` min
+    if its short platforms count, which is only 0.1 min inside the limit.
+
+  OpenStation shows Augsburg Hbf is *station* category 1 (price category 2), so
+  "class 2" in this entry's title describes the price class only. The choice
+  rule cannot be applied yet: the sizing gate is blocked on the unset minimum
+  episode count and episode windows, and there is no episode-rate estimate. No
+  station has been chosen.

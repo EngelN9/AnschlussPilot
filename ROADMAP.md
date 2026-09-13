@@ -170,12 +170,14 @@ benchmark protocol and D049–D053. Do not use deleted chat history as evidence.
   ([`docs/decision-model.md`](docs/decision-model.md) §3). S5 has neither
   fired nor passed. The shortlist is Augsburg Hbf or Würzburg Hbf, and **D055**
   is proposed.
+- **D055:** accepted the same day, and the transfer bounds are computed. S5
+  does not fire at Augsburg Hbf or Würzburg Hbf, though Augsburg's
+  conservative case sits 0.1 min inside the limit.
 - **Next actions:**
-  1. The author decides on D055.
-  2. Read Mobilithek's terms of use.
-  3. Extract OpenStation platform lengths.
-  4. Bound the inter-platform distance.
-  5. Run the §4 sizing gate.
+  1. The author freezes the minimum episode count and the episode windows.
+  2. The author decides how to estimate episode rate.
+  3. Run the §4 sizing gate.
+  4. Apply D055's choice rule.
 
   No recurring poll or collector has run.
 
