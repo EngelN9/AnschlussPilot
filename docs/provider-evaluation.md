@@ -191,10 +191,9 @@ conditions to publication that `CC BY` does not, and those must be read before
 any output is planned around them. Long-distance realtime coverage is described
 as partial, which directly bounds any corridor chosen on this basis.
 
-**Status:** candidate path, recorded for evaluation. No feed has been fetched,
-no data stored, and no licence text has yet been read in full — only the
-summary pages above. This entry changes no matrix field and does not authorise
-collection.
+**Status:** candidate path. The licence texts were read in full on 2026-09-13;
+see *Licence read* below. No feed has been fetched and no data stored. This
+entry changes no matrix field and does not authorise collection.
 
 ##### Correction — the free feed inventory is wider than recorded (2026-09-03)
 
@@ -230,6 +229,91 @@ licence texts are read in full.
 **Matrix effect: none.** A2c, A3c and A4 are unchanged. This correction records a
 wider free schedule inventory and a narrower, better-located open question. It
 does not authorise collection (**I15**, **D044**).
+
+##### Licence read — D049 activity (b) (2026-09-13)
+
+This section **executes D049 activity (b)**. Every source was read in full on
+2026-09-13. `verified` means the stated text was read at that source. The
+findings below are a paraphrase for project gating, not legal advice.
+
+**Sources read:**
+- `gtfs.de` pages:
+  - [realtime (en)](https://gtfs.de/en/realtime/) and [realtime (de)](https://gtfs.de/de/realtime/)
+  - [feeds index](https://gtfs.de/en/feeds/), [`de_fv`](https://gtfs.de/en/feeds/de_fv/) and [`de_rv`](https://gtfs.de/en/feeds/de_rv/)
+  - [services](https://gtfs.de/en/services/), [imprint](https://gtfs.de/en/imprint/), [privacy](https://gtfs.de/en/datenschutz/) and `robots.txt`
+- Licence texts:
+  - the [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/legalcode.en) and [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/legalcode.en) legal code
+  - [DL-DE→BY-2.0](https://www.govdata.de/dl-de/by-2-0). govdata.de refused the connection, so this was read from the Internet Archive capture of 2026-09-12.
+- Terms of two third-party realtime sources: [opentransportdata.swiss](https://opentransportdata.swiss/de/terms-of-use/) and the [OVapi README](https://gtfs.ovapi.nl/README).
+
+| Question | Finding | Status |
+| --- | --- | --- |
+| Separate terms of use | None found. `/en/terms/`, `/en/faq/` and `/en/api/` return the home page. The imprint carries only a website liability disclaimer. `robots.txt` restricts only the imprint and contact pages | `verified` absence, limited to the pages read |
+| Registration / cost | Free feeds and the realtime stream require no registration or key. Separate paid plans exist for the extended feeds | `verified` |
+| Schedule feed licence | Creative Commons 4.0, linked to CC BY 4.0. Source stated as the DELFI e.V. NeTEx dataset. Horizon is the next 30 days | `verified` |
+| Realtime stream licence | CC BY-SA 4.0. The stream is aggregated from agencies' data published under an open licence *or under a special agreement* | `verified` |
+| Fetch and temporary retention (**R**) | CC BY / BY-SA §2(a)(1) grant reproduction. §4 grants extraction, reuse and reproduction of all or a substantial portion of database contents. The §3 conditions attach when material is *shared*. No retention cap is stated | `verified` on the face of the licence |
+| Accepting the licence | CC legal code: exercising the licensed rights is acceptance of the licence. This is terms acceptance under D044, and D044 permits it only after review. This read is that review | `verified`; the decision goes to **D054** |
+| Sub-source relicensing authority | The listed sources carry mixed terms, set out below. A CC licensor can grant only rights it holds, and nothing states whether `gtfs.de` may relicense the special-agreement sources under CC BY-SA | `requires verification` |
+| Sub-source terms that are public | DL-DE→BY-2.0 permits any commercial or non-commercial use, including copying, alteration and combination, with a source note (provider, licence name and URL, dataset URI) and a change note. opentransportdata.swiss permits processing, analysis and publication of file-based data without registration, but publications must name it as the raw-data source. OVapi permits free use on a best-effort basis, with no impersonation of agencies | `verified` |
+| Publication / attribution (**P**) | Sharing adapted material triggers CC BY-SA share-alike (§3(b), §4(b)). The DL-DE and opentransportdata.swiss source notes stack on top. Whether aggregate statistics such as a forecast-error IQR count as adapted material is a legal interpretation not made here | `requires verification` before any publication |
+| Rate limit / cadence | None published. `realtime.gtfs.de/robots.txt` returns 404. The stream is described as updated every 10 seconds | `verified` absence |
+| Realtime coverage by mode | No DB Fernverkehr or DB Regio source is listed. The VRR and NVBW entries mention long-distance lines crossing their areas. The DELFI GTFS-RT entry covers "parts of Germany". Per-station density cannot be established without a fetch | A first instant was observed in the D054 step 1 snapshot below. It is not a rate, and per-station density is still `requires verification` |
+| Continuity (**S11**) | Published without any availability guarantee. The imprint reserves the right to change or stop publication without notice, and the operator is an individual. The CC grant is irrevocable while its conditions are followed, but availability is not | `verified`; S11 risk as already recorded |
+
+Sources in the realtime stream by listed licence:
+- **Special agreement:** VRS, VRR, DEFAS Bayern
+- **Unknown:** Stadtwerke Münster ("Unbekannt"); Hamburg is "in preparation / open license questions"
+- **DL-DE→BY-2.0:** VVO, NVBW, VRN
+- **CC BY-SA:** VBN, VAG Nürnberg and the listed DELFI GTFS-RT / SIRI streams
+- **CC BY 4.0:** VBB
+- **Own terms:** opentransportdata.swiss and OVapi
+
+**Verdict for this path:**
+- **R (private research with temporary retention):** permitted by the published
+  licence text, subject to the sub-source authority caveat.
+- **P (publication or display):** not settled. Share-alike and stacked source
+  notes apply and need a separate reading before any output is planned.
+- **Hold signal:** still absent.
+
+**Matrix effect: none.** A2c, A3c and A4 remain `UNKNOWN` in §2.2 for the
+contract-governed providers. This read answers retention for this
+published-licence path only. The licence read itself fetched no feed. The
+bounded spike was accepted as **D054** the same day.
+
+##### Coverage snapshot — D054 step 1 (2026-09-13)
+
+- **What was fetched:** one request each for the realtime stream and the `de_fv`
+  and `de_rv` schedule feeds, at 10:13 UTC on a Sunday (12:13 CEST).
+- **How:** with an identifying User-Agent and no polling.
+- **Where it is kept:** the payloads, their SHA-256 checksums, the analysis
+  scripts and the numeric results are held privately under the gitignored
+  `.private/` directory, as D054 requires.
+- **Numbers are deliberately not reproduced here.** Publishing derived results
+  is the §2.4 publication question that remains `requires verification`.
+
+The outcome, recorded for gating only:
+
+| Question | Outcome | Status |
+| --- | --- | --- |
+| Forecast times, not only delays? | Yes — most stop-time updates carry an absolute arrival time | observed once |
+| Regional-rail trips running, or arriving within the A8 window (20–40 min ahead) | High share carried in the stream | observed once |
+| Long-distance trips on the same basis | Partial — materially lower than regional, and near-absent for non-DB operators | observed once |
+| Station-level density | Several large nodes carry most of their A8-window arrivals; some nodes, notably parts of Hamburg, carry few | observed once |
+| Stop update at the station vs presence of the trip | Lower than trip-level presence. Whether GTFS-RT delay propagation closes the gap is not established | `requires verification` |
+
+**What this settles:**
+- D054's stop rule did not fire. That rule was *no usable density at any
+  candidate station*.
+- The binding constraint for a Fernverkehr → Nahverkehr transfer is
+  long-distance feeder coverage, so the D051 S5 station desk check must weigh
+  it.
+
+**What it does not settle:**
+- One Sunday-midday instant is not a coverage rate.
+- It is not a forecast-quality measure (A8 / S13).
+- It is not an identity-linkage measure (A7 / S9).
+- No recurring poll has run and no station has been chosen.
 
 ---
 
@@ -381,7 +465,8 @@ in [`decisions.md`](decisions.md), superseding **D005**.
   forecast-error distribution, run as one poll) and a cadence/coverage
   feasibility check using the authorised products. **This route is no longer the
   only one** — the published-licence path in §2.4 can carry the same spike without
-  a contract, subject to reading its licence in full (D049b, D052).
+  a contract. Its licence read was recorded 2026-09-13 (§2.4, D049b), and the
+  bounded spike was accepted as **D054** the same day.
 
 ---
 

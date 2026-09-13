@@ -43,11 +43,11 @@ reversal conditions.
 
 | Area | Active decisions |
 | --- | --- |
-| Phase 0 scope, order and delivery | D001, D002, D007, D008, D009, D010, D011, D027, D033, D037, D039, D044, D048, D050, **D051**, **D052** |
+| Phase 0 scope, order and delivery | D001, D002, D007, D008, D009, D010, D011, D027, D033, D037, D039, D044, D048, D050, **D051**, **D052**, **D054** |
 | Population, episodes and evaluation | D003, D006, D013, D020, D021, D024, D027, D030, D031, D032 |
-| Binding and observation evidence | D004, D012, D015, D022 (retention principle only), D023, D029, D034, D043, D044, D049, **D051** (A3/A6 scope) |
+| Binding and observation evidence | D004, D012, D015, D022 (retention principle only), D023, D029, D034, D043, D044, D049, **D051** (A3/A6 scope), **D054** (`gtfs.de` spike retention) |
 | Competitive, market and validation | D005, D017, D018, D019, D025, D026, D028, D035 (risk classification only), D036 (exit definitions only), D038, D041, D042, D046, D047, **D053** |
-| Open — awaiting a decision from the author | **D040** (code and collected-data layers only; documentation closed 2026-09-02) |
+| Open — awaiting a decision from the author | **D040** (code and collected-data layers only; documentation closed 2026-09-02); **D055** (`T_transfer` from Ril 402.0203A01; Augsburg Hbf / Würzburg Hbf shortlist — proposed 2026-09-13) |
 
 Superseded entries remain below for provenance: D014 is superseded by D021 and
 D027; D016 is superseded by D027; D022's combined status vocabulary is
@@ -1381,3 +1381,125 @@ D052**, while the rest of D050 remains active.
   corrected or withdrawn on request, which is the mechanism working rather than
   failing; or evidence that publication measurably hardened a thread rather than
   opening it.
+
+### D054 — Run the bounded A7 + A8 spike on the `gtfs.de` published-licence feeds
+
+- **Date:** 2026-09-13
+- **Status:** active — proposed and **accepted by the author on 2026-09-13**,
+  with one sequencing amendment (see *Decision*): a single one-time coverage
+  snapshot comes before any recurring poll.
+- **Evidence available at the time:** D049 activity (b) was executed on
+  2026-09-13 and is recorded in
+  [`provider-evaluation.md`](provider-evaluation.md) §2.4 under *Licence read*.
+  The free schedule feeds are published under CC BY 4.0 and the free realtime
+  stream under CC BY-SA 4.0. Both licences grant reproduction and, for
+  databases, the extraction and reuse of all or a substantial portion of the
+  contents. Their attribution and share-alike conditions attach when material
+  is *shared*. `gtfs.de` publishes no separate terms of use, requires no
+  registration, and states no rate limit. Four points remain open:
+  - The realtime stream aggregates sources that `gtfs.de` itself lists under
+    "special agreement" or "Unbekannt", and its authority to relicense those
+    is unverified.
+  - No DB Fernverkehr or DB Regio realtime source is named.
+  - Availability is expressly not guaranteed, and the operator reserves the
+    right to stop publication without notice.
+  - CC licences state that exercising the licensed rights is acceptance of the
+    licence. D044 forbids accepting terms *before* the rights are reviewed, and
+    that review is what §2.4 now records.
+- **Decision:** Start with a single one-time coverage snapshot, with no polling.
+  Only if it shows usable density, run A7 and A8 as one bounded poll with these
+  limits:
+  - private research retention only, with nothing raw or adapted published;
+  - one station, chosen by the D051 S5 desk check;
+  - conditional requests with an identifying User-Agent, at a cadence of no
+    more than one request per 60 s;
+  - retained payloads deleted at the end of the spike unless a later decision
+    extends retention;
+  - scoring against **S9** and **S13** without new thresholds.
+
+  The first coverage observation is itself an output. If the chosen station's
+  services are not carried at usable density, record that and stop rather than
+  widening scope. Publishing any result first requires closing the §2.4
+  publication items.
+- **Alternatives rejected:**
+  - Waiting for DELFI: this path's rights question closes from published text
+    without a counterparty, and waiting spends collection time at zero yield
+    (D052).
+  - Fetching without a recorded decision (**I15**, D044).
+  - Treating the stream's CC BY-SA label as settling sub-source authority: a CC
+    licensor grants only what it is itself entitled to grant.
+- **What would reverse this:** Any one of the following:
+  - `gtfs.de` publishes terms restricting fetch or retention;
+  - a listed sub-source licensor states that its data may not be used this way;
+  - the first bounded fetch shows no usable realtime coverage for any candidate
+    station, so S9 and S13 cannot be scored on this path;
+  - a substantive DELFI answer opens a path with better rights.
+
+### D055 — Bound `T_transfer` from the published DB InfraGO rule and choose a compact class 2 station
+
+- **Date:** 2026-09-13
+- **Status:** active — proposed and **accepted by the author on 2026-09-13**
+  with two amendments:
+  - **Reading of the threshold:** S5's *"bounded within ±5 min"* means the
+    `T_transfer` interval is **no wider than 10 min**.
+  - **Choosing between the two candidates:** both are bounded and sized before
+    either is chosen.
+    - If both pass, choose the one with more usable episodes.
+    - If only one passes, choose it.
+    - If neither passes, S5 fires.
+  - **Inter-platform distance:** measured from OpenStreetMap geometry after
+    the ODbL is read in full, not an unsourced maximum. It is taken as the
+    farthest platform pair used by long-distance and regional services, plus
+    the fixed 1 min stairs component.
+- **Evidence available at the time:** The D051 S5 desk check, recorded in
+  [`decision-model.md`](decision-model.md) §3, found:
+  - no per-station minimum transfer times published on the zero-budget path;
+  - no `transfers.txt` in the free gtfs.de feeds;
+  - a published computation rule, DB InfraGO Ril 402.0203A01 (valid from
+    14.12.2025), built from platform lengths, the inter-platform distance and
+    fixed quality minutes;
+  - platform lengths in DB InfraGO OpenStation under CC0, downloadable from
+    Mobilithek without credentials. Mobilithek's own terms page did not render,
+    so they are unread.
+
+  No source read gives the inter-platform distance. Illustrative arithmetic
+  keeps a compact class 2 station within ±5 min and puts a large node outside
+  it. Among the frozen Phase 0A v2 seed stations, Augsburg Hbf and Würzburg Hbf
+  are class 2 with usable weekday long-distance → regional transfer volume.
+- **Decision (proposed):**
+  - Bound `T_transfer` at the Phase 0-lite station with the Ril 402.0203A01
+    rule. Platform lengths come from OpenStation, once Mobilithek's terms are
+    read.
+  - The inter-platform distance enters as an explicit interval end, never a
+    point value, with its source recorded.
+  - Choose the Phase 0-lite station from **Augsburg Hbf** and **Würzburg Hbf**,
+    after their bounds are computed and the `README.md` §4 sizing gate is run.
+  - If the computed interval is wider than 10 min, **S5 fires** and its
+    narrowing remedy applies.
+- **Alternatives rejected:**
+  - München Hbf or Nürnberg Hbf, despite higher volume: their layouts make the
+    ±5 min upper end unlikely without platform-pair data, which is `UNKNOWN`
+    under A3c.
+  - Registering on DB API Marketplace for OpenStation (D044).
+  - Treating gtfs.de `stops.txt` geometry as a distance source: absent at most
+    major stations.
+  - Using forum or secondary minute rules instead of the published Ril.
+- **What would reverse this:** Any one of the following:
+  - a published per-station transfer-time source appears;
+  - OpenStation lengths, or a sourced inter-platform distance, put both
+    candidates outside ±5 min;
+  - `Quay/Length` proves not to be the Ril's *Nutzlänge*;
+  - Mobilithek's terms forbid the download;
+  - the sizing gate shows too few episodes at both candidates.
+- **Result recorded 2026-09-13:** the bounds were computed
+  ([`decision-model.md`](decision-model.md) §3, *Bounds computed*). S5 does not
+  fire at either station:
+  - **Würzburg Hbf:** `[1, 8.1]` min.
+  - **Augsburg Hbf:** `[1, 7.9]` min on its main platforms, or `[1, 10.9]` min
+    if its short platforms count, which is only 0.1 min inside the limit.
+
+  OpenStation shows Augsburg Hbf is *station* category 1 (price category 2), so
+  "class 2" in this entry's title describes the price class only. The choice
+  rule cannot be applied yet: the sizing gate is blocked on the unset minimum
+  episode count and episode windows, and there is no episode-rate estimate. No
+  station has been chosen.

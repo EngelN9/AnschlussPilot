@@ -52,8 +52,216 @@ changes, the *range* rather than point value of transfer time, station topology,
 changed stop patterns, and whether the underlying information is fresh enough to
 use at all.
 
-`T_transfer` currently has **no confirmed data source** (see `README.md` A3).
-Until it does, it is an interval with provenance `estimated`.
+`T_transfer` has **no published per-station source** (see `README.md` A3). A
+published *computation rule* exists; see the S5 desk check below. Until a
+station-level bound is computed from it, `T_transfer` is an interval with
+provenance `estimated`.
+
+### S5 desk check (D051) — 2026-09-13
+
+**Status: executed at desk level. At the desk stage S5 had neither fired nor
+passed; see *Bounds computed* below — S5 does not fire at either shortlisted
+station.** This check
+reads the transfer threshold as *bounded within ±5 min*, meaning an interval no
+wider than 10 min.
+
+**Sources read on 2026-09-13:**
+
+1. **gtfs.de free schedule feeds** (`de_fv`, `de_rv`): no `transfers.txt`.
+   This was verified from the file list of the D054 snapshot. The
+   [services page](https://gtfs.de/en/services/) lists `transfers.txt` only
+   for the paid feeds.
+2. **DB InfraGO Richtlinie 402.0203A01** —
+   [*Planungsprocedere; Aufgaben und Abläufe im Planungsprocedere für den Netzfahrplan*](https://www.dbinfrago.com/resource/blob/13175496/f347b99ef9b749b4a6ce8c23a978d23f/Ril-402-0203A01-INB-2026-data.pdf),
+   valid from 14.12.2025. `verified`. It defines how every *Übergangszeit* is
+   built. In paraphrase:
+   - **Distance:** one third of the arriving train's platform *Nutzlänge*
+     (usable length), plus one fifth of the departing train's, plus the
+     distance between the two platforms. It is walked at 4.68 km/h
+     (78 m/min).
+   - **Quality minutes:** 1 min at every station, and a possible +1 min at
+     category 1 and 2 stations with unfavourable conditions.
+   - **Stairs:** a fixed +1 min.
+   - **Local adjustment:** up to ±1 min.
+   - **Same-platform transfer:** 2 min *"zuzüglich der Qualitätsparameter nach
+     (4) Nr. 3"*. Section (4) lists only items 1 and 2, so this reference is an
+     inconsistency in the source, left unresolved here.
+   - **S-Bahn systems:** quality parameter 0.
+   - **Override:** stable values from simulation or measurement may replace
+     the computed ones.
+3. **Per-station values are not published.** None appear on the
+   [Kursbuch reading guide](https://kursbuch.bahn.de/hafas/kbview.exe/dn?rt=1&mainframe=AI_KB_lesen),
+   and no public list was found. This absence is `requires verification`,
+   limited to the sources searched.
+4. **DB InfraGO
+   [Stationspreisliste 2026](https://www.dbinfrago.com/resource/blob/13518698/1cd204bc2c7a98b2490822ee6fc200ad/Stationspreisliste-2026-data.pdf)**
+   (valid from 01.01.2026) gives these price classes:
+   - class 1: Nürnberg Hbf, München Hbf;
+   - class 2: Augsburg Hbf, Würzburg Hbf, Ingolstadt Hbf, Regensburg Hbf.
+
+   The Ril refers to *"Kategorien 1 und 2"* under the INPB. Only secondary
+   sources say that this means today's *Preisklasse*, so that link is
+   `requires verification`.
+5. **DB InfraGO OpenStation.** Two primary sources state the data licence is
+   CC0: the
+   [openstation-docs README](https://github.com/dbinfrago/openstation-docs)
+   and the
+   [DB API Marketplace product page](https://developers.deutschebahn.com/db-api-marketplace/apis/product/open-station).
+   - **Access:** per the README, the Mobilithek bulk NeTEx file downloads
+     without credentials. The Marketplace route needs registration, which
+     **D044** excludes.
+   - **What the public example shows** (Saarbrücken Hbf): a `Length` on every
+     platform and platform edge.
+   - **What it lacks:** platforms carry no coordinates, and path segments
+     (`SitePathLink`) carry no length. The docs say the indoor graph is still to
+     be recorded.
+   - **Open point:** whether `Quay/Length` equals the Ril's *Nutzlänge* is
+     `requires verification`.
+   - **Mobilithek terms:** the terms-of-use page did not render on 2026-09-13,
+     so under D044 no bulk download has been made.
+6. **gtfs.de `stops.txt` geometry:** most major stations have 1–3 child stops
+   and no platform codes, so it is unusable as a distance input.
+
+**What the rule implies.** This is illustrative arithmetic, not a measurement,
+and the inter-platform distances are assumed:
+
+| Case | Arithmetic | Result |
+| --- | --- | --- |
+| Lower end, most permissive reading | Same-platform 2 min, minus the 1 min local adjustment | 1 min |
+| Class 2 station: 400 m platforms, up to 150 m platform change, every optional minute | (133 + 80 + 150) m ÷ 78 m/min ≈ 4.7 min, plus 4 min | ≈ 8.7 min |
+| Large node: the same, with a 400 m platform change | (133 + 80 + 400) m ÷ 78 m/min ≈ 7.9 min, plus 4 min | ≈ 11.9 min |
+
+- The class 2 case gives `[1, 8.7]` min, which is within ±5 min.
+- The large-node case gives `[1, 11.9]` min, which is outside ±5 min.
+
+**Verdict.**
+- **S5 has not fired.** A published rule bounds `T_transfer` within ±5 min at
+  compact stations, given platform lengths (CC0) and an inter-platform
+  distance.
+- **S5 has not passed.** No source read contains the inter-platform distance,
+  so any named station's bound currently rests on an assumed distance.
+- **Consequence for station choice:** prefer compact class 2 stations over
+  large class 1 nodes, where the upper end probably breaks ±5 min.
+
+**Candidate stations** from the frozen Phase 0A v2 seed list. Schedule counts
+come from the gtfs.de `de_fv` / `de_rv` feeds (DELFI e.V. data, CC BY 4.0),
+retrieved 2026-09-13. The weekday is Tuesday 2026-09-15, 16:00–20:00. Pairs
+count a long-distance arrival and a regional departure 5–30 min apart. That
+window and that gap band are illustrative; both are still `UNSET` in the
+protocol.
+
+| Station | Price class | Long-distance arrivals | Regional departures | Pairs in band |
+| --- | --- | --- | --- | --- |
+| München Hbf | 1 | 57 | 216 | 1,280 |
+| Nürnberg Hbf | 1 | 41 | 270 | 1,143 |
+| Augsburg Hbf | 2 | 23 | 143 | 323 |
+| Würzburg Hbf | 2 | 21 | 86 | 188 |
+| Ingolstadt Hbf | 2 | 8 | 65 | 48 |
+| Bamberg | not extracted | 6 | 75 | 48 |
+| Rosenheim | not extracted | 4 | 57 | 25 |
+
+- **Regensburg Hbf** matched no long-distance arrival in the window. This was
+  not investigated.
+- **Long-distance realtime coverage** at these stations was observed once, in
+  the private D054 snapshot. München, Nürnberg, Augsburg and Würzburg carried
+  most of their running long-distance trips at that instant; Bamberg and
+  Rosenheim carried few, from very small samples. The figures stay private
+  ([`provider-evaluation.md`](provider-evaluation.md) §2.4).
+
+**Proposed next steps** (see **D055**):
+1. Read Mobilithek's terms of use.
+2. If they permit it, download the OpenStation NeTEx bulk file once and
+   extract the platform lengths for Augsburg Hbf and Würzburg Hbf.
+3. Decide how to bound the inter-platform distance, which has no published
+   source.
+4. Run the `README.md` §4 sizing gate for the chosen station.
+
+#### Bounds computed — 2026-09-13 (D055, accepted)
+
+**Status: S5 does not fire at either shortlisted station.** Both conservative
+intervals are no wider than 10 min. The station choice stays open because the
+sizing gate cannot be run yet (see below).
+
+**Inputs**, all read or retrieved on 2026-09-13:
+
+- **Platform lengths and station categories:** DB InfraGO OpenStation NeTEx
+  bulk file, CC0, publication timestamp 2026-09-13T02:31:47Z.
+  - Downloaded once via `bahnhof.de/daten/netex`, which redirects to the
+    Mobilithek `noauth` endpoint, with no credentials.
+  - Kept privately under `.private/` with its SHA-256.
+- **Inter-platform distances:** OpenStreetMap, via four read-only Overpass
+  queries (OSM base 2026-09-13T11:28Z). Contains information from
+  [OpenStreetMap](https://www.openstreetmap.org/copyright), which is made
+  available here under the
+  [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/).
+  - The ODbL was read in full first. A distance printed here is a *Produced
+    Work*: it needs the §4.3 notice, and §4.5(b) means no share-alike.
+  - The raw responses stay private.
+- **Mobilithek platform terms: not read.** The terms page rendered empty on two
+  attempts. The download went ahead on DB InfraGO's CC0 statement for the data,
+  by the author's decision under D044. The platform-terms gap stays open.
+
+**Correction to item 4 above.** OpenStation carries two separate fields,
+`DBINFRAGO_STATION_CATEGORY` and `DBINFRAGO_PRICE_CATEGORY`:
+
+| Station | Station category | Price category |
+| --- | --- | --- |
+| Augsburg Hbf | **1** | 2 |
+| Würzburg Hbf | 2 | 2 |
+
+- The Ril's *"Kategorien 1 und 2"* therefore most plausibly means the
+  **station** category, not the price class. This is still an interpretation,
+  but a primary source now shows the two fields differ.
+- The arithmetic is unchanged: both stations get the optional extra minute
+  under either reading.
+
+**Method** (conservative by construction):
+
+- The longest platform edge at the station is used for **both** the one-third
+  arriving share and the one-fifth departing share: Augsburg 457 m, Würzburg
+  443 m.
+- **Inter-platform distance:** the largest edge-to-edge distance between any
+  two train platforms or platform edges mapped in OSM.
+- **Minutes:** every optional and fixed minute is applied — quality 1,
+  category extra 1, stairs 1 and local +1, so 4 min.
+- **Lower end:** 1 min, the most permissive same-platform reading above.
+  Under the 2 min reading, every width below shrinks by 1 min.
+
+| Station | Farthest pair (OSM) | Walk | Interval | Width | S5 |
+| --- | --- | --- | --- | --- | --- |
+| Augsburg Hbf — all train platforms, including short platforms 101 / 501 / 801 / 901 | 501 ↔ 801, 293 m | 6.9 min | [1, 10.9] min | 9.9 min | does not fire — **0.1 min inside the limit** |
+| Augsburg Hbf — main platforms 1–12 only | 2 ↔ 12, 62 m | 3.9 min | [1, 7.9] min | 6.9 min | does not fire |
+| Würzburg Hbf — all edges, including Gleis 1 | 1 ↔ 11, 83 m | 4.1 min | [1, 8.1] min | 7.1 min | does not fire |
+
+**What this does not establish:**
+
+- **Augsburg's conservative case sits at the threshold.** The 293 m pair is two
+  short platforms at opposite ends of the station, so the distance is mostly an
+  along-track offset that the length shares partly count again. Whether in-scope
+  long-distance or regional trains use those short platforms is
+  `requires verification`; the free feeds carry no platform codes at Augsburg.
+- Whether `Quay/Length` equals the Ril's *Nutzlänge* is still
+  `requires verification`.
+- **The Ril gives a *planning* transfer time.** Using it to bound the time a
+  passenger actually needs is D055's modelling assumption, not a measurement.
+- **OSM geometry is contributor-mapped.** Its metre-level error is not
+  quantified.
+
+**Sizing gate — no verdict possible yet.** `README.md` §4 asks whether the
+chosen scope yields the episode counts in
+[`modelling-and-evaluation.md`](modelling-and-evaluation.md) §2 within half the
+calendar ceiling. Two inputs are missing:
+
+1. **Episode rules are unfrozen.** The **minimum episode count** and the episode
+   windows `W_primary` / `W_narrow` / `W_wide` are `UNSET` in the protocol
+   manifest. The author must freeze them before any station can be sized
+   against them.
+2. **No episode rate is known** for either station. One realtime snapshot
+   cannot supply it.
+
+The only comparison available today is timetable volume: weekday 16:00–20:00
+transfer pairs above, Augsburg 323 and Würzburg 188. That is a proxy for
+enumerated transfers, not for independent episodes.
 
 Assessment must remain explainable in terms of the factors that produced it.
 
